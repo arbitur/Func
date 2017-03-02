@@ -1,0 +1,85 @@
+//
+//  RadialGradientView.swift
+//  Pods
+//
+//  Created by Philip Fryklund on 21/Feb/17.
+//
+//
+
+import UIKit
+
+
+
+
+
+public class RadialGradientView: UIView {
+	public override class var layerClass: AnyClass { return RadialGradientLayer.self }
+	private var gradientLayer: RadialGradientLayer { return self.layer as! RadialGradientLayer }
+	
+	
+	public var colorComponents: [(color: UIColor, location: CGFloat)]? {
+		get { return gradientLayer.colorComponents }
+		set { gradientLayer.colorComponents = newValue }
+	}
+}
+
+
+
+
+
+
+
+
+
+
+fileprivate class RadialGradientLayer: CALayer {
+	var colorComponents: [(color: UIColor, location: CGFloat)]? {
+		didSet { self.setNeedsDisplay() }
+	}
+	
+	
+	override init() {
+		super.init()
+		self.needsDisplayOnBoundsChange = true
+	}
+	
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+	
+	override func draw(in ctx: CGContext) {
+		print("Draw")
+		
+		guard let components = colorComponents, !components.isEmpty else { return super.draw(in: ctx) }
+		
+		let colors = components.map { $0.color.cgColor } as CFArray
+		let locations = components.map { $0.location }
+		
+		ctx.saveGState()
+		
+		let colorspace = CGColorSpaceCreateDeviceRGB()
+		let gradient = CGGradient(colorsSpace: colorspace, colors: colors, locations: locations)!
+		
+		let center = self.bounds.center
+		let radius = Math.hypotenusa(point: center)
+		
+		ctx.drawRadialGradient(gradient, startCenter: center, startRadius: 0, endCenter: center, endRadius: radius, options: .drawsAfterEndLocation)
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
