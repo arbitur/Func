@@ -26,6 +26,19 @@ class ViewController: UIViewController {
 			(.blue, 0.5),
 			(.black, 1)
 		]
+		
+//		DispatchQueue.global().async {
+//			for l in stride(from: CGFloat(), through: 1.0, by: 0.1) {
+//				Thread.sleep(forTimeInterval: 1)
+//				
+//				DispatchQueue.main.async {
+//					print(l)
+//					let c = UIColor.blue.darkened(by: l)
+//					print(c.rgba)
+//					self.gradientView.colorComponents![1].color = c
+//				}
+//			}
+//		}
 	}
 	
 	override func viewDidLoad() {

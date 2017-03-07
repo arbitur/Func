@@ -199,7 +199,7 @@ public class AlertController: UIViewController {
 			func color() -> UIColor {
 				switch self {
 					case .cancel:       return UIColor(hex: 0x006ADE)
-					case .destructive:  return UIColor.red.brightness(0.1)
+					case .destructive:  return UIColor.red.lightened(by: 0.2)
 					default:            return UIColor(hex: 0x007AFF)
 				}
 			}

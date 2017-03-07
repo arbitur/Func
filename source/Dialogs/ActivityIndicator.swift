@@ -187,7 +187,7 @@ fileprivate class Spinner: UIView {
 //			path.angle = -CGFloat.pi / 2
 			path.speed = minSpeed + speedRange * percent
 //			path.length = CGFloat.pi / 2
-			path.color = UIColor(hex: 0x2DBDB6).brightness(percent * 0.15 + 0.075)
+			path.color = UIColor(hex: 0x2DBDB6).lightened(by: percent * 0.25 + 0.065)
 			
 			return path
 		}

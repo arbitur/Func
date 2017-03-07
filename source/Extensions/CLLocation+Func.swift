@@ -54,17 +54,19 @@ extension CLLocationCoordinate2D: CustomStringConvertible, Equatable {
 		
 		return CLLocationCoordinate2D(latitude: φ2.deg, longitude: λ2.deg)
 	}
+	
+	
+	
+	public static func == (coord1: CLLocationCoordinate2D, coord2: CLLocationCoordinate2D) -> Bool {
+		return coord1.latitude.description == coord2.latitude.description && coord1.longitude.description == coord2.longitude.description
+	}
 }
 
 
 
 
 
-public func == (coord1: CLLocationCoordinate2D, coord2: CLLocationCoordinate2D) -> Bool {
-	//	print(coord1.latitude, coord2.latitude, coord1.longitude, coord2.longitude)
-	//	print(coord1.latitude == coord2.latitude, coord1.longitude == coord2.longitude)
-	return coord1.latitude.description == coord2.latitude.description && coord1.longitude.description == coord2.longitude.description
-}
+
 
 
 

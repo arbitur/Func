@@ -13,7 +13,15 @@ import Foundation
 
 
 public extension CGPoint {
-	var angle: CGFloat { return atan2(self.y, self.x) }
+	var angle: CGFloat {
+		return atan2(self.y, self.x)
+	}
+	
+	var magnitude: CGFloat {
+		return distance(to: .zero)
+	}
+	
+	
 	
 	func angle(to point: CGPoint) -> CGFloat {
 		let deltaX = self.x - point.x
@@ -27,12 +35,9 @@ public extension CGPoint {
 	
 	
 	
-	init(angle: CGFloat) {
-		self.init(x: cos(angle), y: sin(angle))
-	}
-	
-	init(angle: CGFloat, multiplier: CGFloat) {
-		self.init(x: cos(angle) * multiplier, y: sin(angle) * multiplier)
+	/// Angle in rad
+	init(angle: CGFloat, magnitude: CGFloat = 1.0) {
+		self.init(x: cos(angle) * magnitude, y: sin(angle) * magnitude)
 	}
 	
 	init(_ x: CGFloat, _ y: CGFloat) {
@@ -50,89 +55,76 @@ public extension CGPoint {
 	init(_ x: Int, _ y: Int) {
 		self.init(x: x, y: y)
 	}
-	
-	
-	
-	init(radians: CGFloat) {
-		self.init(x: cos(radians), y: sin(radians))
-	}
 }
 
 
 
 
 
-public func + (left: CGPoint, right: CGPoint) -> CGPoint {
-	return CGPoint(x: left.x + right.x, y: left.y + right.y)
+public func + (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+	return CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
 }
 
-public func + (left: CGPoint, right: CGFloat) -> CGPoint {
-	return CGPoint(x: left.x + right, y: left.y + right)
+public func + (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+	return CGPoint(x: lhs.x + rhs, y: lhs.y + rhs)
 }
 
-public func - (left: CGPoint, right: CGPoint) -> CGPoint {
-	return CGPoint(x: left.x - right.x, y: left.y - right.y)
+public func - (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+	return CGPoint(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
 }
 
-public func - (left: CGPoint, right: CGFloat) -> CGPoint {
-	return CGPoint(x: left.x - right, y: left.y - right)
+public func - (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+	return CGPoint(x: lhs.x - rhs, y: lhs.y - rhs)
 }
 
-public func * (left: CGPoint, right: CGPoint) -> CGPoint {
-	return CGPoint(x: left.x * right.x, y: left.y * right.y)
+public func * (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+	return CGPoint(x: lhs.x * rhs.x, y: lhs.y * rhs.y)
 }
 
-public func * (left: CGPoint, right: CGFloat) -> CGPoint {
-	return CGPoint(x: left.x * right, y: left.y * right)
+public func * (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+	return CGPoint(x: lhs.x * rhs, y: lhs.y * rhs)
 }
 
-public func / (left: CGPoint, right: CGPoint) -> CGPoint {
-	return CGPoint(x: left.x / right.x, y: left.y / right.y)
+public func / (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+	return CGPoint(x: lhs.x / rhs.x, y: lhs.y / rhs.y)
 }
 
-public func / (left: CGPoint, right: CGFloat) -> CGPoint {
-	return CGPoint(x: left.x / right, y: left.y / right)
+public func / (lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+	return CGPoint(x: lhs.x / rhs, y: lhs.y / rhs)
 }
 
 
-public func += (left: inout CGPoint, right: CGPoint) {
-	left.x += right.x
-	left.y += right.y
+
+public func += (lhs: inout CGPoint, rhs: CGPoint) {
+	lhs = lhs + rhs
 }
 
-public func += (left: inout CGPoint, right: CGFloat) {
-	left.x += right
-	left.y += right
+public func += (lhs: inout CGPoint, rhs: CGFloat) {
+	lhs = lhs + rhs
 }
 
-public func -= (left: inout CGPoint, right: CGPoint) {
-	left.x -= right.x
-	left.y -= right.y
+public func -= (lhs: inout CGPoint, rhs: CGPoint) {
+	lhs = lhs - rhs
 }
 
-public func -= (left: inout CGPoint, right: CGFloat) {
-	left.x -= right
-	left.y -= right
+public func -= (lhs: inout CGPoint, rhs: CGFloat) {
+	lhs = lhs - rhs
 }
 
-public func *= (left: inout CGPoint, right: CGPoint) {
-	left.x *= right.x
-	left.y *= right.y
+public func *= (lhs: inout CGPoint, rhs: CGPoint) {
+	lhs = lhs * rhs
 }
 
-public func *= (left: inout CGPoint, right: CGFloat) {
-	left.x *= right
-	left.y *= right
+public func *= (lhs: inout CGPoint, rhs: CGFloat) {
+	lhs = lhs * rhs
 }
 
-public func /= (left: inout CGPoint, right: CGPoint) {
-	left.x /= right.x
-	left.y /= right.y
+public func /= (lhs: inout CGPoint, rhs: CGPoint) {
+	lhs = lhs / rhs
 }
 
-public func /= (left: inout CGPoint, right: CGFloat) {
-	left.x /= right
-	left.y /= right
+public func /= (lhs: inout CGPoint, rhs: CGFloat) {
+	lhs = lhs / rhs
 }
 
 

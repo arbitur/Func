@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Func
 
 
 
@@ -33,10 +34,44 @@ class AppDelegate: UIResponder {
 extension AppDelegate: UIApplicationDelegate {
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		
+		let color = UIColor.cyan
+		print(color.rgba)
+		print(color.hsl)
+		print(color.hsb)
+		
+		print()
+		
+		do {
+			try Archiver.archive(["a": 1, "b": "cdefg"], forKey: "test")
+		}
+		catch {
+			print(error.localizedDescription)
+		}
+		
+		let test: Dict? = Archiver.unarchive(forKey: "test")
+		print("Unarchived", test ?? "nil")
+		
 		loadWindow()
 		
 		return true
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

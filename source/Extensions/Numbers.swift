@@ -45,7 +45,19 @@ public protocol Arithmetics: NumberType {
 
 
 
-public protocol IntegerNumber: Integer, Arithmetics {}
+public protocol IntegerNumber: Integer, Arithmetics {
+}
+public extension IntegerNumber {
+	var isEven: Bool  {
+		return self % 2 == 0
+	}
+	
+	var isOdd: Bool  {
+		return self % 2 == 1
+	}
+	
+	
+}
 
 
 public protocol FloatingNumber: FloatingPoint, Arithmetics {}

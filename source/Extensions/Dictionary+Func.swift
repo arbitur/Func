@@ -24,11 +24,13 @@ public extension Dictionary {
 	}
 }
 
+
 public extension Dictionary where Key: ExpressibleByStringLiteral {
 	func keyPath<T>(path: Key, separator: String = ".") -> T? {
+		let path = path as! String
 		var value: Any = self
 		
-		for part in (path as! String).components(separatedBy: separator) {
+		for part in path.components(separatedBy: separator) {
 			if let dict = value as? [String: Any], let v = dict[part] {
 				value = v
 			}
@@ -44,6 +46,16 @@ public extension Dictionary where Key: ExpressibleByStringLiteral {
 	}
 }
 
+extension Dictionary: Equatable {
+	public static func == (lhs: [Key: Value], rhs: [Key: Value]) -> Bool {
+		return NSDictionary(dictionary: lhs).isEqual(to: rhs)
+	}
+	
+	public static func != (lhs: [Key: Value], rhs: [Key: Value]) -> Bool {
+		return !(lhs == rhs)
+	}
+}
+
 
 
 
@@ -51,25 +63,21 @@ public typealias Dict = [String: Any]
 
 
 
-public func += <T, U> (left: inout [T: U], right: [T: U]) {
-	for (k, v) in right {
-		left[k] = v
+public func + <T, U>(lhs: [T: U], rhs: [T: U]) -> [T: U] {
+	var d = lhs
+	for (k, v) in rhs {
+		d[k] = v
 	}
-}
-
-public func + <T, U> (left: [T: U], right: [T: U]) -> [T: U] {
-	var d = left
-	d += right
 	return d
 }
 
-public func == (lhs: Dict, rhs: Dict) -> Bool {
-	return NSDictionary(dictionary: lhs).isEqual(to: rhs)
+public func += <T, U>(lhs: inout [T: U], rhs: [T: U]) {
+	lhs = lhs + rhs
 }
 
-public func != (lhs: Dict, rhs: Dict) -> Bool {
-	return !(lhs == rhs)
-}
+
+
+
 
 
 

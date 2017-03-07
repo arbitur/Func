@@ -14,7 +14,7 @@ import Foundation
 
 public extension CGSize {
 	
-	var ratio: CGFloat {
+	var aspectRatio: CGFloat {
 		return self.width / self.height
 	}
 	
@@ -57,66 +57,70 @@ public extension CGSize {
 
 
 
-public func + (left: CGSize, right: CGSize) -> CGSize {
-	return CGSize(width: left.width + right.width, height: left.height + right.height)
+public func + (lhs: CGSize, rhs: CGSize) -> CGSize {
+	return CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
 }
 
-public func + (left: CGSize, right: CGFloat) -> CGSize {
-	return CGSize(width: left.width + right, height: left.height + right)
+public func + (lhs: CGSize, rhs: CGFloat) -> CGSize {
+	return CGSize(width: lhs.width + rhs, height: lhs.height + rhs)
 }
 
-public func - (left: CGSize, right: CGSize) -> CGSize {
-	return CGSize(width: left.width - right.width, height: left.height - right.height)
+public func - (lhs: CGSize, rhs: CGSize) -> CGSize {
+	return CGSize(width: lhs.width - rhs.width, height: lhs.height - rhs.height)
 }
 
-public func - (left: CGSize, right: CGFloat) -> CGSize {
-	return CGSize(width: left.width - right, height: left.height - right)
+public func - (lhs: CGSize, rhs: CGFloat) -> CGSize {
+	return CGSize(width: lhs.width - rhs, height: lhs.height - rhs)
 }
 
-public func * (left: CGSize, right: CGSize) -> CGSize {
-	return CGSize(width: left.width * right.width, height: left.height * right.height)
+public func * (lhs: CGSize, rhs: CGSize) -> CGSize {
+	return CGSize(width: lhs.width * rhs.width, height: lhs.height * rhs.height)
 }
 
-public func * (left: CGSize, right: CGFloat) -> CGSize {
-	return CGSize(width: left.width * right, height: left.height * right)
+public func * (lhs: CGSize, rhs: CGFloat) -> CGSize {
+	return CGSize(width: lhs.width * rhs, height: lhs.height * rhs)
 }
 
-public func / (left: CGSize, right: CGSize) -> CGSize {
-	return CGSize(width: left.width / right.width, height: left.height / right.height)
+public func / (lhs: CGSize, rhs: CGSize) -> CGSize {
+	return CGSize(width: lhs.width / rhs.width, height: lhs.height / rhs.height)
 }
 
-public func / (left: CGSize, right: CGFloat) -> CGSize {
-	return CGSize(width: left.width / right, height: left.height / right)
+public func / (lhs: CGSize, rhs: CGFloat) -> CGSize {
+	return CGSize(width: lhs.width / rhs, height: lhs.height / rhs)
 }
 
-public func += (left: inout CGSize, right: CGSize) {
-	left.width += right.width
-	left.height += right.height
+
+
+public func += (lhs: inout CGSize, rhs: CGSize) {
+	lhs = lhs + rhs
 }
 
-public func += (left: inout CGSize, right: CGFloat) {
-	left.width += right
-	left.height += right
+public func += (lhs: inout CGSize, rhs: CGFloat) {
+	lhs = lhs + rhs
 }
 
-public func -= (left: inout CGSize, right: CGSize) {
-	left.width -= right.width
-	left.height -= right.height
+public func -= (lhs: inout CGSize, rhs: CGSize) {
+	lhs = lhs - rhs
 }
 
-public func -= (left: inout CGSize, right: CGFloat) {
-	left.width -= right
-	left.height -= right
+public func -= (lhs: inout CGSize, rhs: CGFloat) {
+	lhs = lhs - rhs
 }
 
-public func *= (left: inout CGSize, right: CGSize) {
-	left.width *= right.width
-	left.height *= right.height
+public func *= (lhs: inout CGSize, rhs: CGSize) {
+	lhs = lhs * rhs
 }
 
-public func *= (left: inout CGSize, right: CGFloat) {
-	left.width *= right
-	left.height *= right
+public func *= (lhs: inout CGSize, rhs: CGFloat) {
+	lhs = lhs * rhs
+}
+
+public func /= (lhs: inout CGSize, rhs: CGSize) {
+	lhs = lhs / rhs
+}
+
+public func /= (lhs: inout CGSize, rhs: CGFloat) {
+	lhs = lhs / rhs
 }
 
 

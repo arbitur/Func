@@ -49,8 +49,6 @@ fileprivate class RadialGradientLayer: CALayer {
 	
 	
 	override func draw(in ctx: CGContext) {
-		print("Draw")
-		
 		guard let components = colorComponents, !components.isEmpty else { return super.draw(in: ctx) }
 		
 		let colors = components.map { $0.color.cgColor } as CFArray

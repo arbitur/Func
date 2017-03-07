@@ -19,6 +19,12 @@ infix operator ?==
 
 
 
+internal let funcDirectory = "se.arbitur.Func"
+
+
+
+
+
 public func pixels<T: FloatingNumber>(points v: T) -> T {
 	return v * T(UIScreen.main.scale)
 }

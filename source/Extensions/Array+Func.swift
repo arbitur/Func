@@ -18,7 +18,7 @@ public extension Array {
 	}
 	
 	subscript (safe index: Int) -> Element? {
-		if self.indices ~= index {
+		if self.indices.contains(index) {
 			return self[index]
 		}
 		return nil
@@ -88,7 +88,7 @@ public extension Array where Element: FloatingNumber {
 
 public extension Array where Element: UIView {
 	/// Removes from superview and array
-	mutating func remove() {
+	mutating func removeFromSuperview() {
 		for v in self {
 			v.removeFromSuperview()
 		}
