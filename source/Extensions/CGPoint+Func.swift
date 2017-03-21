@@ -24,8 +24,8 @@ public extension CGPoint {
 	
 	
 	func angle(to point: CGPoint) -> CGFloat {
-		let deltaX = self.x - point.x
-		let deltaY = self.y - point.y
+		let deltaX = point.x - self.x
+		let deltaY = point.y - self.y
 		return atan2(deltaY, deltaX)
 	}
 	
