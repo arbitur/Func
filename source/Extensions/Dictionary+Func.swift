@@ -25,9 +25,8 @@ public extension Dictionary {
 }
 
 
-public extension Dictionary where Key: ExpressibleByStringLiteral {
-	func keyPath<T>(path: Key, separator: String = ".") -> T? {
-		let path = path as! String
+public extension Dictionary where Key == String {
+	func keyPath<T>(path: String, separator: String = ".") -> T? {
 		var value: Any = self
 		
 		for part in path.components(separatedBy: separator) {

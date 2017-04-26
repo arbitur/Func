@@ -108,8 +108,8 @@ public extension Array where Element: Equatable {
 
 
 
-public extension Sequence where Iterator.Element == String {
-	func joined(_ separator: String) -> String {
+public extension Array where Element == String {
+	func joined(by separator: String) -> String {
 		return self.joined(separator: separator)
 	}
 }

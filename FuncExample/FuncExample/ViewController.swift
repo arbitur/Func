@@ -27,6 +27,8 @@ class ViewController: UIViewController {
 			(.black, 1)
 		]
 		
+		
+		
 //		DispatchQueue.global().async {
 //			for l in stride(from: CGFloat(), through: 1.0, by: 0.1) {
 //				Thread.sleep(forTimeInterval: 1)

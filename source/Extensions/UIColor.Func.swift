@@ -111,7 +111,7 @@ public extension UIColor {
 	}
 	
 	var hsl: (h: CGFloat, s: CGFloat, l: CGFloat) {
-		var (r, g, b, _) = self.rgba
+		let (r, g, b, _) = self.rgba
 		
 		let min = Swift.min(r, g, b)
 		let max = Swift.max(r, g, b)
@@ -142,7 +142,7 @@ public extension UIColor {
 	}
 	
 	var hsb: (h: CGFloat, s: CGFloat, l: CGFloat) {
-		var (r, g, b, _) = self.rgba
+		let (r, g, b, _) = self.rgba
 		
 		let min = Swift.min(r, g, b)
 		let max = Swift.max(r, g, b)

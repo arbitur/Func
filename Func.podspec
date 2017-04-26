@@ -15,13 +15,13 @@ Pod::Spec.new do |s|
 	
 	s.subspec 'Core' do |cs|
 		cs.frameworks 	= 'UIKit', 'CoreLocation'
-		cs.source_files 	= 'source/*.swift', 'source/Classes/*.swift', 'source/Extensions/*.swift', 'source/Animation/*.swift'
+		cs.source_files 	= 'source/*.swift', 'source/Classes/*.swift', 'source/Extensions/*.swift'
 		cs.resources 	= 'source/Assets/KeyboardControl/*'
 	end
 	
 	s.subspec 'Views' do |vs|
 		vs.frameworks 	= 'WebKit'
-		vs.source_files	= 'source/Views/*.swift', 'source/Dialogs/*.swift'
+		vs.source_files	= 'source/Views/*.swift', 'source/Dialogs/*.swift', 'source/Animation/*.swift'
 		vs.dependency 'Func/Core'
 		vs.dependency 'SnapKit', '~> 3.0'
 	end

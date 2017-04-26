@@ -48,6 +48,12 @@ open class StackView: UIStackView {
 		self.backgroundColor = nil
 		super.layer.insertSublayer(backgroundLayer, at: 0)
 	}
+	
+	
+	public convenience init(frame: CGRect = .zero, backgroundColor: UIColor) {
+		self.init(frame: frame)
+		self.backgroundColor = backgroundColor
+	}
 }
 
 

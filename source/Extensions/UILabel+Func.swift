@@ -28,11 +28,11 @@ public extension UILabel {
 		}
 	}
 	
-	convenience init(font: UIFont!, color: UIColor = .black, alignment: NSTextAlignment = .left) {
+	convenience init(font: UIFont!, color: UIColor = .black, alignment: NSTextAlignment = .left, lines: Int = 0) {
 		self.init()
 		self.font = font
 		self.textColor = color
 		self.textAlignment = alignment
-//		self.numberOfLines = 0
+		self.numberOfLines = lines
 	}
 }

@@ -40,9 +40,9 @@ extension CLLocationCoordinate2D: CustomStringConvertible, Equatable {
 		var φ2 = φ1 + Δφ
 		
 		// check for some daft bugger going past the pole, normalise latitude if so
-		if (abs(φ2) > M_PI_2) { φ2 = φ2>0 ? M_PI-φ2 : -M_PI-φ2 }
+		if (abs(φ2) > .pi/2) { φ2 = φ2>0 ? .pi-φ2 : -.pi-φ2 }
 		
-		let Δψ = log(tan(φ2/2+M_PI_4)/tan(φ1/2+M_PI_4))
+		let Δψ = log(tan(φ2/2 + .pi/4)/tan(φ1/2 + .pi/4))
 		let q = abs(Δψ) > 10e-12 ? Δφ / Δψ : cos(φ1) // E-W course becomes ill-conditioned with 0/0
 		
 		let Δλ = δ*sin(θ)/q
@@ -50,7 +50,7 @@ extension CLLocationCoordinate2D: CustomStringConvertible, Equatable {
 		var λ2 = λ1 + Δλ
 		
 		
-		λ2 = remainder((λ2 + 3*M_PI), (2*M_PI)) - M_PI; // normalise to -180..+180°
+		λ2 = remainder((λ2 + 3 * .pi), (2 * .pi)) - .pi; // normalise to -180..+180°
 		
 		return CLLocationCoordinate2D(latitude: φ2.deg, longitude: λ2.deg)
 	}
