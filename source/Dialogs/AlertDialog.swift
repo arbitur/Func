@@ -14,6 +14,7 @@ import UIKit
 
 public final class AlertDialog: Dialog {
 	public var customView: UIView?
+	public var customViewAddedToSuperview: ((AlertDialog) -> ())?
 	
 	
 	
@@ -47,7 +48,7 @@ public final class AlertDialog: Dialog {
 		button.titleLabel!.font = font
 		button.titleLabel!.textAlignment = .center
 		
-		button.snp.makeConstraints { $0.height.equalTo(44) }
+		button.lac.height.equal(to: 44)
 		
 		return button
 	}
@@ -65,9 +66,12 @@ public final class AlertDialog: Dialog {
 		self.transitioningDelegate = self
 		
 		contentView.cornerRadius = 13.5
-		contentView.snp.makeConstraints {
-			$0.center.equalToSuperview()
-			$0.width.equalTo(270)
+		contentView.lac.make {
+			$0.top.greaterThanSuperview(20)
+			$0.bottom.lessThanSuperview(-20)
+			$0.centerX.equalToSuperview()
+			$0.centerY.equalToSuperview()
+			$0.width.equal(to: 270)
 		}
 		
 		promptContentView?.layoutMargins = UIEdgeInsets(vertical: 20, horizontal: 16)
@@ -79,10 +83,11 @@ public final class AlertDialog: Dialog {
 		
 		if !actions.isEmpty {
 			let buttonContentView = UIStackView(axis: (actions.count == 2) ? .horizontal : .vertical)
+			buttonContentView.setContentCompressionResistancePriority(1000, for: .vertical)
 			
 			if let _ = promptContentView {
 				mainContentStack.add(arrangedView: generateBorder()) {
-					$0.height.equalTo(points(pixels: 1.0))
+					$0.height.equal(to: points(pixels: 1.0))
 				}
 			}
 			
@@ -96,8 +101,8 @@ public final class AlertDialog: Dialog {
 				if let _ = lastButton {
 					buttonContentView.add(arrangedView: generateBorder()) {
 						switch buttonContentView.axis {
-							case .horizontal: $0.width.equalTo(points(pixels: 1.0))
-							case .vertical	: $0.height.equalTo(points(pixels: 1.0))
+							case .horizontal: $0.width.equal(to: points(pixels: 1.0))
+							case .vertical	: $0.height.equal(to: points(pixels: 1.0))
 						}
 					}
 				}
@@ -105,14 +110,18 @@ public final class AlertDialog: Dialog {
 				buttonContentView.add(arrangedView: button)
 				
 				if buttonContentView.axis == .horizontal, let last = lastButton {
-					button.snp.makeConstraints {
-						$0.width.equalTo(last)
-					}
+					button.lac.width.equal(to: last.lac.width)
 				}
 				
 				lastButton = button
 			}
 		}
+	}
+	
+	public override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		customViewAddedToSuperview?(self)
 	}
 }
 
@@ -144,7 +153,7 @@ fileprivate class AlertAnimator: DialogAnimator<AlertDialog> {
 		viewController.contentBlurView.backgroundColor = .white
 		
 		if !dismissing {
-			viewController.contentView.transform(scale: 1.15)
+			viewController.contentView.transform(scale: 1.175)
 			viewController.view.alpha = 0.0
 		}
 	}

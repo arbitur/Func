@@ -18,6 +18,7 @@ public final class SheetDialog: Dialog {
 	fileprivate var cancelActionView: UIView?
 	
 	public var customView: UIView?
+	public var customViewAddedToSuperview: ((SheetDialog) -> ())?
 	
 	
 	
@@ -98,10 +99,10 @@ public final class SheetDialog: Dialog {
 		contentStackView.spacing = 8
 		
 		contentView.lac.make {
-			$0.top.greater(thanSuperview: 20)
-			$0.left.equal(toSuperview: 10)
-			$0.right.equal(toSuperview: -10)
-			$0.bottom.equal(toSuperview: -10)
+			$0.top.greaterThanSuperview(20)
+			$0.left.equalToSuperview(10)
+			$0.right.equalToSuperview(-10)
+			$0.bottom.equalToSuperview(-10)
 		}
 		
 		contentStackView.add(arrangedView: contentBlurView)
@@ -128,7 +129,7 @@ public final class SheetDialog: Dialog {
 			
 			if let _ = promptContentView {
 				mainContentStack.add(arrangedView: generateBorder()) {
-					$0.height.equalTo(points(pixels: 1.0))
+					$0.height.equal(to: points(pixels: 1.0))
 				}
 			}
 			
@@ -145,8 +146,8 @@ public final class SheetDialog: Dialog {
 					if let _ = lastButton {
 						buttonContentView.add(arrangedView: generateBorder()) {
 							switch buttonContentView.axis {
-								case .horizontal: $0.width.equalTo(points(pixels: 1.0))
-								case .vertical	: $0.height.equalTo(points(pixels: 1.0))
+								case .horizontal: $0.width.equal(to: points(pixels: 1.0))
+								case .vertical	: $0.height.equal(to: points(pixels: 1.0))
 							}
 						}
 					}
@@ -165,7 +166,10 @@ public final class SheetDialog: Dialog {
 				let button = generateActionButton(actions.last!)
 				button.tag = actions.count-1
 				blurView.contentView.add(view: button) {
-					$0.edges.equalToSuperview()
+					$0.top.equalToSuperview()
+					$0.left.equalToSuperview()
+					$0.right.equalToSuperview()
+					$0.bottom.equalToSuperview()
 				}
 				
 				contentStackView.add(arrangedView: blurView)
@@ -174,6 +178,12 @@ public final class SheetDialog: Dialog {
 			}
 			setCancelAction()
 		}
+	}
+	
+	public override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		customViewAddedToSuperview?(self)
 	}
 }
 

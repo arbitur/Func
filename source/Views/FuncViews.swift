@@ -15,16 +15,16 @@ import SnapKit
 
 // SnapKit
 public extension UIView {
-	func add(view: UIView?, makeConstraints: (ConstraintMaker)->()) {
+	func add(view: UIView?, instructions: (LAC)->()) {
 		self.add(view: view)
-		view?.snp.makeConstraints(makeConstraints)
+		view?.lac.make(instructions)
 	}
 }
 
 public extension UIStackView {
-	func add(arrangedView: UIView?, makeConstraints: (ConstraintMaker)->()) {
+	func add(arrangedView: UIView?, instructions: (LAC)->()) {
 		self.add(arrangedView: arrangedView)
-		arrangedView?.snp.makeConstraints(makeConstraints)
+		arrangedView?.lac.make(instructions)
 	}
 }
 

@@ -21,10 +21,11 @@ class AppDelegate: UIResponder {
 	fileprivate func loadWindow() {
 		let window = UIWindow(frame: UIScreen.main.bounds)
 		window.makeKeyAndVisible()
-		defer { self.window = window }
+		self.window = window
 		
-		let vc = ViewController()
-		window.rootViewController = vc
+		let vc = Page1()
+		let nc = UINavigationController(rootViewController: vc)
+		window.rootViewController = nc
 	}
 }
 
@@ -34,22 +35,22 @@ class AppDelegate: UIResponder {
 extension AppDelegate: UIApplicationDelegate {
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		
-		let color = UIColor.cyan
-		print(color.rgba)
-		print(color.hsl)
-		print(color.hsb)
-		
-		print()
-		
-		do {
-			try Archiver.archive(["a": 1, "b": "cdefg"], forKey: "test")
-		}
-		catch {
-			print(error.localizedDescription)
-		}
-		
-		let test: Dict? = Archiver.unarchive(forKey: "test")
-		print("Unarchived", test ?? "nil")
+//		let color = UIColor.cyan
+//		print(color.rgba)
+//		print(color.hsl)
+//		print(color.hsb)
+//		
+//		print()
+//		
+//		do {
+//			try Archiver.archive(["a": 1, "b": "cdefg"], forKey: "test")
+//		}
+//		catch {
+//			print(error.localizedDescription)
+//		}
+//		
+//		let test: Dict? = Archiver.unarchive(forKey: "test")
+//		print("Unarchived", test ?? "nil")
 		
 		loadWindow()
 		

@@ -13,6 +13,7 @@ import UIKit
 public protocol DialogBuilder: class {
 	var actions: [DialogAction] {get set}
 	var customView: UIView? {get set}
+	var customViewAddedToSuperview: ((Self)->())? {get set}
 	
 	func addAction(_ action: DialogAction) -> Self
 }
@@ -30,8 +31,9 @@ public extension DialogBuilder {
 		return addAction(DialogAction(title: title, type: .cancel, callback: nil))
 	}
 	
-	public func setCustomView(_ view: UIView) -> Self {
+	public func setCustomView(_ view: UIView, addedToSuperview: ((Self)->())? = nil) -> Self {
 		customView = view
+		customViewAddedToSuperview = addedToSuperview
 		return self
 	}
 }
@@ -108,20 +110,26 @@ open class Dialog: UIViewController {
 		if let title = promptTitle {
 			promptContentView = UIStackView(axis: .vertical)
 			promptContentView!.isLayoutMarginsRelativeArrangement = true
+			promptContentView!.setContentCompressionResistancePriority(1000, for: .vertical)
 			
 			let titleLabel = generateTitleLabel()
 			titleLabel.text = title
+			titleLabel.setContentCompressionResistancePriority(1000, for: .vertical)
 			promptContentView!.add(arrangedView: titleLabel)
 			
 			if let subtitle = promptSubtitle {
 				let subtitleLabel = generateSubtitleLabel()
 				subtitleLabel.text = subtitle
+				subtitleLabel.setContentCompressionResistancePriority(1000, for: .vertical)
 				promptContentView!.add(arrangedView: subtitleLabel)
 			}
 		}
 		
 		contentBlurView.contentView.add(view: mainContentStack) {
-			$0.edges.equalToSuperview()
+			$0.top.equalToSuperview()
+			$0.left.equalToSuperview()
+			$0.right.equalToSuperview()
+			$0.bottom.equalToSuperview()
 		}
 		
 		mainContentStack.add(arrangedView: promptContentView)

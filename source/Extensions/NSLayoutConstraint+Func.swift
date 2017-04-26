@@ -24,7 +24,6 @@ public extension NSLayoutConstraint {
 
 
 
-
 public struct LayoutItem {
 	let view: UIView
 	let attribute: NSLayoutAttribute
@@ -61,17 +60,17 @@ public struct LayoutItem {
 	
 	
 	@discardableResult
-	public func equal(toSuperview constant: CGFloat, multiplier: CGFloat = 1, priority: Float = 1000) -> NSLayoutConstraint {
+	public func equalToSuperview(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: Float = 1000) -> NSLayoutConstraint {
 		return constraintSuperview(relation: .equal, multiplier: multiplier, constant: constant, priority: priority)
 	}
 	
 	@discardableResult
-	public func greater(thanSuperview constant: CGFloat, multiplier: CGFloat = 1, priority: Float = 1000) -> NSLayoutConstraint {
+	public func greaterThanSuperview(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: Float = 1000) -> NSLayoutConstraint {
 		return constraintSuperview(relation: .greaterThanOrEqual, multiplier: multiplier, constant: constant, priority: priority)
 	}
 	
 	@discardableResult
-	public func less(thanSuperview constant: CGFloat, multiplier: CGFloat = 1, priority: Float = 1000) -> NSLayoutConstraint {
+	public func lessThanSuperview(_ constant: CGFloat = 0, multiplier: CGFloat = 1, priority: Float = 1000) -> NSLayoutConstraint {
 		return constraintSuperview(relation: .lessThanOrEqual, multiplier: multiplier, constant: constant, priority: priority)
 	}
 	
@@ -92,44 +91,46 @@ public struct LayoutItem {
 	}
 }
 
+
+
 public struct LAC {
 	let view: UIView
 	
-	func make(instructions: (LAC)->()) {
+	public func make(_ instructions: (LAC)->()) {
 		view.translatesAutoresizingMaskIntoConstraints = false
 		instructions(self)
 	}
 	
-	var left:		LayoutItem { return LayoutItem(view: view, attribute: .left) }
-	var right:		LayoutItem { return LayoutItem(view: view, attribute: .right) }
-	var top:		LayoutItem { return LayoutItem(view: view, attribute: .top) }
-	var bottom:		LayoutItem { return LayoutItem(view: view, attribute: .bottom) }
-//	var leading:	LayoutItem { return LayoutItem(view: view, attribute: .leading) }
-//	var trailing:	LayoutItem { return LayoutItem(view: view, attribute: .trailing) }
-	var width:		LayoutItem { return LayoutItem(view: view, attribute: .width) }
-	var height:		LayoutItem { return LayoutItem(view: view, attribute: .height) }
-	var centerX:	LayoutItem { return LayoutItem(view: view, attribute: .centerX) }
-	var centerY:	LayoutItem { return LayoutItem(view: view, attribute: .centerY) }
-//	var lastBaseline: LayoutItem { return LayoutItem(view: view, attribute: .lastBaseline) }
+	public var left:		LayoutItem { return LayoutItem(view: view, attribute: .left) }
+	public var right:		LayoutItem { return LayoutItem(view: view, attribute: .right) }
+	public var top:		LayoutItem { return LayoutItem(view: view, attribute: .top) }
+	public var bottom:		LayoutItem { return LayoutItem(view: view, attribute: .bottom) }
+//	public var leading:	LayoutItem { return LayoutItem(view: view, attribute: .leading) }
+//	public var trailing:	LayoutItem { return LayoutItem(view: view, attribute: .trailing) }
+	public var width:		LayoutItem { return LayoutItem(view: view, attribute: .width) }
+	public var height:		LayoutItem { return LayoutItem(view: view, attribute: .height) }
+	public var centerX:	LayoutItem { return LayoutItem(view: view, attribute: .centerX) }
+	public var centerY:	LayoutItem { return LayoutItem(view: view, attribute: .centerY) }
+//	public var lastBaseline: LayoutItem { return LayoutItem(view: view, attribute: .lastBaseline) }
 //	
 //	@available(iOS 8.0, *)
-//	var firstBaseline: LayoutItem			{ return LayoutItem(view: view, attribute: .firstBaseline) }
+//	public var firstBaseline: LayoutItem			{ return LayoutItem(view: view, attribute: .firstBaseline) }
 //	@available(iOS 8.0, *)
-//	var leftMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .leftMargin) }
+//	public var leftMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .leftMargin) }
 //	@available(iOS 8.0, *)
-//	var rightMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .rightMargin) }
+//	public var rightMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .rightMargin) }
 //	@available(iOS 8.0, *)
-//	var topMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .topMargin) }
+//	public var topMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .topMargin) }
 //	@available(iOS 8.0, *)
-//	var bottomMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .bottomMargin) }
+//	public var bottomMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .bottomMargin) }
 //	@available(iOS 8.0, *)
-//	var leadingMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .leadingMargin) }
+//	public var leadingMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .leadingMargin) }
 //	@available(iOS 8.0, *)
-//	var trailingMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .trailingMargin) }
+//	public var trailingMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .trailingMargin) }
 //	@available(iOS 8.0, *)
-//	var centerXWithinMargins: LayoutItem	{ return LayoutItem(view: view, attribute: .centerXWithinMargins) }
+//	public var centerXWithinMargins: LayoutItem	{ return LayoutItem(view: view, attribute: .centerXWithinMargins) }
 //	@available(iOS 8.0, *)
-//	var centerYWithinMargins: LayoutItem	{ return LayoutItem(view: view, attribute: .centerYWithinMargins) }
+//	public var centerYWithinMargins: LayoutItem	{ return LayoutItem(view: view, attribute: .centerYWithinMargins) }
 }
 
 
