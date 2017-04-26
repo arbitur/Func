@@ -7,6 +7,27 @@
 //
 
 import UIKit
+import SnapKit
+
+
+
+
+
+// SnapKit
+public extension UIView {
+	func add(view: UIView?, makeConstraints: (ConstraintMaker)->()) {
+		self.add(view: view)
+		view?.snp.makeConstraints(makeConstraints)
+	}
+}
+
+public extension UIStackView {
+	func add(arrangedView: UIView?, makeConstraints: (ConstraintMaker)->()) {
+		self.add(arrangedView: arrangedView)
+		arrangedView?.snp.makeConstraints(makeConstraints)
+	}
+}
+
 
 
 
