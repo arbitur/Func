@@ -50,12 +50,12 @@ public class ActivityIndicator: UIView {
 		UIWindow.current?.addSubview(self)
 		
 		self.alpha = 0
-		contentView.transform(scale:CGSize.zero + 1.2)
+		contentView.transform(scale: 1.2)
 		self.layoutIfNeeded()
 		
 		UIView.animate(withDuration: 0.4) {
 			self.alpha = 1
-			self.contentView.transform(scale:CGSize.zero + 1.0)
+			self.contentView.transform(scale: 1.0)
 		}
 	}
 	

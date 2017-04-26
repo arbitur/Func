@@ -38,12 +38,26 @@ public func points<T: FloatingNumber>(pixels v: T) -> T {
 
 
 public func boundary<T: Comparable>(value: T, min: T, max: T) -> T {
-	if value < min {
-		return min
+	switch true {
+		case value < min: return min
+		case value > max: return max
+		default			: return value
 	}
-	else if value > max {
-		return max
-	}
-	
-	return value
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

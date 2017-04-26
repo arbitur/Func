@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 	
 	s.subspec 'Core' do |cs|
 		cs.frameworks 	= 'UIKit', 'CoreLocation'
-		cs.source_files 	= 'source/*.swift', 'source/Classes/*.swift', 'source/Extensions/*.swift'
+		cs.source_files = 'source/*.swift', 'source/Classes/*.swift', 'source/Extensions/*.swift'
 		cs.resources 	= 'source/Assets/KeyboardControl/*'
 	end
 	

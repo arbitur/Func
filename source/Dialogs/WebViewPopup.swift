@@ -98,8 +98,8 @@ public class WebViewPopup: UIViewController {
 		super.viewWillAppear(animated)
 		
 		if animated {
-			contentView.transform(scale:CGSize.zero + 1.2)
-			contentView.transform(scale:CGSize.zero + 1.0)
+			contentView.transform(scale: 1.2)
+			contentView.transform(scale: 1.0)
 		}
 		
 		webView.load(URLRequest(url: url))

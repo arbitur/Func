@@ -125,7 +125,7 @@ public class AlertController: UIViewController {
 		super.viewWillAppear(animated)
 		
 		if animated {
-			contentView.transform(scale: .zero + 1.2)
+			contentView.transform(scale: 1.2)
 			self.view.layoutIfNeeded()
 
 			UIView.animate(
@@ -133,7 +133,7 @@ public class AlertController: UIViewController {
 				delay: 0,
 				options: [UIViewAnimationOptions.curveEaseIn],
 				animations: {
-					self.contentView.transform(scale: .zero + 1.0)
+					self.contentView.transform(scale: 1.0)
 				},
 				completion: nil)
 		}

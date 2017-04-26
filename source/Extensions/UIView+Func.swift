@@ -62,7 +62,7 @@ public extension UIView {
 	
 	/// Go down the hiarchy
 	var descendants: [UIView] {
-		return [self] + self.subviews.flatMap{ $0.descendants }
+		return [self] + self.subviews.flatMap { $0.descendants }
 	}
 	
 	/// Go up the hiarchy
@@ -87,12 +87,20 @@ public extension UIView {
 	
 	
 	
-	func transform(scale: CGSize) {
-		self.transform = CGAffineTransform(scaleX: scale.width, y: scale.height)
+	func transform(scaleX x: CGFloat, y: CGFloat) {
+		self.transform = CGAffineTransform(scaleX: x, y: y)
+	}
+	
+	func transform(scale: CGFloat) {
+		self.transform = CGAffineTransform(scaleX: scale, y: scale)
 	}
 	
 	func transform(rotation angle: CGFloat) {
 		self.transform = CGAffineTransform(rotationAngle: angle)
+	}
+	
+	func transform(moveX x: CGFloat, y: CGFloat) {
+		self.transform = CGAffineTransform(translationX: x, y: y)
 	}
 	
 	

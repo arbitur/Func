@@ -159,8 +159,8 @@ public extension UIImage {
 			return nil
 		}
 		
-		let hasBlur = radius > CGFloat(FLT_EPSILON)
-		let hasSaturation = fabs(saturation - 1.0) > CGFloat(FLT_EPSILON)
+		let hasBlur = radius > .ulpOfOne
+		let hasSaturation = fabs(saturation - 1.0) > .ulpOfOne
 		
 		let bitmapInfo = cgImage.bitmapInfo
 		let alphaInfo = CGImageAlphaInfo(rawValue: bitmapInfo.rawValue & CGBitmapInfo.alphaInfoMask.rawValue)
@@ -211,7 +211,7 @@ public extension UIImage {
 			
 			if hasBlur {
 				var inputRadius = radius * scale
-				if inputRadius - 2.0 < CGFloat(FLT_EPSILON) {
+				if inputRadius - 2.0 < .ulpOfOne {
 					inputRadius = 2.0
 				}
 				
@@ -315,8 +315,8 @@ public extension UIImage {
 			return nil
 		}
 		
-		let hasBlur = blurRadius > CGFloat(FLT_EPSILON)
-		let hasSaturationChange = fabs(saturationDeltaFactor - 1) > CGFloat(FLT_EPSILON)
+		let hasBlur = blurRadius > .ulpOfOne
+		let hasSaturationChange = fabs(saturationDeltaFactor - 1) > .ulpOfOne
 		
 		let inputCGImage = cgImage!
 		let inputImageScale = scale
@@ -364,10 +364,10 @@ public extension UIImage {
 			
 			if hasBlur {
 				var inputRadius = blurRadius * inputImageScale
-				if inputRadius - 2 < CGFloat(FLT_EPSILON) {
+				if inputRadius - 2 < .ulpOfOne {
 					inputRadius = 2
 				}
-				let _a = (inputRadius * CGFloat(3) * CGFloat(sqrt(2 * M_PI)) / 4 + 0.5)
+				let _a = (inputRadius * CGFloat(3) * CGFloat(sqrt(2 * .pi)) / 4 + 0.5)
 				var radius = UInt32(floor(_a / 2))
 				radius |= 1
 				
