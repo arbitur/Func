@@ -5,6 +5,7 @@ import SnapKit
 
 
 
+@available(*, deprecated)
 public class AlertController: UIViewController {
 	private let contentView = UIView(backgroundColor: UIColor.white.alpha(0.5))
 	private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))

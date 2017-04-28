@@ -76,6 +76,19 @@ open class RoundLabel: UILabel, BorderDrawable {
 
 
 @IBDesignable
+open class RoundButton: UIButton, BorderDrawable {
+	@IBInspectable public var borderWidth: CGFloat? { didSet { self.setNeedsLayout() } }
+	@IBInspectable public var borderColor: UIColor? { didSet { self.setNeedsLayout() } }
+	open override func layoutSubviews() {
+		super.layoutSubviews()
+		
+		self.roundCorners()
+		self.updateBorder(of: self)
+	}
+}
+
+
+@IBDesignable
 open class TintImageView: UIImageView {
 	open override var image: UIImage? {
 		get { return super.image }

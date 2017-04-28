@@ -49,14 +49,12 @@ public protocol IntegerNumber: Integer, Arithmetics {
 }
 public extension IntegerNumber {
 	var isEven: Bool  {
-		return self % 2 == 0
+		return (self & 1) == 0
 	}
 	
 	var isOdd: Bool  {
-		return self % 2 == 1
+		return (self & 1) == 1
 	}
-	
-	
 }
 
 
@@ -71,11 +69,18 @@ public extension FloatingNumber {
 			v = abs(v)
 			v += (Self.pi - v)*2
 		}
-		return v * (Self(180.0) / Self.pi)
+		return v * Self(57.29577951308232)//(Self(180.0) / Self.pi)
 	}
 	
 	var rad: Self {
-		return self * (Self.pi / Self(180.0))
+		return self * Self(0.017453292519943295)//(Self.pi / Self(180.0))
+	}
+	
+	func ifNan(_ value: Self) -> Self {
+		if self.isNaN {
+			return value
+		}
+		return self
 	}
 	
 	func shorten(decimals: Int) -> Self {

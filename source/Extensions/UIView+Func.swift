@@ -125,7 +125,7 @@ public extension UIView {
 		return Bundle.main.loadNibNamed(name, owner: owner, options: nil)?.first as? UIView
 	}
 	
-	convenience init(frame: CGRect = .zero, backgroundColor: UIColor) {
+	convenience init(frame: CGRect = .zero, backgroundColor: UIColor?) {
 		self.init(frame: frame)
 		self.backgroundColor = backgroundColor
 	}

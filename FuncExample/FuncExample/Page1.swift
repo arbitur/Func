@@ -20,7 +20,8 @@ class Page1: TableViewController {
 			("Alert", alert),
 			("ActionSheet", actionSheet),
 			("AlertDialog", alertDialog),
-			("SheetDialog", sheetDialog)
+			("SheetDialog", sheetDialog),
+			("Views", openViews)
 		]
 	}
 	
@@ -76,6 +77,12 @@ class Page1: TableViewController {
 //			.addDelete(title: "Delete", callback: {})
 			.addCancel(title: "Cancel")
 		self.navigationController?.present(sheet)
+	}
+	
+	
+	func openViews() {
+		let vc = ViewsVC()
+		self.navigationController?.pushViewController(vc, animated: true)
 	}
 }
 

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7F01D04E1E6EE9A50050B5B2 /* Func.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 7F01D04D1E6EE9A50050B5B2 /* Func.podspec */; };
+		7F20104F1EB1F6D7005BD378 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F20104E1EB1F6D7005BD378 /* Views.swift */; };
 		7F411D831E65CB3200153692 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F411D821E65CB3200153692 /* AppDelegate.swift */; };
 		7F411D851E65CB3200153692 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F411D841E65CB3200153692 /* TableViewController.swift */; };
 		7F411D881E65CB3200153692 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F411D861E65CB3200153692 /* Main.storyboard */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		1F0D896746B76223B2DC088A /* Pods_FuncExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FuncExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F01D04D1E6EE9A50050B5B2 /* Func.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Func.podspec; path = ../../Func.podspec; sourceTree = "<group>"; };
+		7F20104E1EB1F6D7005BD378 /* Views.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		7F411D7F1E65CB3200153692 /* FuncExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuncExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F411D821E65CB3200153692 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7F411D841E65CB3200153692 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				7F411D821E65CB3200153692 /* AppDelegate.swift */,
 				7F411D841E65CB3200153692 /* TableViewController.swift */,
 				7FE3EC8C1EA4DDF300347E88 /* Page1.swift */,
+				7F20104E1EB1F6D7005BD378 /* Views.swift */,
 				7F411D861E65CB3200153692 /* Main.storyboard */,
 				7F411D891E65CB3200153692 /* Assets.xcassets */,
 				7F411D8B1E65CB3200153692 /* LaunchScreen.storyboard */,
@@ -219,6 +222,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F20104F1EB1F6D7005BD378 /* Views.swift in Sources */,
 				7F411D851E65CB3200153692 /* TableViewController.swift in Sources */,
 				7F411D831E65CB3200153692 /* AppDelegate.swift in Sources */,
 				7FE3EC8D1EA4DDF300347E88 /* Page1.swift in Sources */,

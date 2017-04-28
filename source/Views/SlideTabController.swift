@@ -16,9 +16,9 @@ open class SlideTabController: UIViewController {
 	fileprivate let scrollView = ScrollView()
 	fileprivate let menu = Menu()
 	
-	var selectedIndex: Int { return menu.index }
+	public var selectedIndex: Int { return menu.index }
 	
-	var selectedViewController: UIViewController? {
+	public var selectedViewController: UIViewController? {
 		return self.childViewControllers[safe: menu.index]
 	}
 	open override var childViewControllerForStatusBarHidden: UIViewController? {

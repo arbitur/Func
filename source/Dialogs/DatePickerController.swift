@@ -12,7 +12,7 @@ import SnapKit
 
 
 
-
+@available(*, deprecated)
 class DatePickerController: UIViewController {
 	private let blurView1 = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
 	private let blurView2 = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))

@@ -20,7 +20,7 @@ public extension UIScreen {
 	
 	
 	
-	public enum ScreenSize: Int {
+	public enum ScreenSize: Int, Comparable {
 		case inch3_5
 		case inch4
 		case inch4_7
@@ -37,5 +37,27 @@ public extension UIScreen {
 				default					: self = .inch5_5
 			}
 		}
+		
+		public static func < (lhs: ScreenSize, rhs: ScreenSize) -> Bool {
+			return lhs.rawValue < rhs.rawValue
+		}
+		public static func > (lhs: ScreenSize, rhs: ScreenSize) -> Bool {
+			return lhs.rawValue > rhs.rawValue
+		}
+		
+		public static func <= (lhs: ScreenSize, rhs: ScreenSize) -> Bool {
+			return lhs.rawValue <= rhs.rawValue
+		}
+		public static func >= (lhs: ScreenSize, rhs: ScreenSize) -> Bool {
+			return lhs.rawValue >= rhs.rawValue
+		}
 	}
 }
+
+
+
+
+
+
+
+

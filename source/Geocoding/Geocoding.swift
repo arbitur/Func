@@ -14,18 +14,18 @@ import Alamofire
 
 
 
-class Geocoding {
-	static var key: String?
+public class Geocoding {
+	public static var key: String?
 	private static var baseUrl = "https://maps.googleapis.com/maps/api/geocode/json"
 	
 	
-	var components: [Component: CustomStringConvertible]?
-	var bounds: (bottomLeft: CLLocationCoordinate2D, topRight: CLLocationCoordinate2D)?
-	var region: String?
+	public var components: [Component: CustomStringConvertible]?
+	public var bounds: (bottomLeft: CLLocationCoordinate2D, topRight: CLLocationCoordinate2D)?
+	public var region: String?
 	// Reverse Geocoding
-	var resultTypes: [AddressType]?
-	var locations: [Location]?
-	var sensor: Bool?
+	public var resultTypes: [AddressType]?
+	public var locations: [Location]?
+	public var sensor: Bool?
 	
 	
 	private var apiUrl = Geocoding.baseUrl
@@ -40,7 +40,7 @@ class Geocoding {
 	
 	
 	
-	func fetch(completion: @escaping (GeoResponse?)->()) {
+	public func fetch(completion: @escaping (GeoResponse?)->()) {
 		if let address = address {
 			apiUrl += "?address=" + address
 			
@@ -98,7 +98,7 @@ class Geocoding {
 			
 			switch response.result {
 				case .success(let data):
-					let result = GeoResponse(json: data as! [String: Any])
+					let result = GeoResponse(json: data as! JSON)
 					completion(result)
 				
 				case .failure(let error):
@@ -111,13 +111,13 @@ class Geocoding {
 	
 	
 	
-	init(address: String) {
+	public init(address: String) {
 		self.address = address
 	}
-	init(coordinate: CLLocationCoordinate2D) {
+	public init(coordinate: CLLocationCoordinate2D) {
 		self.coordinate = coordinate
 	}
-	init(placeId: String) {
+	public init(placeId: String) {
 		self.placeId = placeId
 	}
 
@@ -129,7 +129,7 @@ class Geocoding {
 	
 	
 	
-	enum Status: String {
+	public enum Status: String {
 		case ok =               "OK"
 		case zeroResults =      "ZERO_RESULTS"
 		case overQueryLimit =   "OVER_QUERY_LIMIT"
@@ -138,11 +138,11 @@ class Geocoding {
 		case unknownError =     "UNKNOWN_ERROR"
 	}
 	
-	enum ResultError: Error {
+	public enum ResultError: Error {
 		case zero(String), overLimit(String), denied(String), invalid(String), unknown(String)
 	}
 	
-	enum AddressType: String {
+	public enum AddressType: String {
 		case streetAddress =    "street_address"                // a precise street address.
 		case route =            "route"                         // a named route (such as "US 101").
 		case intersection =     "intersection"                  // a major intersection, usually of two major roads.
@@ -174,14 +174,14 @@ class Geocoding {
 		case postalTown =       "postal_town"                   // indicates a grouping of geographic areas, such as locality and sublocality, used for mailing addresses in some countries
 	}
 	
-	enum Location: String {
+	public enum Location: String {
 		case roofTop =              "ROOFTOP"               // addresses for which we have location information accurate down to street address precision.
 		case rangeInterpolated =    "RANGE_INTERPOLATED"    // those that reflect an approximation (usually on a road) interpolated between two precise points (such as intersections). An interpolated range generally indicates that rooftop geocodes are unavailable for a street address.
 		case geometricCenter =      "GEOMETRIC_CENTER"      // geometric centers of a location such as a polyline (for example, a street) or polygon (region).
 		case approximate =          "APPROXIMATE"           // those that are characterized as approximate.
 	}
 	
-	enum Component: String {
+	public enum Component: String {
 		case route = "route"						// matches long or short name of a route.
 		case locality = "locality"					// matches against both locality and sublocality types.
 		case administrative = "administrative_area" // matches all the administrative_area levels.
@@ -189,105 +189,6 @@ class Geocoding {
 		case country = "country"					// matches a country name or a two letter ISO 3166-1 country code.
 	}
 }
-
-
-
-
-
-
-
-
-struct GeoResponse: Decodable {
-	let results: [Result]
-	let status: Geocoding.Status
-	init?(json: JSON) {
-		results = ("results" <~~ json)!
-		status = ("status" <~~ json)!
-	}
-	
-	
-	/// Get Result
-	subscript(_ type: Geocoding.AddressType) -> [Result]? {
-		return results.filter({ $0.types.contains(type) })
-	}
-	
-	
-	struct Result: Decodable {
-		let addressComponents: [AddressComponent]
-		let formattedAddress: String
-		let geometry: Geometry
-		let types: [Geocoding.AddressType]
-		let placeId: String
-		init?(json: JSON) {
-			addressComponents = ("address_components" <~~ json)!
-			formattedAddress = ("formatted_address" <~~ json)!
-			geometry = ("geometry" <~~ json)!
-			types = ("types" <~~ json)!
-			placeId = ("place_id" <~~ json)!
-		}
-		
-		
-		/// Get AddressComponents
-		subscript(_ type: Geocoding.AddressType) -> [AddressComponent]? {
-			return addressComponents.filter({ $0.types.contains(type) })
-		}
-		
-		
-		struct AddressComponent: Decodable {
-			let longName: String
-			let shortName: String
-			let types: [Geocoding.AddressType]
-			init?(json: JSON) {
-				longName = ("long_name" <~~ json)!
-				shortName = ("short_name" <~~ json)!
-				types = ("types" <~~ json)!
-			}
-		}
-		
-		struct Geometry: Decodable {
-			let location: Coordinate
-			let locationType: Geocoding.Location
-			let viewport: Viewport
-			init?(json: JSON) {
-				location = ("location" <~~ json)!
-				locationType = ("location_type" <~~ json)!
-				viewport = ("viewport" <~~ json)!
-			}
-			
-			
-			struct Coordinate: Decodable {
-				let lat: Double
-				let long: Double
-				let coordinate: CLLocationCoordinate2D
-				init?(json: JSON) {
-					lat = ("lat" <~~ json)!
-					long = ("lng" <~~ json)!
-					coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-				}
-			}
-			
-			struct Viewport: Decodable {
-				let southWest: Coordinate
-				let northEast: Coordinate
-				init?(json: JSON) {
-					southWest = ("southwest" <~~ json)!
-					northEast = ("northeast" <~~ json)!
-				}
-			}
-		}
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 

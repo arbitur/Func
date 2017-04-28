@@ -68,7 +68,7 @@ public enum TextAttributes {
 
 
 public extension Sequence where Iterator.Element == TextAttributes {
-	var attributes: [String: Any] {
+	var dictionary: [String: Any] {
 		var dict = [String: Any]()
 		
 		for attr in self {
@@ -84,14 +84,29 @@ public extension Sequence where Iterator.Element == TextAttributes {
 
 
 
-protocol TextAttributable: class {
+public protocol TextAttributable: class {
 	var text: String? {get set}
 	var attributedText: NSAttributedString? {get set}
 }
 
-extension TextAttributable {
+public extension TextAttributable {
 	func setAttributes(_ attributes: [TextAttributes]) {
-		attributedText = NSAttributedString(string: self.text ?? "", attributes: attributes.attributes)
+		attributedText = NSAttributedString(string: self.text ?? "", attributes: attributes.dictionary)
+	}
+	
+	// Add attributes to substring
+	func addAttributes(_ attributes: [TextAttributes], to part: String) {
+		if let attr = self.attributedText, let text = self.text, let range = text.range(of: part) {
+			let mattr = NSMutableAttributedString(attributedString: attr)
+			
+			let start = text.distance(from: text.startIndex, to: range.lowerBound)
+			let length = text.distance(from: text.startIndex, to: range.upperBound) - start
+			let range = NSMakeRange(start, length)
+			
+			mattr.addAttributes(attributes.dictionary, range: range)
+			
+			self.attributedText = mattr
+		}
 	}
 }
 

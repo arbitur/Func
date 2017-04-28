@@ -25,6 +25,7 @@ class AppDelegate: UIResponder {
 		
 		let vc = Page1()
 		let nc = UINavigationController(rootViewController: vc)
+		nc.navigationBar.isTranslucent = false
 		window.rootViewController = nc
 	}
 }
@@ -52,7 +53,17 @@ extension AppDelegate: UIApplicationDelegate {
 //		let test: Dict? = Archiver.unarchive(forKey: "test")
 //		print("Unarchived", test ?? "nil")
 		
+		let geocoding = Geocoding(address: "Östermalmstorg 1, Stockholm")
+		geocoding.fetch { response in
+			guard let response = response else { return }
+			print(response.status, response.results.first?.formattedAddress ?? "nan")
+		}
+		
 		loadWindow()
+		
+		print(Float.nan.ifNan(23.0))
+		print(Int(true))
+		print(Bool(0))
 		
 		return true
 	}
