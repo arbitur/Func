@@ -14,7 +14,7 @@ import UIKit
 
 public extension UILabel {
 	
-	convenience init(font: UIFont!, color: UIColor = .black, alignment: NSTextAlignment = .left, lines: Int = 0) {
+	convenience init(font: UIFont!, color: UIColor = .black, alignment: NSTextAlignment = .left, lines: Int = 1) {
 		self.init()
 		self.font = font
 		self.textColor = color

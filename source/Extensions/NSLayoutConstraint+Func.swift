@@ -14,11 +14,15 @@ import Foundation
 
 public extension NSLayoutConstraint {
 	func activate() {
-		self.isActive = true
+		if !self.isActive {
+			self.isActive = true
+		}
 	}
 	
 	func deactivate() {
-		self.isActive = false
+		if self.isActive {
+			self.isActive = false
+		}
 	}
 }
 
@@ -84,7 +88,14 @@ public struct LayoutItem {
 	}
 	
 	private func constraint(relation: NSLayoutRelation, item: LayoutItem?, multiplier: CGFloat, constant: CGFloat, priority: Float) -> NSLayoutConstraint {
-		let constraint = NSLayoutConstraint(item: view, attribute: attribute, relatedBy: relation, toItem: item?.view, attribute: item?.attribute ?? .notAnAttribute, multiplier: multiplier, constant: constant)
+		let constraint: NSLayoutConstraint
+		if let item = item {
+			view.translatesAutoresizingMaskIntoConstraints = false
+			constraint = NSLayoutConstraint(item: view, attribute: attribute, relatedBy: relation, toItem: item.view, attribute: item.attribute, multiplier: multiplier, constant: constant)
+		}
+		else {
+			constraint = NSLayoutConstraint(item: view, attribute: attribute, relatedBy: relation, toItem: nil, attribute: .notAnAttribute, multiplier: multiplier, constant: constant)
+		}
 		constraint.priority = priority
 		constraint.activate()
 		return constraint
@@ -97,7 +108,6 @@ public struct LAC {
 	let view: UIView
 	
 	public func make(_ instructions: (LAC)->()) {
-		view.translatesAutoresizingMaskIntoConstraints = false
 		instructions(self)
 	}
 	

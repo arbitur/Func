@@ -32,7 +32,7 @@ public class RadialGradientView: UIView {
 
 
 
-fileprivate class RadialGradientLayer: CALayer {
+open class RadialGradientLayer: CALayer {
 	var colorComponents: [(color: UIColor, location: CGFloat)]? {
 		didSet { self.setNeedsDisplay() }
 	}
@@ -48,13 +48,13 @@ fileprivate class RadialGradientLayer: CALayer {
 		self.needsDisplayOnBoundsChange = true
 	}
 	
-	required init?(coder aDecoder: NSCoder) {
+	public required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		self.needsDisplayOnBoundsChange = true
 	}
 	
 	
-	override func draw(in ctx: CGContext) {
+	override open func draw(in ctx: CGContext) {
 		guard let components = colorComponents, !components.isEmpty else { return super.draw(in: ctx) }
 		
 		let colors = components.map { $0.color.cgColor } as CFArray

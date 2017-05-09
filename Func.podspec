@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
 	s.name 		= 'Func'
-	s.version 	= '1.0.2'
+	s.version 	= '1.0.3'
 	s.author 	= { 'Arbitur' => 'arbiturr@gmail.com' }
 	s.license 	= { :type => 'MIT', :file => 'LICENSE' }
 	s.homepage 	= 'https://github.com/arbitur/Func'
@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 	
 	s.subspec 'Views' do |vs|
 		vs.frameworks 	= 'WebKit'
-		vs.source_files	= 'source/Views/*.swift', 'source/Dialogs/*.swift', 'source/Animation/*.swift'
+		vs.source_files	= 'source/Views/*.swift', 'source/Dialogs/*.swift'
 		vs.dependency 'Func/Core'
 		vs.dependency 'SnapKit', '~> 3.0'
 	end

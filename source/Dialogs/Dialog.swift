@@ -11,30 +11,36 @@ import UIKit
 
 
 public protocol DialogBuilder: class {
+	associatedtype T: UIViewController
 	var actions: [DialogAction] {get set}
-	var customView: UIView? {get set}
-	var customViewAddedToSuperview: ((Self)->())? {get set}
-	
-	func addAction(_ action: DialogAction) -> Self
+	var customViews: [UIView] {get set}
+	var didAddCustomViewToSuperview: ((T, UIView)->())? {get set}
 }
 
 public extension DialogBuilder {
-	public func addNormal(title: String, callback: @escaping Closure) -> Self {
-		return addAction(DialogAction(title: title, type: .normal, callback: callback))
+	public func addAction(_ action: DialogAction) {
+		actions.append(action)
 	}
 	
-	public func addDelete(title: String, callback: @escaping Closure) -> Self {
-		return addAction(DialogAction(title: title, type: .delete, callback: callback))
+	public func addNormal(title: String, callback: @escaping Closure) {
+		addAction(DialogAction(title: title, type: .normal, callback: callback))
 	}
 	
-	public func addCancel(title: String) -> Self {
-		return addAction(DialogAction(title: title, type: .cancel, callback: nil))
+	public func addDelete(title: String, callback: @escaping Closure) {
+		addAction(DialogAction(title: title, type: .delete, callback: callback))
 	}
 	
-	public func setCustomView(_ view: UIView, addedToSuperview: ((Self)->())? = nil) -> Self {
-		customView = view
-		customViewAddedToSuperview = addedToSuperview
-		return self
+	public func addCancel(title: String, callback: Closure? = nil) {
+		addAction(DialogAction(title: title, type: .cancel, callback: callback))
+	}
+	
+	public func addCustomView(_ view: UIView, at index: Int? = nil) {
+		if let index = index {
+			customViews.insert(view, at: index)
+		}
+		else {
+			customViews.append(view)
+		}
 	}
 }
 
@@ -46,14 +52,9 @@ public class DialogAction {
 	let callback: Closure?
 	
 	public init(title: String, type: DialogActionType, callback: Closure? = nil) {
-		print("DialogAction(\"\(title)\")")
 		self.title = title
 		self.type = type
 		self.callback = callback
-	}
-	
-	deinit {
-		print("~DialogAction")
 	}
 }
 
@@ -137,7 +138,7 @@ open class Dialog: UIViewController {
 	
 	
 	
-	public init(title: String?, subtitle: String?) {
+	public required init(title: String?, subtitle: String?) {
 		promptTitle = title
 		promptSubtitle = subtitle
 		

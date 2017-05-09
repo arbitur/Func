@@ -12,17 +12,17 @@ import UIKit
 
 
 
-public final class AlertDialog: Dialog {
-	public var customView: UIView?
-	public var customViewAddedToSuperview: ((AlertDialog) -> ())?
+open class AlertDialog: Dialog, DialogBuilder {
+	open var customViews = [UIView]()
+	public var didAddCustomViewToSuperview: ((AlertDialog, UIView)->())?
 	
 	
 	
-	override public func generateTitleLabel() -> UILabel	{
+	override open func generateTitleLabel() -> UILabel	{
 		return UILabel(font: UIFont.boldSystemFont(ofSize: 17), alignment: .center, lines: 0)
 	}
 	
-	override public func generateSubtitleLabel() -> UILabel	{
+	override open func generateSubtitleLabel() -> UILabel	{
 		return UILabel(font: UIFont.systemFont(ofSize: 13), alignment: .center, lines: 0)
 	}
 	
@@ -59,7 +59,7 @@ public final class AlertDialog: Dialog {
 	
 	
 	
-	public override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		self.modalPresentationStyle = .custom
@@ -77,8 +77,9 @@ public final class AlertDialog: Dialog {
 		promptContentView?.layoutMargins = UIEdgeInsets(vertical: 20, horizontal: 16)
 		promptContentView?.spacing = 3
 		
-		if let view = customView {
+		for view in customViews {
 			mainContentStack.add(arrangedView: view)
+			didAddCustomViewToSuperview?(self, view)
 		}
 		
 		if !actions.isEmpty {
@@ -116,19 +117,6 @@ public final class AlertDialog: Dialog {
 				lastButton = button
 			}
 		}
-	}
-	
-	public override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
-		customViewAddedToSuperview?(self)
-	}
-}
-
-extension AlertDialog: DialogBuilder {
-	public func addAction(_ action: DialogAction) -> AlertDialog {
-		actions ++= action
-		return self
 	}
 }
 

@@ -320,7 +320,10 @@ extension KeyboardControl: UITextFieldDelegate {
 	
 	@available(iOS 10.0, *)
 	public func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
-		delegate(for: textField)?.textFieldDidEndEditing?(textField, reason: reason)
+		let d = delegate(for: textField)
+		if d?.textFieldDidEndEditing?(textField) == nil {
+			d?.textFieldDidEndEditing?(textField, reason: reason)
+		}
 	}
 	
 	public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

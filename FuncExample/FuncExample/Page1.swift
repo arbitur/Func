@@ -44,74 +44,58 @@ class Page1: TableViewController {
 	}
 	
 	func alertDialog() {
-		let webView = WKWebView()
-		webView.load(URLRequest(url: "https://google.se"))
-		
 		let alert = AlertDialog(title: "Title", subtitle: "Subtitle")
-			.setCustomView(webView) {
-				webView.lac.height.equal(to: $0.view.lac.height, priority: 500)
-			}
-//			.addNormal(title: "Normal", callback: {})
-//			.addDelete(title: "Delete", callback: {})
-			.addCancel(title: "Cancel")
+		alert.addCancel(title: "Cancel")
 		self.navigationController?.present(alert)
 	}
 	
 	func sheetDialog() {
-//		let delegate = PickerDelegate(rows: (0..<5).map({ "Test \($0)" }))
-//		let picker = UIPickerView()
-//		picker.delegate = delegate
-//		picker.dataSource = delegate
-//		picker.lac.height.equal(to: 150)
-		
 		let webView = WKWebView()
 		webView.load(URLRequest(url: "https://google.se"))
 		
-		let sheet = SheetDialog(title: "Intervall", subtitle: nil)
-			.setCustomView(webView) {
-				webView.lac.height.equal(to: $0.view.lac.height, priority: 500)
-			}
-//			.addNormal(title: "Välj intervall") {
-//				print(delegate.rows[picker.selectedRow(inComponent: 0)])
+//		let sheet = SheetDialog(title: "Intervall", subtitle: nil)
+//			.setCustomView(webView) {
+//				webView.lac.height.equal(to: $0.view.lac.height, priority: 500)
 //			}
-//			.addDelete(title: "Delete", callback: {})
-			.addCancel(title: "Cancel")
+//			.addCancel(title: "Cancel")
+		
+//		let sheet = DateSheetDialog(title: "Datum", subtitle: nil)
+//		sheet.addNormal(title: "Välj Datum") { [unowned sheet] in
+//			print(sheet.datePicker.date)
+//		}
+//		sheet.datePicker.minimumDate = Date()
+		
+//		let sheet = WebSheetDialog(title: nil, subtitle: nil)
+//		sheet.load("https://google.se")
+		
+		let imageView = UIImageView(image: #imageLiteral(resourceName: "img_lights"))
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
+		let constraint = imageView.lac.height.equal(to: 0)
+		
+		let sheet = PickerSheetDialog(title: "Intervall", subtitle: nil)
+		sheet.addColumn(rows: ["En gång", "Varje vecka", "Varannan vecka", "Varje månad"])
+		sheet.addNormal(title: "Välj") { [unowned sheet] in
+			print(sheet.data[0][sheet.picker.selectedRow(inComponent: 0)])
+		}
+		sheet.didSelectRow { [unowned sheet] column, row in
+			print(sheet.data[column][row])
+			constraint.isActive = row != 0
+		}
+		sheet.addCustomView(imageView, at: 0)
+		sheet.didAddCustomViewToSuperview = { [unowned sheet] _, view in
+			if view === sheet.picker {
+				sheet.picker.selectRow(3, inComponent: 0, animated: false)
+			}
+		}
+		
 		self.navigationController?.present(sheet)
 	}
 	
-	
 	func openViews() {
+	
 		let vc = ViewsVC()
 		self.navigationController?.pushViewController(vc, animated: true)
-	}
-}
-
-
-class PickerDelegate: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
-	let rows: [String]
-	
-	init(rows: [String]) {
-		self.rows = rows
-	}
-	
-	deinit {
-		print("~PickerDelegate")
-	}
-	
-	func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
-	}
-	
-	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return rows.count
-	}
-	
-	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return rows[row]
-	}
-	
-	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		print(rows[row])
 	}
 }
 

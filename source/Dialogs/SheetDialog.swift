@@ -12,18 +12,18 @@ import UIKit
 
 
 
-public final class SheetDialog: Dialog {
+open class SheetDialog: Dialog, DialogBuilder {
 	private let contentStackView = UIStackView(axis: .vertical)
-	public override var contentView: UIView { return contentStackView }
+	open override var contentView: UIView { return contentStackView }
 	fileprivate var cancelActionView: UIView?
 	
-	public var customView: UIView?
-	public var customViewAddedToSuperview: ((SheetDialog) -> ())?
+	open var customViews = [UIView]()
+	open var didAddCustomViewToSuperview: ((SheetDialog, UIView) -> ())?
 	
 	
 	
 	
-	public override func drawBackgroundHole(bezier: UIBezierPath) {
+	open override func drawBackgroundHole(bezier: UIBezierPath) {
 		if !self.isBeingPresented && !self.isBeingDismissed {
 			let frame1 = contentStackView.convert(contentBlurView.frame, to: self.view)
 			bezier.append(UIBezierPath(roundedRect: frame1, cornerRadius: contentBlurView.cornerRadius))
@@ -36,7 +36,7 @@ public final class SheetDialog: Dialog {
 	}
 	
 	
-	override public func generateTitleLabel() -> UILabel {
+	override open func generateTitleLabel() -> UILabel {
 		if let _ = promptSubtitle {
 			let font = UIFont.boldSystemFont(ofSize: 13)
 			let color = UIColor(white: 0.56, alpha: 1)
@@ -45,17 +45,12 @@ public final class SheetDialog: Dialog {
 		return generateSubtitleLabel()
 	}
 	
-	override public func generateSubtitleLabel() -> UILabel {
+	override open func generateSubtitleLabel() -> UILabel {
 		let font = UIFont.systemFont(ofSize: 13)
 		let color = UIColor(white: 0.56, alpha: 1)
 		return UILabel(font: font, color: color, alignment: .center, lines: 0)
 	}
 	
-	class Button: UIButton {
-		deinit {
-			print("~Button")
-		}
-	}
 	private func generateActionButton(_ action: DialogAction) -> UIButton {
 		let color: UIColor
 		switch action.type {
@@ -71,7 +66,7 @@ public final class SheetDialog: Dialog {
 			case .cancel: font = UIFont.boldSystemFont(ofSize: 20)
 		}
 		
-		let button = Button(type: .system, target: self, action: #selector(actionPressed))
+		let button = UIButton(type: .system, target: self, action: #selector(actionPressed))
 		button.setTitleColor(color, for: .normal)
 		button.setTitle(action.title, for: .normal)
 		
@@ -93,7 +88,7 @@ public final class SheetDialog: Dialog {
 		self.dismiss(animated: true, completion: nil)
 	}
 	
-	public override func loadView() {
+	open override func loadView() {
 		super.loadView()
 		
 		contentStackView.spacing = 8
@@ -107,7 +102,7 @@ public final class SheetDialog: Dialog {
 		
 		contentStackView.add(arrangedView: contentBlurView)
 	}
-	public override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissSheet)))
@@ -120,8 +115,9 @@ public final class SheetDialog: Dialog {
 		promptContentView?.layoutMargins = UIEdgeInsets(horizontal: 16, top: 14, bottom: (promptSubtitle == nil) ? 14 : 25)
 		promptContentView?.spacing = 12
 		
-		if let view = customView {
+		for view in customViews {
 			mainContentStack.add(arrangedView: view)
+			didAddCustomViewToSuperview?(self, view)
 		}
 		
 		if !actions.isEmpty {
@@ -178,19 +174,6 @@ public final class SheetDialog: Dialog {
 			}
 			setCancelAction()
 		}
-	}
-	
-	public override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
-		customViewAddedToSuperview?(self)
-	}
-}
-
-extension SheetDialog: DialogBuilder {
-	public func addAction(_ action: DialogAction) -> SheetDialog {
-		actions.append(action)
-		return self
 	}
 }
 

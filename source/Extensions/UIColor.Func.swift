@@ -32,38 +32,17 @@ public extension UIColor {
 		return self.withAlphaComponent(alpha)
 	}
 	
-	/// -1.0...1.0
-//	func brightness(_ change: CGFloat) -> UIColor {
-//		let comp = self.cgColor.components!
-//		var components = [comp[0], comp[1], comp[2]]
-//		
-//		for i in 0..<components.count {
-//			let v = components[i] + change
-//			
-//			if v < 0 {
-//				components[i] = 0
-//			}
-//			else if v > 1 {
-//				components[i] = 1
-//			}
-//			else {
-//				components[i] = v
-//			}
-//		}
-//		
-//		return UIColor(red: components[0], green: components[1], blue: components[2], alpha: comp[3])
-//	}
-	
 	func lightened(by v: CGFloat) -> UIColor {
 		let (h, s, l) = self.hsl
 		let delta = 1.0 - l
-		return UIColor(hue: h, saturation: s, lightness: l + delta * v, alpha: self.rgba.a)
+		return UIColor(hue: h/360, saturation: s, lightness: l + delta * v, alpha: self.rgba.a)
 	}
 	
 	func darkened(by v: CGFloat) -> UIColor {
+		defer {print()}
 		let (h, s, l) = self.hsl
 		let delta = l
-		return UIColor(hue: h, saturation: s, lightness: l - delta * v, alpha: self.rgba.a)
+		return UIColor(hue: h/360, saturation: s, lightness: l - delta * v, alpha: self.rgba.a)
 	}
 	
 	
@@ -78,27 +57,38 @@ public extension UIColor {
 	}
 	
 	
-	
+	/// All parameters range 0...1
 	convenience init(hue h: CGFloat, saturation s: CGFloat, lightness l: CGFloat, alpha: CGFloat) {
-		let C = s * (1.0 - abs(l * 2.0 - 1.0))
-		let H = h/60.0
-		let X = C * (1.0 - abs(H.remainder(dividingBy: 2) - 1))
-		let m = l - C / 2
+		var r: CGFloat = 0.0
+		var g: CGFloat = 0.0
+		var b: CGFloat = 0.0
 		
-		var rgb: (r: CGFloat, g: CGFloat, b: CGFloat)
-		switch H {
-		case 0..<1	: rgb = (C, X, 0)
-		case 1..<2	: rgb = (X, C, 0)
-		case 2..<3	: rgb = (0, C, X)
-		case 3..<4	: rgb = (0, X, C)
-		case 4..<5	: rgb = (X, 0, C)
-		default		: rgb = (C, 0, X)
+		if s == 0.0 {
+			r = l
+			g = l
+			b = l
 		}
-		rgb.r += m
-		rgb.g += m
-		rgb.b += m
-		
-		self.init(red: rgb.r, green: rgb.g, blue: rgb.b, alpha: alpha)
+		else {
+			func hueToRGB(p: CGFloat, q: CGFloat, t: CGFloat) -> CGFloat {
+				var t = t
+				if t < 0 { t += 1 }
+				if t > 1 { t -= 1 }
+				switch true {
+					case t < 1/6: return p + (q - p) * 6 * t
+					case t < 1/2: return q
+					case t < 2/3: let fuckingApple = (2/3 - t); return  p + (q - p) * fuckingApple * 6
+					default		: return p
+				}
+			}
+			
+			let q = (l < 0.5) ? (l * (1 + s)) : (l + s - l*s)
+			let p = 2 * l - q
+			r = hueToRGB(p: p, q: q, t: h + 1/3)
+			g = hueToRGB(p: p, q: q, t: h)
+			b = hueToRGB(p: p, q: q, t: h - 1/3)
+		}
+		print(r,g,b,alpha)
+		self.init(red: r, green: g, blue: b, alpha: alpha)
 	}
 }
 

@@ -175,9 +175,9 @@ public struct StringIndex {
 
 
 
-
+/// Left exists inside right
 public func ?== (s1: String, s2: String) -> Bool {
-	return s1.contains(s2)
+	return s2.contains(s1)
 }
 
 
