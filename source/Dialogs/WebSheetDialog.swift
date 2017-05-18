@@ -19,10 +19,6 @@ public final class WebSheetDialog: SheetDialog, WKNavigationDelegate {
 	var activityIndicator: UIActivityIndicatorView?
 	
 	
-	public func load(_ url: URL) {
-		webView.load(URLRequest(url: url))
-	}
-	
 	
 	public override func viewDidLoad() {
 		activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
@@ -44,14 +40,21 @@ public final class WebSheetDialog: SheetDialog, WKNavigationDelegate {
 	}
 	
 	
+	public convenience init(title: String? = nil, subtitle: String? = nil, html: String) {
+		self.init(title: title, subtitle: subtitle)
+		webView.loadHTMLString(html, baseURL: nil)
+	}
+	
 	public convenience init(title: String? = nil, subtitle: String? = nil, url: URL) {
 		self.init(title: title, subtitle: subtitle)
-		load(url)
+		webView.load(URLRequest(url: url))
 	}
+	
 	public required init(title: String?, subtitle: String?) {
 		super.init(title: title, subtitle: subtitle)
 		customViews.append(webView)
 	}
+	
 	public override init(nibName: String?, bundle: Bundle?) { fatalError() }
 	public required init?(coder aDecoder: NSCoder) { fatalError() }
 	
