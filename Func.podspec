@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
 	s.name 		= 'Func'
-	s.version 	= '1.0.3'
+	s.version 	= '1.0.4'
 	s.author 	= { 'Arbitur' => 'arbiturr@gmail.com' }
 	s.license 	= { :type => 'MIT', :file => 'LICENSE' }
 	s.homepage 	= 'https://github.com/arbitur/Func'
