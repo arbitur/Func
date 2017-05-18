@@ -14,6 +14,8 @@ public protocol DialogBuilder: class {
 	associatedtype T: UIViewController
 	var actions: [DialogAction] {get set}
 	var customViews: [UIView] {get set}
+	var didDismiss: Closure? {get set}
+	
 	var didAddCustomViewToSuperview: ((T, UIView)->())? {get set}
 }
 
@@ -22,16 +24,16 @@ public extension DialogBuilder {
 		actions.append(action)
 	}
 	
-	public func addNormal(title: String, callback: @escaping Closure) {
-		addAction(DialogAction(title: title, type: .normal, callback: callback))
+	public func addNormal(title: String, action: @escaping Closure) {
+		addAction(DialogAction(title: title, type: .normal, action: action))
 	}
 	
-	public func addDelete(title: String, callback: @escaping Closure) {
-		addAction(DialogAction(title: title, type: .delete, callback: callback))
+	public func addDelete(title: String, action: @escaping Closure) {
+		addAction(DialogAction(title: title, type: .delete, action: action))
 	}
 	
-	public func addCancel(title: String, callback: Closure? = nil) {
-		addAction(DialogAction(title: title, type: .cancel, callback: callback))
+	public func addCancel(title: String, action: Closure? = nil) {
+		addAction(DialogAction(title: title, type: .cancel, action: action))
 	}
 	
 	public func addCustomView(_ view: UIView, at index: Int? = nil) {
@@ -42,6 +44,10 @@ public extension DialogBuilder {
 			customViews.append(view)
 		}
 	}
+	
+	public func setDidDismiss(_ action: Closure?) {
+		self.didDismiss = action
+	}
 }
 
 
@@ -49,12 +55,12 @@ public extension DialogBuilder {
 public class DialogAction {
 	let title: String
 	let type: DialogActionType
-	let callback: Closure?
+	let action: Closure?
 	
-	public init(title: String, type: DialogActionType, callback: Closure? = nil) {
+	public init(title: String, type: DialogActionType, action: Closure? = nil) {
 		self.title = title
 		self.type = type
-		self.callback = callback
+		self.action = action
 	}
 }
 
@@ -76,14 +82,15 @@ open class Dialog: UIViewController {
 	public final var promptContentView: UIStackView?
 	
 	public final var actions = [DialogAction]()
+	public final var didDismiss: Closure?
 	
 	
 	
 	
 	
 	public final func actionPressed(_ view: UIView) {
-		actions[view.tag].callback?()
-		self.dismiss(animated: true, completion: nil)
+		self.dismiss(animated: true, completion: didDismiss)
+		actions[view.tag].action?()
 	}
 	
 	open func drawBackgroundHole(bezier: UIBezierPath) {

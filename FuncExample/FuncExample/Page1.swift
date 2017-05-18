@@ -76,16 +76,16 @@ class Page1: TableViewController {
 		let sheet = PickerSheetDialog(title: "Intervall", subtitle: nil)
 		sheet.addColumn(rows: ["En gång", "Varje vecka", "Varannan vecka", "Varje månad"])
 		sheet.addNormal(title: "Välj") { [unowned sheet] in
-			print(sheet.data[0][sheet.picker.selectedRow(inComponent: 0)])
+			print(sheet.data[0][sheet.pickerView.selectedRow(inComponent: 0)])
 		}
-		sheet.didSelectRow { [unowned sheet] column, row in
+		sheet.setDidSelectRow { [unowned sheet] column, row in
 			print(sheet.data[column][row])
 			constraint.isActive = row != 0
 		}
 		sheet.addCustomView(imageView, at: 0)
 		sheet.didAddCustomViewToSuperview = { [unowned sheet] _, view in
-			if view === sheet.picker {
-				sheet.picker.selectRow(3, inComponent: 0, animated: false)
+			if view === sheet.pickerView {
+				sheet.pickerView.selectRow(3, inComponent: 0, animated: false)
 			}
 		}
 		

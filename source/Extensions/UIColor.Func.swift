@@ -87,7 +87,7 @@ public extension UIColor {
 			g = hueToRGB(p: p, q: q, t: h)
 			b = hueToRGB(p: p, q: q, t: h - 1/3)
 		}
-		print(r,g,b,alpha)
+
 		self.init(red: r, green: g, blue: b, alpha: alpha)
 	}
 }
@@ -131,6 +131,7 @@ public extension UIColor {
 		return (h, s, l)
 	}
 	
+	@available(*, deprecated: 1.0.3, message: "Will be removed or modified")
 	var hsb: (h: CGFloat, s: CGFloat, l: CGFloat) {
 		let (r, g, b, _) = self.rgba
 		
