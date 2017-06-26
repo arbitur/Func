@@ -18,7 +18,7 @@ public extension String {
 	}
 	
 	var reversed: String {
-		return self.characters.reversed().map({ String($0) }).joined()
+		return String(self.characters.reversed())
 	}
 	
 	
@@ -66,6 +66,7 @@ public extension String {
 		return self.replacingOccurrences(of: str, with: rep, options: [], range: nil)
 	}
 	
+	@discardableResult
 	mutating func replace(_ str: String, with rep: String) -> Bool {
 		let temp = self
 		self = self.replaced(str, with: rep)
@@ -80,7 +81,7 @@ public extension String {
 	
 	
 	
-	func group(separator: String, size: Int) -> String {
+	func grouped(separator: String, size: Int) -> String {
 		var holder = [String]()
 		for (i, char) in self.characters.enumerated() {
 			let index = (i) / size

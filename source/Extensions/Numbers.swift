@@ -45,8 +45,7 @@ public protocol Arithmetics: NumberType {
 
 
 
-public protocol IntegerNumber: Integer, Arithmetics {
-}
+public protocol IntegerNumber: Integer, Arithmetics {}
 public extension IntegerNumber {
 	var isEven: Bool  {
 		return (self & 1) == 0
@@ -59,7 +58,6 @@ public extension IntegerNumber {
 
 
 public protocol FloatingNumber: FloatingPoint, Arithmetics {}
-
 public extension FloatingNumber {
 	static var max: Self { return self.greatestFiniteMagnitude }
 	

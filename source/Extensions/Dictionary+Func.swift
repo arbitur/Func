@@ -26,18 +26,17 @@ public extension Dictionary {
 
 
 public extension Dictionary where Key == String {
-	func keyPath<T>(path: String, separator: String = ".") -> T? {
+	func valueForPath<T>(_ path: String, separator: String = ".") -> T? {
 		var value: Any = self
-		
-		for part in path.components(separatedBy: separator) {
-			if let dict = value as? [String: Any], let v = dict[part] {
+		for part in path.split(separator) {
+			if let dict = value as? Dict, let v = dict[part] {
 				value = v
 			}
-			else if let array = value as? [Any], let index = Int(part) {
-				value = array[index]
+			else if let arr = value as? [Any], let index = Int(part), let v = arr[safe: index] {
+				value = v
 			}
 			else {
-				break//TODO: Migh be dangerous
+				return nil
 			}
 		}
 		
