@@ -55,7 +55,7 @@ extension AppDelegate: UIApplicationDelegate {
 		
 		let geocoding = Geocoding(address: "Östermalmstorg 1, Stockholm")
 		geocoding.fetch { response in
-			guard let response = response else { return }
+			guard let response = response else { return print("No results") }
 			print(response.status, response.results.first?.formattedAddress ?? "nan")
 		}
 		

@@ -35,11 +35,11 @@ public struct GeoResponse: Decodable {
 		public let geometry: Geometry
 		public let types: [Geocoding.AddressType]
 		public let placeId: String
-		public  init?(json: JSON) {
+		public init?(json: JSON) {
 			addressComponents = ("address_components" <~~ json)!
 			formattedAddress = ("formatted_address" <~~ json)!
 			geometry = ("geometry" <~~ json)!
-			types = ("types" <~~ json)!
+			types = ("types" <~~ json) ?? []
 			placeId = ("place_id" <~~ json)!
 		}
 		
