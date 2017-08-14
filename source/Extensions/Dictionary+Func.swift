@@ -16,18 +16,34 @@ public extension Dictionary {
 	var key: Key { return self.keys.first! }
 	var value: Value { return self.values.first! }
 	
-	subscript(index: Int) -> (key: Key, value: Value)? {
+	
+	subscript(index: Int) -> Element? {
 		if let key = Array(self.keys)[safe: index] {
 			return (key, self[key]!)
 		}
 		return nil
 	}
+	
+	
+	func merged(with: [Key: Value]) -> [Key: Value] {
+		var d = self
+		for (k, v) in with {
+			d[k] = v
+		}
+		return d
+	}
+	
+	
+	mutating func merge(with: [Key: Value]) {
+		self = self.merged(with: with)
+	}
 }
 
 
 public extension Dictionary where Key == String {
-	func valueForPath<T>(_ path: String, separator: String = ".") -> T? {
+	func valueFor<T>(path: String, separator: String = ".") -> T? {
 		var value: Any = self
+		
 		for part in path.split(separator) {
 			if let dict = value as? Dict, let v = dict[part] {
 				value = v
@@ -62,15 +78,11 @@ public typealias Dict = [String: Any]
 
 
 public func + <T, U>(lhs: [T: U], rhs: [T: U]) -> [T: U] {
-	var d = lhs
-	for (k, v) in rhs {
-		d[k] = v
-	}
-	return d
+	return lhs.merged(with: rhs)
 }
 
 public func += <T, U>(lhs: inout [T: U], rhs: [T: U]) {
-	lhs = lhs + rhs
+	lhs.merge(with: rhs)
 }
 
 

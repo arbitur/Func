@@ -17,6 +17,7 @@ public extension Array {
 		return self[Random.range(0..<self.count)]
 	}
 	
+	// Has to be in Array because only Array has the [index] subscript
 	subscript (safe index: Int) -> Element? {
 		if self.indices.contains(index) {
 			return self[index]
@@ -45,12 +46,13 @@ public extension Array {
 	}
 	
 	
-	
+	/// Removes all from index
 	mutating func remove(from index: Int) {
 		let n = self.count - index
 		self.removeLast(n)
 	}
 	
+	/// Removes all to index
 	mutating func remove(to n: Int) {
 		self.removeFirst(n)
 	}
@@ -58,29 +60,17 @@ public extension Array {
 
 
 
-public extension Array where Element: IntegerNumber {
-	func sum() -> Element? {
+public extension Collection where Iterator.Element: IntegerNumber {
+	func sum() -> Iterator.Element? {
 		if self.isEmpty { return nil }
-		
-		var sum = Element(0)
-		self.forEach {
-			sum = sum + $0
-		}
-		
-		return sum
+		return self.reduce(Iterator.Element(0), +)
 	}
 }
 
-public extension Array where Element: FloatingNumber {
-	func sum() -> Element {
+public extension Collection where Iterator.Element: FloatingNumber {
+	func sum() -> Iterator.Element {
 		if self.isEmpty { return .nan }
-		
-		var sum = Element(0)
-		self.forEach {
-			sum = sum + $0
-		}
-		
-		return sum
+		return self.reduce(Iterator.Element(0), +)
 	}
 }
 
@@ -108,9 +98,21 @@ public extension Array where Element: Equatable {
 
 
 
-public extension Array where Element == String {
+public extension Collection where Iterator.Element == String {
 	func joined(by separator: String) -> String {
 		return self.joined(separator: separator)
+	}
+}
+
+
+
+public extension Array where Element: ExpressibleByDictionaryLiteral, Element.Key: Hashable {
+	func merged() -> Dictionary<Element.Key, Element.Value> {
+		var d = Dictionary<Element.Key, Element.Value>()
+		for case let dd as Dictionary<Element.Key, Element.Value> in self {
+			d += dd
+		}
+		return d
 	}
 }
 
@@ -129,6 +131,7 @@ public func --= <T: Equatable>(left: inout [T], right: T) {
 	left.remove(element: right)
 }
 
+/// Checks if obj exists in arr
 public func ?== <T: Equatable>(obj: T, arr: [T]) -> Bool {
 	return arr.contains(obj)
 }

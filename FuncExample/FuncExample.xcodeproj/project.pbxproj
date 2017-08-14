@@ -20,7 +20,7 @@
 
 /* Begin PBXFileReference section */
 		1F0D896746B76223B2DC088A /* Pods_FuncExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FuncExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7F01D04D1E6EE9A50050B5B2 /* Func.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Func.podspec; path = ../../Func.podspec; sourceTree = "<group>"; };
+		7F01D04D1E6EE9A50050B5B2 /* Func.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; name = Func.podspec; path = ../../Func.podspec; sourceTree = "<group>"; };
 		7F20104E1EB1F6D7005BD378 /* Views.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		7F411D7F1E65CB3200153692 /* FuncExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuncExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F411D821E65CB3200153692 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -182,7 +182,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		504049993B61E815ED49398A /* [CP] Copy Pods Resources */ = {

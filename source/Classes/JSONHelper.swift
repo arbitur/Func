@@ -13,10 +13,10 @@ import Foundation
 
 
 public class JSONHelper {
-	public typealias JSONData = (dictionary: [String: Any]?, array: [Any]?)
+	public typealias JSONData = (dictionary: Dict?, array: [Any]?)
 	
 	
-	public static func decode(data: Data, print: Bool = false) -> JSONData? {
+	public static func decode(data: Data, print: Bool = false) throws -> JSONData {
 		if print {
 			Swift.print()
 			Swift.print("Decode JSON:", String(data)!)
@@ -24,20 +24,19 @@ public class JSONHelper {
 		
 		do {
 			let json = try JSONSerialization.jsonObject(with: data, options: [])
-			return (json as? [String: Any], json as? [Any])
+			return (json as? Dict, json as? [Any])
 		}
 		catch {
 			Swift.print("Failed to decode JSON:", error.localizedDescription)
-			return nil
+			throw error
 		}
 	}
 	
-	public static func decode(string: String, print: Bool = false) -> JSONData? {
+	public static func decode(string: String, print: Bool = false) throws -> JSONData {
 		if let data = Data(string) {
-			return decode(data: data, print: print)
+			return try decode(data: data, print: print)
 		}
-		
-		return nil
+		throw NSError()
 	}
 	
 	public static func encode(obj: Any, print: Bool = false) -> String? {

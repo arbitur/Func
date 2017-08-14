@@ -127,7 +127,7 @@ public extension Date {
 		case dateTimeSec
 		case custom(String)
 		
-		fileprivate var format: String {
+		public var format: String {
 			switch self {
 				case .date:				return "yyyy-MM-dd"
 				case .time:				return "HH:mm"

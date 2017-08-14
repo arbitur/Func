@@ -4,5 +4,10 @@ platform :ios, '9.0'
 target 'FuncExample' do
 	use_frameworks!
 	
-	pod 'Func', :path => '../source'
+	pod 'Func', :path => '../'
+	pod 'Func/Views', :path => '../'
+	pod 'Func/Geocoding', :path => '../'
+	pod 'Func/API', :path => '../'
+	pod 'Func/JSON', :path => '../'
+	
 end
