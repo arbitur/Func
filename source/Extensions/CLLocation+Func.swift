@@ -13,6 +13,7 @@ import CoreLocation
 
 
 public extension CLLocation {
+	
 	convenience init(coordinate: CLLocationCoordinate2D) {
 		self.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
 	}
@@ -22,6 +23,7 @@ public extension CLLocation {
 
 
 extension CLLocationCoordinate2D: CustomStringConvertible, Equatable {
+	
 	public var description: String {
 		return "\(self.latitude),\(self.longitude)"
 	}
@@ -58,7 +60,7 @@ extension CLLocationCoordinate2D: CustomStringConvertible, Equatable {
 	
 	
 	public static func == (coord1: CLLocationCoordinate2D, coord2: CLLocationCoordinate2D) -> Bool {
-		return coord1.latitude.description == coord2.latitude.description && coord1.longitude.description == coord2.longitude.description
+		return coord1.description == coord2.description
 	}
 }
 

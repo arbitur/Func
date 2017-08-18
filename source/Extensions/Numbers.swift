@@ -67,11 +67,11 @@ public extension FloatingNumber {
 			v = abs(v)
 			v += (Self.pi - v)*2
 		}
-		return v * Self(57.29577951308232)//(Self(180.0) / Self.pi)
+		return v * (Self(180.0) / Self.pi)
 	}
 	
 	var rad: Self {
-		return self * Self(0.017453292519943295)//(Self.pi / Self(180.0))
+		return Self.pi / Self(180.0)
 	}
 	
 	func ifNan(_ value: Self) -> Self {

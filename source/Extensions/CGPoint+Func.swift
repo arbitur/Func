@@ -40,20 +40,8 @@ public extension CGPoint {
 		self.init(x: cos(angle) * magnitude, y: sin(angle) * magnitude)
 	}
 	
-	init(_ x: CGFloat, _ y: CGFloat) {
-		self.init(x: x, y: y)
-	}
-	
-	init(_ x: Double, _ y: Double) {
-		self.init(x: x, y: y)
-	}
-	
-	init(_ x: Float, _ y: Float) {
-		self.init(x: CGFloat(x), y: CGFloat(y))
-	}
-	
-	init(_ x: Int, _ y: Int) {
-		self.init(x: x, y: y)
+	init(_ x: NumberType, _ y: NumberType) {
+		self.init(x: x.toDouble(), y: y.toDouble())
 	}
 }
 

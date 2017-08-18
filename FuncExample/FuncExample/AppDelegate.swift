@@ -94,7 +94,7 @@ extension AppDelegate: UIApplicationDelegate {
 }
 
 
-struct User: Decodable {
+struct User: Func.Decodable {
 	let id: Int
 	let name: String
 	let email: String?
@@ -119,7 +119,7 @@ struct User: Decodable {
 }
 
 
-struct Test: Decodable {
+struct Test: Func.Decodable {
 	let int: Int
 	let string: String?
 	let bool: Bool
@@ -140,7 +140,7 @@ struct Test: Decodable {
 	}
 }
 
-struct Test2: Decodable {
+struct Test2: Func.Decodable {
 	let a: Int
 	
 	init?(json: Dict) {

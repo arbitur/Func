@@ -25,11 +25,11 @@ internal let funcDirectory = "se.arbitur.Func"
 
 
 
-public func pixels<T: FloatingNumber>(points v: T) -> T {
+public func pixels <T> (points v: T) -> T where T: FloatingNumber {
 	return v * T(UIScreen.main.scale)
 }
 
-public func points<T: FloatingNumber>(pixels v: T) -> T {
+public func points <T> (pixels v: T) -> T where T: FloatingNumber {
 	return v / T(UIScreen.main.scale)
 }
 
@@ -37,9 +37,16 @@ public func points<T: FloatingNumber>(pixels v: T) -> T {
 
 
 
-public func boundary<T: Comparable>(value: T, min: T, max: T) -> T {
+public func boundary <T> (_ value: T, min: T, max: T) -> T where T: Comparable {
 	switch true {
 		case value < min: return min
+		case value > max: return max
+		default			: return value
+	}
+}
+
+public func boundary <T> (_ value: T, max: T) -> T where T: Comparable {
+	switch true {
 		case value > max: return max
 		default			: return value
 	}

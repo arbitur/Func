@@ -13,8 +13,10 @@ import Foundation
 
 
 public extension Dictionary {
+	
 	var key: Key { return self.keys.first! }
 	var value: Value { return self.values.first! }
+	
 	
 	
 	subscript(index: Int) -> Element? {
@@ -27,20 +29,21 @@ public extension Dictionary {
 	
 	func merged(with: [Key: Value]) -> [Key: Value] {
 		var d = self
-		for (k, v) in with {
-			d[k] = v
-		}
+		d.merge(with: with)
 		return d
 	}
 	
 	
 	mutating func merge(with: [Key: Value]) {
-		self = self.merged(with: with)
+		for (k, v) in with {
+			self[k] = v
+		}
 	}
 }
 
 
 public extension Dictionary where Key == String {
+	
 	func valueFor<T>(path: String, separator: String = ".") -> T? {
 		var value: Any = self
 		
@@ -61,6 +64,7 @@ public extension Dictionary where Key == String {
 }
 
 extension Dictionary: Equatable {
+	
 	public static func == (lhs: [Key: Value], rhs: [Key: Value]) -> Bool {
 		return NSDictionary(dictionary: lhs).isEqual(to: rhs)
 	}
