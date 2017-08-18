@@ -98,7 +98,10 @@ public extension API {
 	*/
 	@discardableResult
 	static func fetch <R> (_ requestable: R, success: @escaping (R.M) -> (), failure: @escaping (String) -> (), finally: Closure? = nil) -> Alamofire.Request where R: Requestable {
-		let request = requestable.request(api: Self.self)
+		let url = baseUrl + "/" + requestable.url
+		let headers = [baseHeaders, requestable.headers].flatMap { $0 }.merged()
+		
+		let request = try! requestable.request(url: url, headers: headers) //TODO
 		
 		log(request: request)
 		
