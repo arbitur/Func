@@ -20,11 +20,11 @@ public extension CGSize {
 	
 	
 	
-	init(_ width: NumberType, _ height: NumberType) {
+	init <T> (_ width: T, _ height: T) where T: NumberType {
 		self.init(width: width.toDouble(), height: height.toDouble())
 	}
 	
-	init(_ size: NumberType) {
+	init <T> (_ size: T) where T: NumberType {
 		self.init(size, size)
 	}
 }

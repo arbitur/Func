@@ -40,7 +40,7 @@ public extension CGPoint {
 		self.init(x: cos(angle) * magnitude, y: sin(angle) * magnitude)
 	}
 	
-	init(_ x: NumberType, _ y: NumberType) {
+	init <T> (_ x: T, _ y: T) where T: NumberType {
 		self.init(x: x.toDouble(), y: y.toDouble())
 	}
 }

@@ -59,13 +59,13 @@ public extension CGRect {
 	}
 	
 	// Fuck you sincerely, Apple
-	var w: CGFloat {
+	var widt: CGFloat {
 		get { return self.size.width }
 		set { self.size.width = newValue }
 	}
 	
 	// Fuck you sincerely, Apple
-	var h: CGFloat {
+	var heigt: CGFloat {
 		get { return self.size.height }
 		set { self.size.height = newValue }
 	}

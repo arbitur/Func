@@ -152,18 +152,20 @@ public extension Date {
 		case hour(Int)
 		case minute(Int)
 		case second(Int)
+		case millisecond(Int)
 		
 		
 		fileprivate var properties: (component: Calendar.Component, value: Int) {
 			switch self {
-				case .year(let v):		return (.year, v)
-				case .month(let v):		return (.month, v)
-				case .week(let v):		return (.weekOfYear, v)
-				case .day(let v):		return (.day, v)
+				case .year(let v)		: return (.year, v)
+				case .month(let v)		: return (.month, v)
+				case .week(let v)		: return (.weekOfYear, v)
+				case .day(let v)		: return (.day, v)
 				
-				case .hour(let v):		return (.hour, v)
-				case .minute(let v):	return (.minute, v)
-				case .second(let v):	return (.second, v)
+				case .hour(let v)		: return (.hour, v)
+				case .minute(let v)		: return (.minute, v)
+				case .second(let v)		: return (.second, v)
+				case .millisecond(let v): return (.nanosecond, v * 1_000_000)
 			}
 		}
 	}

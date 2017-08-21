@@ -13,11 +13,26 @@ import UIKit
 
 
 public extension UIEdgeInsets {
+	
+	var totalWidth: CGFloat {
+		return self.left + self.right
+	}
+	
+	var totalHeight: CGFloat {
+		return self.top + self.bottom
+	}
+	
+	var size: CGSize {
+		return CGSize(totalWidth, totalHeight)
+	}
+	
+	
+	
 	init(inset: CGFloat) {
 		self.init(top: inset, left: inset, bottom: inset, right: inset)
 	}
 	
-	init(vertical: CGFloat, horizontal: CGFloat) {
+	init(horizontal: CGFloat, vertical: CGFloat) {
 		self.init(top: vertical, left: horizontal, bottom: vertical, right: horizontal)
 	}
 	

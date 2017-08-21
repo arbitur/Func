@@ -74,7 +74,7 @@ open class AlertDialog: Dialog, DialogBuilder {
 			$0.width.equal(to: 270)
 		}
 		
-		promptContentView?.layoutMargins = UIEdgeInsets(vertical: 20, horizontal: 16)
+		promptContentView?.layoutMargins = UIEdgeInsets(horizontal: 16, vertical: 20)
 		promptContentView?.spacing = 3
 		
 		for view in customViews {

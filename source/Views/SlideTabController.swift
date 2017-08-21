@@ -146,7 +146,7 @@ extension SlideTabController: UIScrollViewDelegate {
 //		print("Left: \(leftPosition / fullWidth)%", "Right: \(rightPosition / fullWidth)%")
 		
 		menu.indicator.frame.left = menu.contentSize.width * (leftPosition / fullWidth)
-		menu.indicator.frame.w = menu.contentSize.width * ((rightPosition - leftPosition) / fullWidth)
+		menu.indicator.frame.widt = menu.contentSize.width * ((rightPosition - leftPosition) / fullWidth)
 		
 		//TODO: Right edge not flush
 		if scrollView.contentSize.width > scrollView.bounds.width {
@@ -381,13 +381,13 @@ fileprivate class Menu: UIScrollView {
 			indicator.frame.bottom = self.bounds.height
 			
 			if let btn = self.arrangedSubviews[safe: 0] {
-				indicator.frame.w = btn.bounds.width
+				indicator.frame.widt = btn.bounds.width
 			}
 		}
 		convenience init() {
 			self.init(frame: CGRect.zero)
 			
-			indicator.frame.h = SlideTabAppearance.indicatorHeight
+			indicator.frame.heigt = SlideTabAppearance.indicatorHeight
 			
 			self.addSubview(indicator)
 		}

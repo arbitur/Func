@@ -116,7 +116,7 @@ public class KeyboardControl: NSObject {
 		
 		if isOpening {
 			UIView.performWithoutAnimation {
-				toolbar?.frame.w = data.frame.width
+				toolbar?.frame.widt = data.frame.width
 				updateArrows()
 			}
 		}
@@ -248,7 +248,7 @@ public class KeyboardControl: NSObject {
 		if inputAccessoryView {
 			toolbar = UIToolbar()
 			toolbar!.isTranslucent = true
-			toolbar!.frame.h = 44
+			toolbar!.frame.heigt = 44
 			toolbar!.items = []
 			
 			if inputs.count > 1 {
