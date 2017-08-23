@@ -108,47 +108,47 @@ private func decode(_ json: Dict, _ key: String, format: Date.Format = .dateTime
 
 
 
-infix operator <--
-
-
-
-public func <-- <T> (json: Dict, key: String) throws -> T {
-	return try decode(json, key)
-}
-
-//public func <-- <T> (json: Dict, key: String) throws -> [T] {
+//infix operator <--
+//
+//
+//
+//public func <-- <T> (json: Dict, key: String) throws -> T {
 //	return try decode(json, key)
 //}
-
-
-
-public func <-- <T> (json: Dict, key: String) throws -> T where T: Decodable {
-	return try decode(json, key)
-}
-
-public func <-- <T> (json: Dict, key: String) throws -> [T] where T: Decodable {
-	return try decode(json, key)
-}
-
-
-
-public func <-- <T> (json: Dict, key: String) throws -> T where T: RawRepresentable {
-	return try decode(json, key)
-}
-
-public func <-- <T> (json: Dict, key: String) throws -> [T] where T: RawRepresentable {
-	return try decode(json, key)
-}
-
-
-
-public func <-- (json: Dict, key: String) throws -> URL {
-	return try decode(json, key)
-}
-
-public func <-- (json: Dict, key: String) throws -> [URL] {
-	return try decode(json, key)
-}
+//
+////public func <-- <T> (json: Dict, key: String) throws -> [T] {
+////	return try decode(json, key)
+////}
+//
+//
+//
+//public func <-- <T> (json: Dict, key: String) throws -> T where T: Decodable {
+//	return try decode(json, key)
+//}
+//
+//public func <-- <T> (json: Dict, key: String) throws -> [T] where T: Decodable {
+//	return try decode(json, key)
+//}
+//
+//
+//
+//public func <-- <T> (json: Dict, key: String) throws -> T where T: RawRepresentable {
+//	return try decode(json, key)
+//}
+//
+//public func <-- <T> (json: Dict, key: String) throws -> [T] where T: RawRepresentable {
+//	return try decode(json, key)
+//}
+//
+//
+//
+//public func <-- (json: Dict, key: String) throws -> URL {
+//	return try decode(json, key)
+//}
+//
+//public func <-- (json: Dict, key: String) throws -> [URL] {
+//	return try decode(json, key)
+//}
 
 
 

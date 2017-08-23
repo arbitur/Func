@@ -29,6 +29,7 @@ Pod::Spec.new do |s|
 	s.subspec 'Geocoding' do |gs|
 		gs.source_files = 'source/Geocoding/**/*.swift'
 		gs.dependency 'Func/API'
+		gs.dependency 'Func/JSON'
 		gs.dependency 'Alamofire', '~> 4.0'
 	end
 	
