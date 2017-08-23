@@ -13,6 +13,7 @@ import Foundation
 
 
 public extension NSLayoutConstraint {
+	
 	func activate() {
 		if !self.isActive {
 			self.isActive = true
@@ -29,8 +30,11 @@ public extension NSLayoutConstraint {
 
 
 public struct LayoutItem {
+	
 	let view: UIView
 	let attribute: NSLayoutAttribute
+	
+	
 	
 	@discardableResult
 	public func equal(to item: LayoutItem, constant: CGFloat = 0, multiplier: CGFloat = 1, priority: Float = 1000) -> NSLayoutConstraint {
@@ -89,15 +93,18 @@ public struct LayoutItem {
 	
 	private func constraint(relation: NSLayoutRelation, item: LayoutItem?, multiplier: CGFloat, constant: CGFloat, priority: Float) -> NSLayoutConstraint {
 		let constraint: NSLayoutConstraint
+		
 		if let item = item {
-			view.translatesAutoresizingMaskIntoConstraints = false
 			constraint = NSLayoutConstraint(item: view, attribute: attribute, relatedBy: relation, toItem: item.view, attribute: item.attribute, multiplier: multiplier, constant: constant)
 		}
 		else {
 			constraint = NSLayoutConstraint(item: view, attribute: attribute, relatedBy: relation, toItem: nil, attribute: .notAnAttribute, multiplier: multiplier, constant: constant)
 		}
+		
+		view.translatesAutoresizingMaskIntoConstraints = false
 		constraint.priority = priority
 		constraint.activate()
+		
 		return constraint
 	}
 }
@@ -107,20 +114,20 @@ public struct LayoutItem {
 public struct LAC {
 	let view: UIView
 	
-	public func make(_ instructions: (LAC)->()) {
+	public func make(_ instructions: (LAC) -> ()) {
 		instructions(self)
 	}
 	
 	public var left:		LayoutItem { return LayoutItem(view: view, attribute: .left) }
 	public var right:		LayoutItem { return LayoutItem(view: view, attribute: .right) }
-	public var top:		LayoutItem { return LayoutItem(view: view, attribute: .top) }
+	public var top:			LayoutItem { return LayoutItem(view: view, attribute: .top) }
 	public var bottom:		LayoutItem { return LayoutItem(view: view, attribute: .bottom) }
 //	public var leading:	LayoutItem { return LayoutItem(view: view, attribute: .leading) }
 //	public var trailing:	LayoutItem { return LayoutItem(view: view, attribute: .trailing) }
 	public var width:		LayoutItem { return LayoutItem(view: view, attribute: .width) }
 	public var height:		LayoutItem { return LayoutItem(view: view, attribute: .height) }
-	public var centerX:	LayoutItem { return LayoutItem(view: view, attribute: .centerX) }
-	public var centerY:	LayoutItem { return LayoutItem(view: view, attribute: .centerY) }
+	public var centerX:		LayoutItem { return LayoutItem(view: view, attribute: .centerX) }
+	public var centerY:		LayoutItem { return LayoutItem(view: view, attribute: .centerY) }
 //	public var lastBaseline: LayoutItem { return LayoutItem(view: view, attribute: .lastBaseline) }
 //	
 //	@available(iOS 8.0, *)
@@ -145,6 +152,7 @@ public struct LAC {
 
 
 public extension UIView {
+	
 	var lac: LAC {
 		return LAC(view: self)
 	}

@@ -16,10 +16,12 @@ import Alamofire
 	Base protocol for a request
 */
 public protocol Requestable {
-	var method: HTTPMethod { get } // Default .get
+	var method: HTTPMethod { get }
+	
 	/// The specific api path Ex: `users/add`
-	var url: String { get } // Required
-	var headers: [String: String]? { get } // Default nil
+	var url: String { get }
+	
+	var headers: [String: String]? { get }
 	
 	associatedtype D: Decoder
 	associatedtype M
@@ -49,7 +51,7 @@ public protocol Requestable {
 /// Protocol to make a standard request.
 public protocol DataRequestable: Requestable {
 	/// HTTP body (default: nil)
-	var body: [String: Any]? { get }
+	var body: Dict? { get }
 	
 	/// How to encode HTTP body (default: URLEncoding)
 	var encoding: ParameterEncoding { get }
@@ -68,10 +70,12 @@ public extension DataRequestable {
 		return nil
 	}
 	
+	/// (default: nil)
 	var body: [String: Any]? {
 		return nil
 	}
 	
+	/// (default: URLEncoding)
 	var encoding: ParameterEncoding {
 		return URLEncoding.default
 	}

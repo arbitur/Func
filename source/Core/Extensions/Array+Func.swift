@@ -41,13 +41,13 @@ public extension RangeReplaceableCollection where Index == Int, IndexDistance ==
 	}
 	
 	/**
-	Splits `Self` into `count` amount of `Self`
-	
-	[1, 2, 3, 4, 5, 6, 7].split(arrays: 2) ==
-	[
-		[1, 2, 3, 4],
-		[5, 6, 7]
-	]
+		Splits `Self` into `count` amount of `Self`
+
+			[1, 2, 3, 4, 5, 6, 7].split(arrays: 2) ==
+			[
+				[1, 2, 3, 4],
+				[5, 6, 7]
+			]
 	*/
 	func split(arrays count: Int) -> [SubSequence] {
 		var start = 0
@@ -209,7 +209,7 @@ public func --= <T> (left: inout T, right: T.Iterator.Element) where T: RangeRep
 	left.remove(element: right)
 }
 
-/// Checks if obj exists in arr
+/// Checks if left exists in right
 public func ?== <T> (left: T.Iterator.Element, right: T) -> Bool where T: Sequence, T.Iterator.Element: Equatable {
 	return right.contains(left)
 }

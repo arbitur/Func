@@ -12,9 +12,27 @@ import Foundation
 
 
 
-public class JSONHelper {
-	public typealias JSONData = (dictionary: Dict?, array: [Any]?)
+public enum JSONData {
+	case dictionary(Dict)
+	case array([Any])
 	
+	public var dictionary: Dict? {
+		switch self {
+			case .dictionary(let dict): return dict
+			default: return nil
+		}
+	}
+	
+	public var array: [Any]? {
+		switch self {
+		case .array(let arr): return arr
+		default: return nil
+		}
+	}
+}
+
+
+public class JSONHelper {
 	
 	public static func decode(data: Data, print: Bool = false) throws -> JSONData {
 		if print {
@@ -24,7 +42,11 @@ public class JSONHelper {
 		
 		do {
 			let json = try JSONSerialization.jsonObject(with: data, options: [])
-			return (json as? Dict, json as? [Any])
+			switch json {
+				case let dictionary as Dict: return JSONData.dictionary(dictionary)
+				case let array as [Any]: return JSONData.array(array)
+				default: throw NSError()
+			}
 		}
 		catch {
 			Swift.print("Failed to decode JSON:", error.localizedDescription)
@@ -32,12 +54,14 @@ public class JSONHelper {
 		}
 	}
 	
+	
 	public static func decode(string: String, print: Bool = false) throws -> JSONData {
 		if let data = Data(string) {
 			return try decode(data: data, print: print)
 		}
 		throw NSError()
 	}
+	
 	
 	public static func encode(obj: Any, print: Bool = false) -> String? {
 		do {

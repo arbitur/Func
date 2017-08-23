@@ -22,7 +22,7 @@ public enum LoggingMode {
 
 
 public protocol API {
-	static var loggingMode: LoggingMode { get }
+	static var loggingMode: LoggingMode { get set }
 	
 	/// The host to your api server EX: https://api.company.com
 	static var baseUrl: String { get set }
@@ -34,11 +34,8 @@ public protocol API {
 
 
 public extension API {
-	static var loggingMode: LoggingMode {
-		return .all
-	}
 	
-	/// Logs the request when sending it to your server
+	/// Logs the request
 	private static func log(request: Alamofire.Request) {
 		if loggingMode == .none {
 			return
@@ -59,6 +56,7 @@ public extension API {
 	}
 	
 	
+	/// Logs the response
 	private static func log(_ response: String, headers: [AnyHashable: Any]? = nil, body: Data? = nil, error: (message: String, failure: (String) -> ())? = nil) {
 		if loggingMode == .none {
 			return
@@ -76,7 +74,7 @@ public extension API {
 		}
 		
 		if loggingMode ?== [.headers, .all], let headers = headers {
-			response += "\n" + headers.map {  "\($0.key) : \($0.value)" }.joined(by: "\n")
+			response += "\n" + headers.map {  "\($0.key): \($0.value)" }.joined(by: "\n")
 		}
 		
 		if loggingMode ?== [.body, .all], let body = body, let string = String(body) {

@@ -6,69 +6,103 @@
 //
 //
 
-import Foundation
-import Gloss
 import CoreLocation
 
 
 
 
 
-public struct GeoResponse: Decodable {
+public struct GeoResponse: Decodable, CustomStringConvertible {
 	public let results: [Result]
-	public let status: Geocoding.Status
-	public init?(json: JSON) {
-		results = ("results" <~~ json)!
-		status = ("status" <~~ json)!
+	public let status: Status
+	
+	public var description: String {
+		return "GeoResponse(results: [\(results.count)], status: \(status.rawValue))"
+	}
+
+	
+	public init?(json: Dict) {
+		do {
+			results = try json.decode("results")
+			status = try json.decode("status")
+		}
+		catch {
+			return nil
+		}
 	}
 	
 	
-	/// Get Result
-	public subscript(_ type: Geocoding.AddressType) -> [Result]? {
-		return results.filter({ $0.types.contains(type) })
+	
+	/// Filter results by type
+	public subscript(_ type: AddressType) -> [Result]? {
+		return results.filter { type ?== $0.types }
 	}
+	
 	
 	
 	public struct Result: Decodable {
 		public let addressComponents: [AddressComponent]
 		public let formattedAddress: String
 		public let geometry: Geometry
-		public let types: [Geocoding.AddressType]
+		public let types: [AddressType]
 		public let placeId: String
-		public init?(json: JSON) {
-			addressComponents = ("address_components" <~~ json)!
-			formattedAddress = ("formatted_address" <~~ json)!
-			geometry = ("geometry" <~~ json)!
-			types = ("types" <~~ json) ?? []
-			placeId = ("place_id" <~~ json)!
+
+		
+		public init?(json: Dict) {
+			do {
+				addressComponents = try json.decode("address_components")
+				formattedAddress = try json.decode("formatted_address")
+				geometry = try json.decode("geometry")
+				placeId = try json.decode("place_id")
+				types = try json.decode("types")
+			}
+			catch {
+				return nil
+			}
 		}
 		
 		
-		/// Get AddressComponents
-		public subscript(_ type: Geocoding.AddressType) -> [AddressComponent]? {
-			return addressComponents.filter({ $0.types.contains(type) })
+		
+		/// Filter AddressComponents by type
+		public subscript(_ type: AddressType) -> [AddressComponent]? {
+			return addressComponents.filter { type ?== $0.types }
 		}
+		
 		
 		
 		public struct AddressComponent: Decodable {
 			public let longName: String
 			public let shortName: String
-			public let types: [Geocoding.AddressType]
-			public init?(json: JSON) {
-				longName = ("long_name" <~~ json)!
-				shortName = ("short_name" <~~ json)!
-				types = ("types" <~~ json)!
+			public let types: [AddressType]
+			
+			
+			public init?(json: Dict) {
+				do {
+					longName = try json.decode("long_name")
+					shortName = try json.decode("short_name")
+					types = try json.decode("types")
+				}
+				catch {
+					return nil
+				}
 			}
 		}
 		
 		public struct Geometry: Decodable {
 			public let location: Coordinate
-			public let locationType: Geocoding.Location
+			public let locationType: LocationType
 			public let viewport: Viewport
-			public init?(json: JSON) {
-				location = ("location" <~~ json)!
-				locationType = ("location_type" <~~ json)!
-				viewport = ("viewport" <~~ json)!
+			
+			
+			public init?(json: Dict) {
+				do {
+					location = try json.decode("location")
+					locationType = try json.decode("location_type")
+					viewport = try json.decode("viewport")
+				}
+				catch {
+					return nil
+				}
 			}
 			
 			
@@ -76,19 +110,33 @@ public struct GeoResponse: Decodable {
 				public let lat: Double
 				public let long: Double
 				public let coordinate: CLLocationCoordinate2D
-				public init?(json: JSON) {
-					lat = ("lat" <~~ json)!
-					long = ("lng" <~~ json)!
-					coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+				
+				
+				public init?(json: Dict) {
+					do {
+						lat = try json.decode("lat")
+						long = try json.decode("lng")
+						coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+					}
+					catch {
+						return nil
+					}
 				}
 			}
 			
 			public struct Viewport: Decodable {
 				public let southWest: Coordinate
 				public let northEast: Coordinate
-				public init?(json: JSON) {
-					southWest = ("southwest" <~~ json)!
-					northEast = ("northeast" <~~ json)!
+				
+				
+				public init?(json: Dict) {
+					do {
+						southWest = try json.decode("southwest")
+						northEast = try json.decode("northeast")
+					}
+					catch {
+						return nil
+					}
 				}
 			}
 		}

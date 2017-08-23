@@ -27,11 +27,6 @@ public class RadialGradientView: UIView {
 
 
 
-
-
-
-
-
 open class RadialGradientLayer: CALayer {
 	var colorComponents: [(color: UIColor, location: CGFloat)]? {
 		didSet { self.setNeedsDisplay() }
@@ -66,7 +61,7 @@ open class RadialGradientLayer: CALayer {
 		let gradient = CGGradient(colorsSpace: colorspace, colors: colors, locations: locations)!
 		
 		let center = self.bounds.center
-		let radius = Math.hypotenusa(point: center)
+		let radius = center.magnitude//Math.hypotenusa(point: center) //TODO: Check still works as intended
 		
 		ctx.drawRadialGradient(gradient, startCenter: center, startRadius: 0, endCenter: center, endRadius: radius, options: .drawsAfterEndLocation)
 	}

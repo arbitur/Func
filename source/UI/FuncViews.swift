@@ -13,18 +13,31 @@ import SnapKit
 
 
 
-// SnapKit
+public func pixels(points: CGFloat) -> CGFloat {
+	return points * UIScreen.main.scale
+}
+
+public func points(pixels: CGFloat) -> CGFloat {
+	return pixels / UIScreen.main.scale
+}
+
+
+
+
+
 public extension UIView {
-	func add(view: UIView?, instructions: (LAC)->()) {
+	
+	func add(view: UIView, instructions: (LAC)->()) {
 		self.add(view: view)
-		view?.lac.make(instructions)
+		view.lac.make(instructions)
 	}
 }
 
 public extension UIStackView {
-	func add(arrangedView: UIView?, instructions: (LAC)->()) {
+	
+	func add(arrangedView: UIView, instructions: (LAC)->()) {
 		self.add(arrangedView: arrangedView)
-		arrangedView?.lac.make(instructions)
+		arrangedView.lac.make(instructions)
 	}
 }
 
@@ -33,11 +46,12 @@ public extension UIStackView {
 
 
 public protocol BorderDrawable: class {
-	var borderWidth: CGFloat? {get set}
-	var borderColor: UIColor? {get set}
+	var borderWidth: CGFloat? { get set }
+	var borderColor: UIColor? { get set }
 }
 
 extension BorderDrawable {
+	
 	fileprivate func updateBorder(of view: UIView) {
 		if let width = borderWidth, let color = borderColor ?? view.tintColor {
 			view.border(width: width, color: color)

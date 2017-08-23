@@ -33,9 +33,8 @@ public protocol Decoder {
 public struct JSONDecoder: Decoder {
 	public static let `default`: JSONDecoder = JSONDecoder()
 	
-	public func decode(data: Data) throws -> (dictionary: Dict?, array: [Any]?) {
-		let json = try JSONSerialization.jsonObject(with: data, options: [])
-		return (json as? Dict, json as? [Any])
+	public func decode(data: Data) throws -> JSONData {
+		return try JSONHelper.decode(data: data)
 	}
 }
 

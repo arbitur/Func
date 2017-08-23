@@ -9,6 +9,7 @@
 import UIKit
 import Func
 import Alamofire
+import CoreLocation
 
 
 
@@ -36,6 +37,8 @@ class AppDelegate: UIResponder {
 
 extension AppDelegate: UIApplicationDelegate {
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+
+		loadWindow()
 		
 //		let color = UIColor.cyan
 //		print(color.rgba)
@@ -53,41 +56,34 @@ extension AppDelegate: UIApplicationDelegate {
 //		
 //		let test: Dict? = Archiver.unarchive(forKey: "test")
 //		print("Unarchived", test ?? "nil")
+
+		GeocodingAPI.loggingMode = .url
+		GeocodingAPI.key = "AIzaSyCBWku312Br8Rsh8YXhzNkDN3vsy2Iz6yA"
 		
-//		let geocoding = Geocoding(address: "Östermalmstorg 1, Stockholm")
-//		geocoding.fetch { response in
-//			guard let response = response else { return print("No results") }
-//			print(response.status, response.results.first?.formattedAddress ?? "nan")
-//		}
-		
-//		loadWindow()
-		
-//		print(Float.nan.ifNan(23.0))
-//		print(Int(true))
-//		print(Bool(0))
-		
-		
-		let json: Dict = [
-			"int": 42,
-			"string": "123",
-			"bool": true,
-			"test": [
-				"a": 123
-			]
-		]
-		
-		let test = Test(json: json)
-		print(test)
-		
-		Alamofire.request("http://127.0.0.1:8080/users", method: .get).responseJSON { response in
-			switch response.result {
-			case .success(let v):
-				let arr = v as! [Dict]
-				let users = arr.flatMap(User.init)
-				print(users)
-			default: return
+		ReverseGeocode(
+			coordinate: CLLocationCoordinate2D(latitude: 10, longitude: 10),
+			resultTypes: [.streetAddress],
+			locationTypes: [.roofTop],
+			language: "sv"
+		)
+		.fetch(
+			success: { response in
+				print(response)
+			},
+			failure: { error in
+				print("Error:", error)
 			}
-		}
+		)
+		
+		Geocode(address: "Östermalmstorg 1", components: [.locality: "Östermalm"], region: "sv")
+		.fetch(
+			success: { response in
+				print(response)
+			},
+			failure: { error in
+				print("Error:", error)
+			}
+		)
 		
 		return true
 	}

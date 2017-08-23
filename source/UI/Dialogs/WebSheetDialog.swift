@@ -22,10 +22,10 @@ public final class WebSheetDialog: SheetDialog, WKNavigationDelegate {
 	
 	public override func viewDidLoad() {
 		activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-		activityIndicator?.color = .gray
-		activityIndicator?.hidesWhenStopped = false
-		activityIndicator?.startAnimating()
-		webView.add(view: activityIndicator) {
+		activityIndicator!.color = .gray
+		activityIndicator!.hidesWhenStopped = false
+		activityIndicator!.startAnimating()
+		webView.add(view: activityIndicator!) {
 			$0.centerX.equalToSuperview()
 			$0.centerY.equalToSuperview()
 		}
@@ -35,7 +35,9 @@ public final class WebSheetDialog: SheetDialog, WKNavigationDelegate {
 		if actions.isEmpty {
 			self.addCancel(title: "Stäng")
 		}
+		
 		super.viewDidLoad()
+		
 		webView.lac.height.equal(to: self.view.lac.height, priority: 500)
 	}
 	
