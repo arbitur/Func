@@ -63,8 +63,7 @@ extension AppDelegate: UIApplicationDelegate {
 		ReverseGeocode(
 			coordinate: CLLocationCoordinate2D(latitude: 10, longitude: 10),
 			resultTypes: [.streetAddress],
-			locationTypes: [.roofTop],
-			language: "sv"
+			locationTypes: [.roofTop]
 		)
 		.fetch(
 			success: { response in
@@ -89,60 +88,6 @@ extension AppDelegate: UIApplicationDelegate {
 	}
 }
 
-
-struct User: Func.Decodable {
-	let id: Int
-	let name: String
-	let email: String?
-	let isHidden: Bool
-	let date: Date
-	let array: [String]
-	
-	init?(json: Dict) {
-		do {
-			id = try json.decode("id")
-			name = try json.decode("name")
-			email = try? json.decode("email")
-			isHidden = try json.decode("hidden")
-			date = try json.decode("date", format: .dateTimeSec)
-			array = try json.decode("array")
-		}
-		catch {
-			print(error.localizedDescription)
-			return nil
-		}
-	}
-}
-
-
-struct Test: Func.Decodable {
-	let int: Int
-	let string: String?
-	let bool: Bool
-	let test: Test2
-	
-	
-	init?(json: Dict) {
-		do {
-			int = try json <-- "int"
-			string = try? json <-- "string"
-			bool = try json <-- "bool"
-			test = try json <-- "test"
-		}
-		catch {
-			print(error.localizedDescription)
-			return nil
-		}
-	}
-}
-
-struct Test2: Func.Decodable {
-	let a: Int
-	
-	init?(json: Dict) {
-		a = try! json <-- "a"
-	}
-}
 
 
 

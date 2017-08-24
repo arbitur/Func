@@ -59,23 +59,26 @@ public extension Geocodable {
 public struct Geocode: Geocodable {
 	public let body: Dict?
 	
+	public typealias Bounds = (sW: CLLocationCoordinate2D, nE: CLLocationCoordinate2D)
 	
-	public init(address: String, components: [Component: String]? = nil, region: String? = nil, language: String? = nil, key: String? = nil) {
+	public init(address: String, bounds: Bounds? = nil, components: [Component: String]? = nil, region: String? = nil) {
 		body = [
 			"address": address,
+			"bounds": (bounds == nil) ? "" : "\(bounds!.sW.description),\(bounds!.nE.description)",
 			"components": components?.map { "\($0.key.rawValue):\($0.value)" }.joined(by: "|") ?? "",
 			"region": region ?? "",
-			"language": language ?? GeocodingAPI.language,
-			"key": key ?? GeocodingAPI.key
+			"language": GeocodingAPI.language,
+			"key": GeocodingAPI.key
 		]
 	}
 	
-	public init(components: [Component: String], region: String? = nil, language: String? = nil, key: String? = nil) {
+	public init(components: [Component: String], bounds: Bounds? = nil, region: String? = nil) {
 		body = [
 			"components": components.map { "\($0.key.rawValue):\($0.value)" }.joined(by: "|"),
+			"bounds": (bounds == nil) ? "" : "\(bounds!.sW.description),\(bounds!.nE.description)",
 			"region": region ?? "",
-			"language": language ?? GeocodingAPI.language,
-			"key": key ?? GeocodingAPI.key
+			"language": GeocodingAPI.language,
+			"key": GeocodingAPI.key
 		]
 	}
 }
@@ -88,22 +91,22 @@ public struct ReverseGeocode: Geocodable {
 	public let body: Dict?
 	
 	
-	public init(coordinate: CLLocationCoordinate2D, resultTypes: [AddressType]? = nil, locationTypes: [LocationType]? = nil, sensor: Bool? = nil, language: String? = nil, key: String? = nil) {
+	public init(coordinate: CLLocationCoordinate2D, resultTypes: [AddressType]? = nil, locationTypes: [LocationType]? = nil, sensor: Bool? = nil) {
 		body = [
 			"latlng": "\(coordinate.latitude),\(coordinate.longitude)",
 			"result_type": resultTypes?.map { $0.rawValue }.joined(by: "|") ?? "",
 			"location_type": locationTypes?.map { $0.rawValue }.joined(by: "|") ?? "",
 			"sensor": sensor?.description ?? "",
-			"language": language ?? GeocodingAPI.language,
-			"key": key ?? GeocodingAPI.key
+			"language": GeocodingAPI.language,
+			"key": GeocodingAPI.key
 		]
 	}
 	
 	public init(placeId: String, language: String? = nil, key: String? = nil) {
 		body = [
 			"place_id": placeId,
-			"language": language ?? GeocodingAPI.language,
-			"key": key ?? GeocodingAPI.key
+			"language": GeocodingAPI.language,
+			"key": GeocodingAPI.key
 		]
 	}
 }
