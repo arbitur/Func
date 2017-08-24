@@ -88,11 +88,12 @@ public struct ReverseGeocode: Geocodable {
 	public let body: Dict?
 	
 	
-	public init(coordinate: CLLocationCoordinate2D, resultTypes: [AddressType]? = nil, locationTypes: [LocationType]? = nil, language: String?, key: String? = nil) {
+	public init(coordinate: CLLocationCoordinate2D, resultTypes: [AddressType]? = nil, locationTypes: [LocationType]? = nil, sensor: Bool? = nil, language: String? = nil, key: String? = nil) {
 		body = [
 			"latlng": "\(coordinate.latitude),\(coordinate.longitude)",
 			"result_type": resultTypes?.map { $0.rawValue }.joined(by: "|") ?? "",
 			"location_type": locationTypes?.map { $0.rawValue }.joined(by: "|") ?? "",
+			"sensor": sensor?.description ?? "",
 			"language": language ?? GeocodingAPI.language,
 			"key": key ?? GeocodingAPI.key
 		]
