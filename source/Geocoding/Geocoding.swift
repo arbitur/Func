@@ -64,7 +64,7 @@ public struct Geocode: Geocodable {
 	public init(address: String, bounds: Bounds? = nil, components: [Component: String]? = nil, region: String? = nil) {
 		body = [
 			"address": address,
-			"bounds": (bounds == nil) ? "" : "\(bounds!.sW.description),\(bounds!.nE.description)",
+			"bounds": (bounds == nil) ? "" : "\(bounds!.sW.description)|\(bounds!.nE.description)",
 			"components": components?.map { "\($0.key.rawValue):\($0.value)" }.joined(by: "|") ?? "",
 			"region": region ?? "",
 			"language": GeocodingAPI.language,
@@ -75,7 +75,7 @@ public struct Geocode: Geocodable {
 	public init(components: [Component: String], bounds: Bounds? = nil, region: String? = nil) {
 		body = [
 			"components": components.map { "\($0.key.rawValue):\($0.value)" }.joined(by: "|"),
-			"bounds": (bounds == nil) ? "" : "\(bounds!.sW.description),\(bounds!.nE.description)",
+			"bounds": (bounds == nil) ? "" : "\(bounds!.sW.description)|\(bounds!.nE.description)",
 			"region": region ?? "",
 			"language": GeocodingAPI.language,
 			"key": GeocodingAPI.key
