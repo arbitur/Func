@@ -17,10 +17,10 @@ public struct GeocodingAPI: API {
 	public static var key: String = ""
 	public static var language: String = ""
 	
-	public static var loggingMode: LoggingMode = .body
+//	public static var loggingMode: LoggingMode = .body
 	
-	public static var baseUrl: String = "https://maps.googleapis.com/maps/api/geocode"
-	public static var baseHeaders: [String : String]? = nil
+	public static let baseUrl: String = "https://maps.googleapis.com/maps/api/geocode"
+	public static let baseHeaders: HTTPHeaders? = nil
 }
 
 
@@ -33,21 +33,16 @@ public protocol Geocodable: DataRequestable {
 }
 
 public extension Geocodable {
-	public var url: String {
+	
+	var url: String {
 		return "json"
 	}
 	
-	public var decoder: JSONDecoder {
-		return .default
-	}
-	
-	public func makeModel(data: JSONData) -> GeoResponse? {
-		return GeoResponse(json: data.dictionary!)
-	}
-	
-	@discardableResult
-	public func fetch(success: @escaping (M) -> (), failure: @escaping (String) -> (), finally: Closure? = nil) -> Request {
-		return GeocodingAPI.fetch(self, success: success, failure: failure, finally: finally)
+	func decode(_ obj: Any) throws -> GeoResponse {
+		guard let response = GeoResponse(json: obj as! Dict) else {
+			throw AFError.responseSerializationFailed(reason: AFError.ResponseSerializationFailureReason.inputDataNil) //TODO: Proper error
+		}
+		return response
 	}
 }
 
@@ -57,12 +52,13 @@ public extension Geocodable {
 
 //TODO: Bounds
 public struct Geocode: Geocodable {
-	public let body: Dict?
-	
 	public typealias Bounds = (sW: CLLocationCoordinate2D, nE: CLLocationCoordinate2D)
 	
+	public let parameters: Parameters?
+	
+	
 	public init(address: String, bounds: Bounds? = nil, components: [Component: String]? = nil, region: String? = nil) {
-		body = [
+		parameters = [
 			"address": address,
 			"bounds": (bounds == nil) ? "" : "\(bounds!.sW.description)|\(bounds!.nE.description)",
 			"components": components?.map { "\($0.key.rawValue):\($0.value)" }.joined(by: "|") ?? "",
@@ -73,7 +69,7 @@ public struct Geocode: Geocodable {
 	}
 	
 	public init(components: [Component: String], bounds: Bounds? = nil, region: String? = nil) {
-		body = [
+		parameters = [
 			"components": components.map { "\($0.key.rawValue):\($0.value)" }.joined(by: "|"),
 			"bounds": (bounds == nil) ? "" : "\(bounds!.sW.description)|\(bounds!.nE.description)",
 			"region": region ?? "",
@@ -88,11 +84,12 @@ public struct Geocode: Geocodable {
 
 
 public struct ReverseGeocode: Geocodable {
-	public let body: Dict?
+	
+	public let parameters: Parameters?
 	
 	
 	public init(coordinate: CLLocationCoordinate2D, resultTypes: [AddressType]? = nil, locationTypes: [LocationType]? = nil, sensor: Bool? = nil) {
-		body = [
+		parameters = [
 			"latlng": "\(coordinate.latitude),\(coordinate.longitude)",
 			"result_type": resultTypes?.map { $0.rawValue }.joined(by: "|") ?? "",
 			"location_type": locationTypes?.map { $0.rawValue }.joined(by: "|") ?? "",
@@ -103,7 +100,7 @@ public struct ReverseGeocode: Geocodable {
 	}
 	
 	public init(placeId: String, language: String? = nil, key: String? = nil) {
-		body = [
+		parameters = [
 			"place_id": placeId,
 			"language": GeocodingAPI.language,
 			"key": GeocodingAPI.key
