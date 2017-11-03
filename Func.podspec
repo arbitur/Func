@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 	s.subspec 'UI' do |vs|
 		vs.frameworks 	= 'WebKit'
 		vs.source_files	= 'source/UI/**/*.swift'
-		vs.resources = 'source/Assets/KeyboardControl/*'
+		vs.resources = 'source/Assets/UI/*'
 		vs.dependency 'Func/Core'
 		vs.dependency 'SnapKit', '~> 3.0'
 	end
@@ -30,7 +30,6 @@ Pod::Spec.new do |s|
 		gs.source_files = 'source/Geocoding/**/*.swift'
 		gs.dependency 'Func/API'
 		gs.dependency 'Func/JSON'
-		gs.dependency 'Alamofire', '~> 4.0'
 	end
 	
 	s.subspec 'API' do |as|
