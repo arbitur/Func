@@ -88,7 +88,7 @@ open class Dialog: UIViewController {
 	
 	
 	
-	public final func actionPressed(_ view: UIView) {
+	@objc public final func actionPressed(_ view: UIView) {
 		self.dismiss(animated: true, completion: didDismiss)
 		actions[view.tag].action?()
 	}
@@ -118,17 +118,17 @@ open class Dialog: UIViewController {
 		if let title = promptTitle {
 			promptContentView = UIStackView(axis: .vertical)
 			promptContentView!.isLayoutMarginsRelativeArrangement = true
-			promptContentView!.setContentCompressionResistancePriority(1000, for: .vertical)
+			promptContentView!.setContentCompressionResistancePriority(.required, for: .vertical)
 			
 			let titleLabel = generateTitleLabel()
 			titleLabel.text = title
-			titleLabel.setContentCompressionResistancePriority(1000, for: .vertical)
+			titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 			promptContentView!.add(arrangedView: titleLabel)
 			
 			if let subtitle = promptSubtitle {
 				let subtitleLabel = generateSubtitleLabel()
 				subtitleLabel.text = subtitle
-				subtitleLabel.setContentCompressionResistancePriority(1000, for: .vertical)
+				subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 				promptContentView!.add(arrangedView: subtitleLabel)
 			}
 		}

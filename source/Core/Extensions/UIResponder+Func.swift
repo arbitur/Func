@@ -13,15 +13,16 @@ import UIKit
 
 
 public extension UIResponder {
+	
 	private static var currentFirstResponder: UIResponder?
 	
-	static var first: UIResponder? {
+	public static var first: UIResponder? {
 		currentFirstResponder = nil
 		UIApplication.shared.sendAction(#selector(UIResponder.findFirstResponder(sender:)), to: nil, from: nil, for: nil)
 		return currentFirstResponder
 	}
 	
-	private dynamic func findFirstResponder(sender: AnyObject) {
+	@objc private func findFirstResponder(sender: AnyObject) {
 		UIResponder.currentFirstResponder = self
 	}
 	

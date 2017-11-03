@@ -251,7 +251,7 @@ public class SlideTabAppearance {
 	public static var indicatorColor: UIColor = .orange
 	public static var tabDeselectedTitleColor: UIColor = .lightGray
 	public static var tabSelectedTitleColor: UIColor = .darkGray
-	public static var tabTitleFont: UIFont = UIFont.systemFont(ofSize: 15, weight: UIFontWeightSemibold)
+	public static var tabTitleFont: UIFont = UIFont.systemFont(ofSize: 15, weight: .semibold)
 	public static var indicatorHeight: CGFloat = 2
 	public static var indicatorMinimumWidth: CGFloat = 95
 	public static var align: MenuAlign = .top
@@ -301,7 +301,7 @@ fileprivate class Menu: UIScrollView {
 	}
 	
 	
-	func press(button: UIButton) {
+	@objc func press(button: UIButton) {
 		selectViewController(index: button.tag)
 	}
 	
@@ -322,7 +322,7 @@ fileprivate class Menu: UIScrollView {
 	}
 	
 	
-	func didChangeStatusBar(_ notification: Notification) {
+	@objc func didChangeStatusBar(_ notification: Notification) {
 		var vc: UIViewController? = self.superViewController
 		while(vc != nil) {
 			if let nc = vc as? UINavigationController, !nc.isNavigationBarHidden { return }

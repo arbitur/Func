@@ -84,11 +84,11 @@ open class AlertDialog: Dialog, DialogBuilder {
 		
 		if !actions.isEmpty {
 			let buttonContentView = UIStackView(axis: (actions.count == 2) ? .horizontal : .vertical)
-			buttonContentView.setContentCompressionResistancePriority(1000, for: .vertical)
+			buttonContentView.setContentCompressionResistancePriority(.required, for: .vertical)
 			
 			if let _ = promptContentView {
 				mainContentStack.add(arrangedView: generateBorder()) {
-					$0.height.equal(to: points(pixels: 1.0))
+					$0.height.equal(to: points(pixels: 1))
 				}
 			}
 			
@@ -102,8 +102,8 @@ open class AlertDialog: Dialog, DialogBuilder {
 				if let _ = lastButton {
 					buttonContentView.add(arrangedView: generateBorder()) {
 						switch buttonContentView.axis {
-							case .horizontal: $0.width.equal(to: points(pixels: 1.0))
-							case .vertical	: $0.height.equal(to: points(pixels: 1.0))
+							case .horizontal: $0.width.equal(to: points(pixels: 1))
+							case .vertical	: $0.height.equal(to: points(pixels: 1))
 						}
 					}
 				}

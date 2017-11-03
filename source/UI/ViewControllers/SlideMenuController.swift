@@ -49,7 +49,7 @@ open class SlideMenuController: DebugViewController {
 		}
 	}
 	
-	open func openMenu() {
+	@objc open func openMenu() {
 		self.present(menuViewController, animated: true, completion: nil)
 	}
 	
@@ -144,7 +144,7 @@ class TransitionManager: UIPercentDrivenInteractiveTransition {
 
 extension TransitionManager {
 	
-	func gestureOpen(_ gesture: UIScreenEdgePanGestureRecognizer) {
+	@objc func gestureOpen(_ gesture: UIScreenEdgePanGestureRecognizer) {
 		let percent = gesture.point.x / slideMenuController!.menuViewController.view.bounds.width
 		
 		switch gesture.state {
@@ -169,7 +169,7 @@ extension TransitionManager {
 		}
 	}
 	
- 	func gestureClose(_ gesture: UIPanGestureRecognizer) {
+ 	@objc func gestureClose(_ gesture: UIPanGestureRecognizer) {
 		let point = gesture.translation(in: gesture.view)
 		let percent = -point.x / slideMenuController!.menuViewController.view.bounds.width
 		

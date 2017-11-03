@@ -13,12 +13,13 @@ import Foundation
 
 
 public extension String {
+	
 	var length: Int {
-		return self.characters.count
+		return self.count
 	}
 	
 	var reversed: String {
-		return String(self.characters.reversed())
+		return String(self.reversed())
 	}
 	
 	
@@ -56,9 +57,9 @@ public extension String {
 		return self.substring(with: start..<end)
 	}
 	
-	subscript (_ i: Int) -> Character {
-		return Array(self.characters)[i]
-	}
+//	subscript (_ i: Int) -> Substring {
+//		return self[i]
+//	}
 	
 	
 	
@@ -83,7 +84,7 @@ public extension String {
 	
 	func grouped(separator: String, size: Int) -> String {
 		var holder = [String]()
-		for (i, char) in self.characters.enumerated() {
+		for (i, char) in self.enumerated() {
 			let index = (i) / size
 			if i % size == 0 { holder ++= String() }
 			holder[index] += String(char)
@@ -95,8 +96,7 @@ public extension String {
 	
 	
 	func size(for width: CGFloat, font: UIFont) -> CGSize {
-		let attr = [NSFontAttributeName: font]
-		let height = self.boundingRect(with: CGSize(width, CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: attr, context: nil).height
+		let height = self.boundingRect(with: CGSize(width, .max), options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil).height
 		return CGSize(width, ceil(height))
 	}
 	

@@ -84,7 +84,7 @@ open class SheetDialog: Dialog, DialogBuilder {
 	
 	
 	
-	func dismissSheet() {
+	@objc func dismissSheet() {
 		self.dismiss(animated: true, completion: nil)
 	}
 	
@@ -125,7 +125,7 @@ open class SheetDialog: Dialog, DialogBuilder {
 			
 			if let _ = promptContentView {
 				mainContentStack.add(arrangedView: generateBorder()) {
-					$0.height.equal(to: points(pixels: 1.0))
+					$0.height.equal(to: points(pixels: 1))
 				}
 			}
 			
@@ -142,8 +142,8 @@ open class SheetDialog: Dialog, DialogBuilder {
 					if let _ = lastButton {
 						buttonContentView.add(arrangedView: generateBorder()) {
 							switch buttonContentView.axis {
-								case .horizontal: $0.width.equal(to: points(pixels: 1.0))
-								case .vertical	: $0.height.equal(to: points(pixels: 1.0))
+								case .horizontal: $0.width.equal(to: points(pixels: 1))
+								case .vertical	: $0.height.equal(to: points(pixels: 1))
 							}
 						}
 					}

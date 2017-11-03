@@ -13,7 +13,8 @@ import Foundation
 
 
 public extension NSCache {
-	convenience init(name: String) {
+	
+	@objc convenience init(name: String) {
 		self.init()
 		self.name = name
 	}

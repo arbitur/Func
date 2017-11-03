@@ -144,7 +144,7 @@ fileprivate class Spinner: UIView {
 	
 	
 	
-	func update() {
+	@objc func update() {
 		self.setNeedsDisplay()
 	}
 	
