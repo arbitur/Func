@@ -12,87 +12,6 @@ import UIKit
 
 
 
-//MARK: - Protocols
-
-public protocol KeyboardDisplayable: class, UITextInputTraits {
-	var superview: UIView? {get}
-	var inputAccessoryView: UIView? {get set}
-	var frame: CGRect {get set}
-	var isFirstResponder: Bool {get}
-	var _delegate: NSObjectProtocol? {get set}
-	
-	@discardableResult
-	func becomeFirstResponder() -> Bool
-	@discardableResult
-	func resignFirstResponder() -> Bool
-}
-
-
-
-extension UITextField: KeyboardDisplayable {
-	public var _delegate: NSObjectProtocol? {
-		get { return self.delegate }
-		set { self.delegate = newValue as? UITextFieldDelegate }
-	}
-}
-extension UITextView: KeyboardDisplayable {
-	public var _delegate: NSObjectProtocol? {
-		get { return self.delegate }
-		set { self.delegate = newValue as? UITextViewDelegate }
-	}
-}
-extension UISearchBar: KeyboardDisplayable {
-	public var _delegate: NSObjectProtocol? {
-		get { return self.delegate }
-		set { self.delegate = newValue as? UISearchBarDelegate }
-	}
-}
-
-
-
-
-
-//MARK: - Structs
-
-fileprivate struct Weak<T: AnyObject> {
-	weak var data: T?
-}
-
-
-public struct KeyboardEvent {
-	public let isOpening: Bool
-	public let keyboardFrame: CGRect
-	public let input: KeyboardDisplayable
-	
-	public let distance: CGFloat
-}
-
-
-fileprivate struct KeyboardNotificationData {
-	let frame: CGRect
-	let curve: UInt
-	let duration: TimeInterval
-	let belongsToMe: Bool
-	var options: UIViewAnimationOptions {
-		return UIViewAnimationOptions(rawValue: curve)
-	}
-	
-	init(notification: Notification) {
-		let userInfo = notification.userInfo!
-		frame = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect
-		curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
-		duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! TimeInterval
-		belongsToMe = userInfo[UIKeyboardIsLocalUserInfoKey] as! Bool
-	}
-}
-
-
-
-
-
-
-// Class
-
 public class KeyboardControl: NSObject {
 	public typealias EventHandler = (_ event: KeyboardEvent)->()
 	
@@ -111,8 +30,8 @@ public class KeyboardControl: NSObject {
 	
 	
 	
-	private func handle(notification: Notification, isOpening: Bool) {
-		let data = KeyboardNotificationData(notification: notification)
+	private func handleNotification(_ notification: Notification, isOpening: Bool) {
+		let data = KeyboardNotificationData(notification)
 		
 		if isOpening {
 			UIView.performWithoutAnimation {
@@ -125,7 +44,7 @@ public class KeyboardControl: NSObject {
 			animations: {
 				if let index = self.selectedIndex {
 					let input = self.inputs[index]
-					let projectedBottom = input.superview!.convert(input.frame, to: input.superview!.window!).bottom + 8
+					let projectedBottom = input.superview!.convert(input.frame, to: nil).bottom + 8
 					let top = data.frame.top
 					let distance = top - projectedBottom
 					
@@ -137,36 +56,36 @@ public class KeyboardControl: NSObject {
 	
 	
 	
-	private dynamic func keyboardWillShow(_ notification: Notification) {
-		handle(notification: notification, isOpening: true)
+	@objc private func keyboardWillShow(_ notification: Notification) {
+		handleNotification(notification, isOpening: true)
 	}
 	
-	private dynamic func keyboardWillHide(_ notification: Notification) {
-		handle(notification: notification, isOpening: false)
-	}
-	
-	
-	private dynamic func keyboardDidShow(_ notification: Notification) {
-	}
-	
-	private dynamic func keyboardDidHide(_ notification: Notification) {
+	@objc private func keyboardWillHide(_ notification: Notification) {
+		handleNotification(notification, isOpening: false)
 	}
 	
 	
+	@objc private func keyboardDidShow(_ notification: Notification) {
+	}
 	
-	private dynamic func back() {
+	@objc private func keyboardDidHide(_ notification: Notification) {
+	}
+	
+	
+	
+	@objc private func back() {
 		let index = max(0, selectedIndex! - 1)
 		let input = inputs[safe: index]
 		input?.becomeFirstResponder()
 	}
 	
-	fileprivate dynamic func forward() {
+	@objc private func forward() {
 		let index = min(inputs.count - 1, selectedIndex! + 1)
 		let input = inputs[safe: index]
 		input?.becomeFirstResponder()
 	}
 	
-	fileprivate dynamic func done() {
+	@objc private func done() {
 		let input = inputs[selectedIndex!]
 		input.resignFirstResponder()
 	}
@@ -185,7 +104,7 @@ public class KeyboardControl: NSObject {
 				leftArrow?.isEnabled = false
 				rightArrow?.isEnabled = true
 			
-			case self.inputs.count-1:
+			case self.inputs.count - 1:
 				leftArrow?.isEnabled = true
 				rightArrow?.isEnabled = false
 			
@@ -209,17 +128,20 @@ public class KeyboardControl: NSObject {
 	
 	
 	public func deactivate() {
-		print("KeyboardControl disabled")
+		print("KeyboardControl deactvated")
 		
 		if let index = selectedIndex {
 			inputs[index].resignFirstResponder()
 		}
 		
-		NotificationCenter.default.removeObserver(self)
+		NotificationCenter.default.removeObserver(self, name: .UIKeyboardDidShow, object: nil)
+		NotificationCenter.default.removeObserver(self, name: .UIKeyboardDidHide, object: nil)
+		NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+		NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
 	}
 	
 	public func activate() {
-		print("KeyboardControl enabled")
+		print("KeyboardControl activated")
 		
 		NotificationCenter.default.removeObserver(self)
 		NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: .UIKeyboardDidShow, object: nil)
@@ -230,13 +152,12 @@ public class KeyboardControl: NSObject {
 	
 	
 	
+	/// Remember, `handler` with `self` WILL cause retain-cycle, add [unowned/weak self] in closure
 	public init(inputs: [KeyboardDisplayable], inputAccessoryView: Bool = true, handler: @escaping EventHandler) {
 		self.handler = handler
 		self.inputs = inputs
 		
 		super.init()
-		
-		
 		
 		// Replace inputs delegates with self and store them separatelly
 		inputs.forEach { input in
@@ -277,10 +198,91 @@ public class KeyboardControl: NSObject {
 	}
 	
 	deinit {
-		print("Deinit", type(of: self))
-		
-		deactivate()
+		print("~\(type(of: self))")
 	}
+}
+
+
+
+
+
+
+public struct KeyboardEvent {
+	public let isOpening: Bool
+	public let keyboardFrame: CGRect
+	public let input: KeyboardDisplayable
+	
+	public let distance: CGFloat
+}
+
+
+
+private struct KeyboardNotificationData {
+	let frame: CGRect
+	let curve: UInt
+	let duration: TimeInterval
+	let belongsToMe: Bool
+	var options: UIViewAnimationOptions {
+		return UIViewAnimationOptions(rawValue: curve)
+	}
+	
+	init(_ notification: Notification) {
+		let userInfo = notification.userInfo!
+		frame = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect
+		curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
+		duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! TimeInterval
+		belongsToMe = userInfo[UIKeyboardIsLocalUserInfoKey] as! Bool
+	}
+}
+
+
+
+
+
+public protocol KeyboardDisplayable: class, UITextInputTraits {
+	var superview: UIView? {get}
+	var inputAccessoryView: UIView? {get set}
+	var frame: CGRect {get set}
+	var isFirstResponder: Bool {get}
+	var _delegate: NSObjectProtocol? {get set}
+	
+	@discardableResult
+	func becomeFirstResponder() -> Bool
+	@discardableResult
+	func resignFirstResponder() -> Bool
+}
+
+
+extension UITextField: KeyboardDisplayable {
+	
+	public var _delegate: NSObjectProtocol? {
+		get { return self.delegate }
+		set { self.delegate = newValue as? UITextFieldDelegate }
+	}
+}
+
+extension UITextView: KeyboardDisplayable {
+	
+	public var _delegate: NSObjectProtocol? {
+		get { return self.delegate }
+		set { self.delegate = newValue as? UITextViewDelegate }
+	}
+}
+
+extension UISearchBar: KeyboardDisplayable {
+	
+	public var _delegate: NSObjectProtocol? {
+		get { return self.delegate }
+		set { self.delegate = newValue as? UISearchBarDelegate }
+	}
+}
+
+
+
+
+
+private struct Weak<T: AnyObject> {
+	weak var data: T?
 }
 
 
@@ -290,9 +292,12 @@ public class KeyboardControl: NSObject {
 
 
 
-//MARK: - Delegates -
+
+
+
 
 extension KeyboardControl: UITextFieldDelegate {
+	
 	private func delegate(for textField: UITextField) -> UITextFieldDelegate? {
 		if let index = self.inputs.index(where: { textField === $0 }) {
 			return self.individualDelegates[index].data as? UITextFieldDelegate
@@ -336,8 +341,8 @@ extension KeyboardControl: UITextFieldDelegate {
 	
 	public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		switch textField.returnKeyType {
-			case .next: self.forward()
-			default: self.done()
+		case .next: self.forward()
+		default: self.done()
 		}
 		
 		return delegate(for: textField)?.textFieldShouldReturn?(textField) ?? true
@@ -345,10 +350,8 @@ extension KeyboardControl: UITextFieldDelegate {
 }
 
 
-
-
-
 extension KeyboardControl: UISearchBarDelegate {
+	
 	private func delegate(for searchBar: UISearchBar) -> UISearchBarDelegate? {
 		if let index = self.inputs.index(where: { searchBar === $0 }) {
 			return self.individualDelegates[index].data as? UISearchBarDelegate
@@ -404,8 +407,8 @@ extension KeyboardControl: UISearchBarDelegate {
 }
 
 
-
 extension KeyboardControl: UITextViewDelegate {
+	
 	private func delegate(for textView: UITextView) -> UITextViewDelegate? {
 		if let index = self.inputs.index(where: { textView === $0 }) {
 			return self.individualDelegates[index].data as? UITextViewDelegate
@@ -453,36 +456,4 @@ extension KeyboardControl: UITextViewDelegate {
 		return delegate(for: textView)?.textView?(textView, shouldInteractWith: textAttachment, in: characterRange, interaction: interaction) ?? true
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
