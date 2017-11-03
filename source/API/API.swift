@@ -1,9 +1,8 @@
 //
 //  API.swift
-//  Pods
+//  Func
 //
-//  Created by Philip Fryklund on 11/Aug/17.
-//
+//  Created by Philip Fryklund on 24/Oct/17.
 //
 
 import Alamofire
@@ -12,153 +11,96 @@ import Alamofire
 
 
 
-/**
-	What to log for requests and responses
-*/
-public enum LoggingMode {
-	case none, url, headers, body, all
-}
-
-
-
 public protocol API {
-	static var loggingMode: LoggingMode { get set }
-	
-	/// The host to your api server EX: https://api.company.com
-	static var baseUrl: String { get set }
-	
-	/// Headers to send for each request
-	static var baseHeaders: [String: String]? { get set }
+	/// Schema + domain [+ port]
+	static var baseUrl: String { get }
+	static var baseHeaders: HTTPHeaders? { get }
+	static var loggingMode: LoggingMode { get }
 }
-
-
 
 public extension API {
 	
-	/// Logs the request
-	private static func log(request: Alamofire.Request) {
-		if loggingMode == .none {
+	static var loggingMode: LoggingMode {
+		return .all
+	}
+	
+	static func log(request: URLRequest?) {
+		guard
+			loggingMode != .none,
+			let request = request,
+			let httpMethod = request.httpMethod,
+			let url = request.url?.absoluteString
+		else {
 			return
 		}
 		
-		print()
-		print(request, "|", request.request?.httpBody?.count ?? 0, "b |")
+		print("\n-->", httpMethod, url, "|", request.httpBody?.count ?? 0, "b |")
 		
-		if loggingMode ?== [.headers, .all], let headers = request.request?.allHTTPHeaderFields {
-			for (k, v) in headers {
-				print(k + ":", v)
-			}
+		if loggingMode ?== [.headers, .all], let headers = request.allHTTPHeaderFields {
+			headers.forEach { print($0 + ":", $1) }
 		}
 		
-		if loggingMode ?== [.body, .all], let data = request.request?.httpBody, let str = String(data) {
+		if loggingMode ?== [.body, .all], let data = request.httpBody, let str = String(data) {
 			print(str)
 		}
 	}
 	
-	
-	/// Logs the response
-	private static func log(_ response: String, headers: [AnyHashable: Any]? = nil, body: Data? = nil, error: (message: String, failure: (String) -> ())? = nil) {
-		if loggingMode == .none {
+	static func log(response: DefaultDataResponse) {
+		guard
+			loggingMode != .none,
+			let statusCode = response.response?.statusCode,
+			let url = response.request?.url?.absoluteString
+		else {
 			return
 		}
 		
-		var response = response
+		print("\n<-- \(statusCode) \(url) | \(Int(response.timeline.totalDuration * 1000)) ms |")
 		
-		response += " \(body?.count ?? 0) b |"
-		
-		if let error = error {
-			response += "\n" + error.message
-			print(response, "\n")
-			error.failure(error.message)
-			return
+		if loggingMode ?== [.headers, .all], let headers = response.response?.allHeaderFields as? [String: String] {
+			headers.forEach { print($0 + ":", $1) }
 		}
 		
-		if loggingMode ?== [.headers, .all], let headers = headers {
-			response += "\n" + headers.map {  "\($0.key): \($0.value)" }.joined(by: "\n")
+		if loggingMode ?== [.body, .all], let data = response.data, let str = String(data) {
+			print(str)
 		}
-		
-		if loggingMode ?== [.body, .all], let body = body, let string = String(body) {
-			response += "\n" + string
-		}
-		
-		print(response, "\n")
 	}
 	
-	
-	/**
-		Sends request to server using Alamofire.
-		- parameters:
-			- requestable: The request struct.
-			- success: Callback for successful response where the model is successfully parsed.
-			- failure: Callback for when parsing the response failed with an error message.
-			- finally: Optional callback always called after success or failure.
-		- returns: The request created by requestable
-	*/
-	@discardableResult
-	static func fetch <R> (_ requestable: R, success: @escaping (R.M) -> (), failure: @escaping (String) -> (), finally: Closure? = nil) -> Alamofire.Request where R: Requestable {
-		let url = baseUrl + "/" + requestable.url
-		let headers = [baseHeaders, requestable.headers].flatMap { $0 }.merged()
+	static func request <R> (_ req: R) -> ResponseHandler<DataRequest, R.Model> where R: DataRequestable {
+		let request = req.request(Self.self)
+		let responseHandler = ResponseHandler<DataRequest, R.Model>(request: request)
 		
-		let request = try! requestable.request(url: url, headers: headers) //TODO
+		log(request: request.request)
 		
-		log(request: request)
-		
-		let callback: (DefaultDataResponse) -> () = { response in
-			defer {
-				finally?()
-			}
+		request.response { response in
+			log(response: response)
 			
-			let logString = "\nRESPONSE \(request) | \(Int(response.timeline.totalDuration * 1000)) ms |"
+			defer {
+				responseHandler.finally?()
+			}
 			
 			if let error = response.error {
-				return log(logString, error: (error.localizedDescription, failure))
+				responseHandler.failure?(error.localizedDescription)
+				return
 			}
-			
-			guard let data = response.data, data.count > 0 else {
-				return log(logString, error: ("Zero data received", failure))
+			do {
+				let a = req.responseSerializer
+				let obj = try a.serialize(data: response.data)
+				let model = try req.decode(obj)
+				responseHandler.success?(response.response?.statusCode ?? 0, model)
 			}
-			
-			guard let d = try? requestable.decoder.decode(data: data) else {
-				return log(logString, error: ("Failed to decode data", failure))
+			catch {
+				responseHandler.failure?(error.localizedDescription)
 			}
-			
-			guard let model = requestable.makeModel(data: d) else {
-				return log(logString, error: ("Failed to decode data", failure))
-			}
-			
-			log(logString, headers: response.response?.allHeaderFields, body: data, error: nil)
-			
-			success(model)
 		}
 		
-		if let request = request as? DataRequest {
-			request.response(completionHandler: callback)
-		}
-		else if let request = request as? UploadRequest {
-			request.response(completionHandler: callback)
-		}
-//		else if let request = request as? DownloadRequest {
-//			request.response(completionHandler: { response in
-//				
-//			})
-//		}
-		
-		return request
+		return responseHandler
 	}
 }
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+public enum LoggingMode {
+	case none, url, headers, body, all
+}
 
