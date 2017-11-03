@@ -38,15 +38,16 @@ public protocol Arithmetics: NumberType {
 	static func -(lhs: Self, rhs: Self) -> Self
 	static func *(lhs: Self, rhs: Self) -> Self
 	static func /(lhs: Self, rhs: Self) -> Self
-	static func %(lhs: Self, rhs: Self) -> Self
+//	static func %(lhs: Self, rhs: Self) -> Self
 }
 
 
 
 
 
-public protocol IntegerNumber: Integer, Arithmetics {}
+public protocol IntegerNumber: BinaryInteger, Arithmetics {}
 public extension IntegerNumber {
+	
 	var isEven: Bool  {
 		return (self & 1) == 0
 	}
@@ -59,19 +60,20 @@ public extension IntegerNumber {
 
 public protocol FloatingNumber: FloatingPoint, Arithmetics {}
 public extension FloatingNumber {
+	
 	static var max: Self { return self.greatestFiniteMagnitude }
 	
 	var deg: Self {
-		var v = self
-		if v < 0 {
-			v = abs(v)
-			v += (Self.pi - v)*2
-		}
-		return v * (Self(180.0) / Self.pi)
+//		var v = self
+//		if v < 0 {
+//			v = abs(v)
+//			v += (Self.pi - v)*2
+//		}
+		return self * Self(180.0) / Self.pi
 	}
 	
 	var rad: Self {
-		return Self.pi / Self(180.0)
+		return self *  Self.pi / Self(180.0)
 	}
 	
 	func ifNan(_ value: Self) -> Self {
@@ -240,7 +242,9 @@ extension CGFloat: FloatingNumber {
 		self.init(number.toDouble())
 	}
 	public init?(text: String) {
-		guard let v = NumberFormatter().number(from: text) else { return nil }
+		guard let v = NumberFormatter().number(from: text)?.doubleValue else {
+			return nil
+		}
 		self.init(v)
 	}
 	public func toDouble() -> Double {
