@@ -17,8 +17,13 @@ public protocol Decodable {
 }
 
 
+//public enum DecodableError: Error {
+//	case wrong
+//}
 
-private func getParse<T>(_ json: Dict, key: String) throws -> T {
+
+
+private func getParse <T> (_ json: Dict, key: String) throws -> T {
 	guard let value: Any = json.valueFor(path: key) else {
 		throw DecodingError.missingKey(key: key)
 	}
@@ -107,53 +112,6 @@ private func decode(_ json: Dict, _ key: String, format: Date.Format = .dateTime
 
 
 
-
-//infix operator <--
-//
-//
-//
-//public func <-- <T> (json: Dict, key: String) throws -> T {
-//	return try decode(json, key)
-//}
-//
-////public func <-- <T> (json: Dict, key: String) throws -> [T] {
-////	return try decode(json, key)
-////}
-//
-//
-//
-//public func <-- <T> (json: Dict, key: String) throws -> T where T: Decodable {
-//	return try decode(json, key)
-//}
-//
-//public func <-- <T> (json: Dict, key: String) throws -> [T] where T: Decodable {
-//	return try decode(json, key)
-//}
-//
-//
-//
-//public func <-- <T> (json: Dict, key: String) throws -> T where T: RawRepresentable {
-//	return try decode(json, key)
-//}
-//
-//public func <-- <T> (json: Dict, key: String) throws -> [T] where T: RawRepresentable {
-//	return try decode(json, key)
-//}
-//
-//
-//
-//public func <-- (json: Dict, key: String) throws -> URL {
-//	return try decode(json, key)
-//}
-//
-//public func <-- (json: Dict, key: String) throws -> [URL] {
-//	return try decode(json, key)
-//}
-
-
-
-
-
 public extension Dictionary where Key == String {
 	
 	public func decode <T> (_ key: String) throws -> T {
@@ -205,43 +163,6 @@ public extension Dictionary where Key == String {
 
 
 
-//public extension Dictionary where Key == String {
-//	private static func getValue(json: Dict, key: String) throws -> Any {
-//		guard let value = json[key] else {
-//			throw DecodingError.missingKey(key)
-//		}
-//		
-//		return value
-//	}
-//	
-//	private static func parse<T>(_ value: Any, key: String) throws -> T {
-//		guard let parsed = value as? T else {
-//			throw DecodingError.parseFailed(key, value, T.self)
-//		}
-//		
-//		return parsed
-//	}
-//	
-//	
-//	func decode<T>(_ key: String) throws -> T {
-//		let value = try Dictionary.getValue(json: self, key: key)
-//		return try Dictionary.parse(value, key: key)
-//	}
-//	
-//	func decode<T: Decodable>(_ key: String) throws -> T {
-//		let v = try Dictionary.getValue(json: self, key: key)
-//		let dict: Dict = try Dictionary.parse(v, key: key)
-//		
-//		guard let decodable = T(json: dict) else {
-//			throw DecodingError.parseFailed(key, dict, T.self)
-//		}
-//		
-//		return decodable
-//	}
-//}
-
-
-
 
 public enum DecodingError: LocalizedError {
 	case missingKey(key: String)
@@ -252,7 +173,7 @@ public enum DecodingError: LocalizedError {
 	public var errorDescription: String? {
 		switch self {
 			case .missingKey(let key): return "\"\(key)\" does not exist"
-			case .parseFailed(let key, let value, let type): return "Expected \"\(key)\" to be of type: \(type) but was \(type(of: value))"
+			case .parseFailed(let key, let value, let type): return "Expected \"\(key)\" to be of type: \(type) but was "//\(type(of: value))"
 			case .dateFormat(let key, let value, let format): return "Expected \"\(key)\" \(value) to be of format \(format)"
 		}
 	}
