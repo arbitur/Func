@@ -14,8 +14,8 @@ import UIKit
 
 public extension UITableView {
 	
-	func cell <T> (for id: String) -> T where T: UITableViewCell {
-		return self.dequeueReusableCell(withIdentifier: id) as! T
+	func cell <T> (for id: String) -> T! where T: UITableViewCell {
+		return self.dequeueReusableCell(withIdentifier: id) as? T
 	}
 	
 	func deselectRow(animated: Bool) {

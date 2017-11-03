@@ -173,7 +173,7 @@ public enum DecodingError: LocalizedError {
 	public var errorDescription: String? {
 		switch self {
 			case .missingKey(let key): return "\"\(key)\" does not exist"
-			case .parseFailed(let key, let value, let type): return "Expected \"\(key)\" to be of type: \(type) but was "//\(type(of: value))"
+			case .parseFailed(let key, let value, let type): return "Expected \"\(key)\" to be of type: \(type) but was \(Swift.type(of: value))"
 			case .dateFormat(let key, let value, let format): return "Expected \"\(key)\" \(value) to be of format \(format)"
 		}
 	}
