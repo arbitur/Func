@@ -52,6 +52,7 @@ public extension FontBuildable {
 
 
 public extension UIFont {
+	
 	enum Arial: String, FontBuildable {
 		case regular = "MT"
 		case bold = "-BoldMT"

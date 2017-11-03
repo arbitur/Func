@@ -102,7 +102,7 @@ public struct LayoutItem {
 		}
 		
 		view.translatesAutoresizingMaskIntoConstraints = false
-		constraint.priority = priority
+		constraint.priority = .init(priority)
 		constraint.activate()
 		
 		return constraint
@@ -122,8 +122,8 @@ public struct LAC {
 	public var right:		LayoutItem { return LayoutItem(view: view, attribute: .right) }
 	public var top:			LayoutItem { return LayoutItem(view: view, attribute: .top) }
 	public var bottom:		LayoutItem { return LayoutItem(view: view, attribute: .bottom) }
-//	public var leading:	LayoutItem { return LayoutItem(view: view, attribute: .leading) }
-//	public var trailing:	LayoutItem { return LayoutItem(view: view, attribute: .trailing) }
+	public var leading:		LayoutItem { return LayoutItem(view: view, attribute: .leading) }
+	public var trailing:	LayoutItem { return LayoutItem(view: view, attribute: .trailing) }
 	public var width:		LayoutItem { return LayoutItem(view: view, attribute: .width) }
 	public var height:		LayoutItem { return LayoutItem(view: view, attribute: .height) }
 	public var centerX:		LayoutItem { return LayoutItem(view: view, attribute: .centerX) }
@@ -151,10 +151,29 @@ public struct LAC {
 }
 
 
+
 public extension UIView {
 	
 	var lac: LAC {
 		return LAC(view: self)
+	}
+}
+
+
+
+public extension UIView {
+	
+	func add(view: UIView, instructions: (LAC)->()) {
+		self.add(view: view)
+		view.lac.make(instructions)
+	}
+}
+
+public extension UIStackView {
+	
+	func add(arrangedView: UIView, instructions: (LAC)->()) {
+		self.add(arrangedView: arrangedView)
+		arrangedView.lac.make(instructions)
 	}
 }
 

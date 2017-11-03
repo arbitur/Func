@@ -14,6 +14,13 @@ import Foundation
 
 public extension CGSize {
 	
+	/**
+		Returns an aspect ratio of `width / height`
+	
+		## Usage:
+	
+			let width = height * aspectRatio
+	*/
 	var aspectRatio: CGFloat {
 		return self.width / self.height
 	}

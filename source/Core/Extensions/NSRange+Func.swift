@@ -12,8 +12,10 @@ import Foundation
 
 
 
-extension NSRange: CustomStringConvertible {
-	public var description: String {
-		return  "\(self.location)..<\(self.length)"
-	}
-}
+//extension NSRange: CustomStringConvertible {
+//
+//	public var description: String {
+//		return  "\(self.location)..<\(self.length)"
+//	}
+//}
+

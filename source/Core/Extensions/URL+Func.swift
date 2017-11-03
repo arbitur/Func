@@ -13,6 +13,7 @@ import Foundation
 
 
 public extension URL {
+	
 	var parameters: [String: String] {
 		let paramsRaw = self.query?.components(separatedBy: "&")
 		var params = [String: String]()
@@ -30,6 +31,7 @@ public extension URL {
 
 
 extension URL: ExpressibleByStringLiteral {
+	
 	public init(stringLiteral value: StringLiteralType) {
 		guard let url = URL(string: value) else { fatalError("Could not create URL from: \(value)") }
 		self = url

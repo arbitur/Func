@@ -102,7 +102,7 @@ public extension RangeReplaceableCollection where Index == Int, IndexDistance ==
 
 
 
-public extension MutableCollection where Index == Indices.Iterator.Element {
+public extension MutableCollection {
 	
 	/// Returns `nil` if `Element` doesn't exist at `index`
 	subscript (safe index: Index) -> Iterator.Element? {

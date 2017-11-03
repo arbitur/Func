@@ -13,7 +13,8 @@ import UIKit
 
 
 public extension UIStoryboard {
-	func viewController<T: UIViewController>(id: String = "") -> T {
+	
+	func viewController <T> (for id: String = "") -> T where T: UIViewController {
 		if !id.isEmpty {
 			return self.instantiateViewController(withIdentifier: id) as! T
 		}

@@ -12,6 +12,7 @@ import UIKit
 
 
 
+@available(*, deprecated, message: "Maybe discontinued")
 public struct Snackbar {
 	
 	public enum Duration {
@@ -42,6 +43,7 @@ public struct Snackbar {
 
 
 
+@available(*, deprecated, message: "Maybe discontinued")
 private class SnackbarView: UIView {
 	let label: UILabel
 	let snackbar: Snackbar
@@ -77,6 +79,7 @@ private class SnackbarView: UIView {
 
 
 
+@available(*, deprecated, message: "Maybe discontinued")
 private class SnackbarHandler {
 	static let shared = SnackbarHandler()
 	
@@ -106,13 +109,14 @@ private class SnackbarHandler {
 		numberOfSnackbars += 1
 	}
 	
-	dynamic func dismiss(_ notification: Notification) {
+	@objc func dismiss(_ notification: Notification) {
 		
 	}
 }
 
 
 extension Notification.Name {
+	@available(*, deprecated, message: "Maybe discontinued")
 	static let snackbarDismiss = Notification.Name(rawValue: "asdasd")
 }
 
