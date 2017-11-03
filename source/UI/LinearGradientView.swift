@@ -12,17 +12,17 @@ import UIKit
 
 
 
-public typealias GradientColorComponents = [(color: UIColor, location: NSNumber)]
-
 @IBDesignable
 open class LinearGradientView: UIView {
+	
 	open override class var layerClass: AnyClass { return LinearGradientLayer.self }
+	
 	public var gradientLayer: LinearGradientLayer {
 		return self.layer as! LinearGradientLayer
 	}
 	
 	
-	public var colorComponents: GradientColorComponents? {
+	public var colorComponents: [(color: UIColor, location: Double)]? {
 		get { return gradientLayer.colorComponents }
 		set {
 			gradientLayer.colorComponents = newValue
@@ -48,11 +48,12 @@ open class LinearGradientView: UIView {
 
 
 open class LinearGradientLayer: CAGradientLayer {
-	public var colorComponents: GradientColorComponents? {
-		get { return zip(self.colors ?? [], self.locations ?? []).map { (UIColor(cgColor: $0.0 as! CGColor), $0.1) } }
+	
+	public var colorComponents: [(color: UIColor, location: Double)]? {
+		get { return zip(self.colors ?? [], self.locations ?? []).map { (UIColor(cgColor: $0.0 as! CGColor), $0.1.doubleValue) } }
 		set {
 			self.colors = newValue?.map { $0.color.cgColor }
-			self.locations = newValue?.map { $0.location }
+			self.locations = newValue?.map { NSNumber(value: $0.location) }
 		}
 	}
 	
@@ -68,23 +69,20 @@ open class LinearGradientLayer: CAGradientLayer {
 		}
 	}
 	
-	private func initz() {
-		self.needsDisplayOnBoundsChange = true
-	}
 	
 	public override init() {
 		super.init()
-		initz()
+		self.needsDisplayOnBoundsChange = true
 	}
 	
 	public override init(layer: Any) {
 		super.init(layer: layer)
-		initz()
+		self.needsDisplayOnBoundsChange = true
 	}
 	
 	public required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
-		initz()
+		self.needsDisplayOnBoundsChange = true
 	}
 }
 
