@@ -17,28 +17,8 @@ public func pixels(points: CGFloat) -> CGFloat {
 	return points * UIScreen.main.scale
 }
 
-public func points(pixels: CGFloat) -> CGFloat {
-	return pixels / UIScreen.main.scale
-}
-
-
-
-
-
-public extension UIView {
-	
-	func add(view: UIView, instructions: (LAC)->()) {
-		self.add(view: view)
-		view.lac.make(instructions)
-	}
-}
-
-public extension UIStackView {
-	
-	func add(arrangedView: UIView, instructions: (LAC)->()) {
-		self.add(arrangedView: arrangedView)
-		arrangedView.lac.make(instructions)
-	}
+public func points(pixels: Int) -> CGFloat {
+	return CGFloat(pixels) / UIScreen.main.scale
 }
 
 
@@ -46,16 +26,39 @@ public extension UIStackView {
 
 
 public protocol BorderDrawable: class {
-	var borderWidth: CGFloat? { get set }
-	var borderColor: UIColor? { get set }
+	var borderWidth: CGFloat { get set }
+	var borderColor: UIColor { get set }
 }
 
-extension BorderDrawable {
+extension BorderDrawable where Self: UIView {
 	
-	fileprivate func updateBorder(of view: UIView) {
-		if let width = borderWidth, let color = borderColor ?? view.tintColor {
-			view.border(width: width, color: color)
+	public var borderWidth: CGFloat {
+		get {
+			return self.layer.borderWidth
 		}
+		set {
+			self.layer.borderWidth = newValue
+			self.setNeedsLayout()
+		}
+	}
+	
+	public var borderColor: UIColor {
+		get {
+			if let cgColor = self.layer.borderColor {
+				return UIColor(cgColor: cgColor)
+			}
+			else {
+				return self.tintColor
+			}
+		}
+		set {
+			self.layer.borderColor = newValue.cgColor
+			self.setNeedsLayout()
+		}
+	}
+	
+	fileprivate func updateBorder() {
+		self.border(width: borderWidth, color: borderColor)
 	}
 }
 
@@ -65,67 +68,70 @@ extension BorderDrawable {
 
 @IBDesignable
 open class RoundView: UIView, BorderDrawable {
-	@IBInspectable public var borderWidth: CGFloat? { didSet { self.setNeedsLayout() } }
-	@IBInspectable public var borderColor: UIColor? { didSet { self.setNeedsLayout() } }
+	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 		
 		self.roundCorners()
-		self.updateBorder(of: self)
+		self.updateBorder()
 	}
 }
+
 
 
 @IBDesignable
 open class RoundLabel: UILabel, BorderDrawable {
-	@IBInspectable public var borderWidth: CGFloat? { didSet { self.setNeedsLayout() } }
-	@IBInspectable public var borderColor: UIColor? { didSet { self.setNeedsLayout() } }
+	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 		
 		self.roundCorners()
-		self.updateBorder(of: self)
+		self.updateBorder()
 	}
 }
+
 
 
 @IBDesignable
 open class RoundButton: UIButton, BorderDrawable {
-	@IBInspectable public var borderWidth: CGFloat? { didSet { self.setNeedsLayout() } }
-	@IBInspectable public var borderColor: UIColor? { didSet { self.setNeedsLayout() } }
+	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 		
 		self.roundCorners()
-		self.updateBorder(of: self)
+		self.updateBorder()
 	}
 }
+
 
 
 @IBDesignable
 open class TintImageView: UIImageView {
+	
 	open override var image: UIImage? {
 		get { return super.image }
 		set { super.image = newValue?.withRenderingMode(.alwaysTemplate) }
 	}
 }
+
 
 
 @IBDesignable
 open class RoundImageView: UIImageView, BorderDrawable {
-	@IBInspectable public var borderWidth: CGFloat? { didSet { self.setNeedsLayout() } }
-	@IBInspectable public var borderColor: UIColor? { didSet { self.setNeedsLayout() } }
+	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 		
 		self.roundCorners()
-		self.updateBorder(of: self)
+		self.updateBorder()
 	}
 }
 
 
+
 @IBDesignable
 open class RoundTintImageView: RoundImageView {
+	
 	open override var image: UIImage? {
 		get { return super.image }
 		set { super.image = newValue?.withRenderingMode(.alwaysTemplate) }
@@ -133,10 +139,9 @@ open class RoundTintImageView: RoundImageView {
 }
 
 
+
 @IBDesignable
 open class RoundTextField: UITextField, BorderDrawable {
-	@IBInspectable public var borderWidth: CGFloat? { didSet { self.setNeedsLayout() } }
-	@IBInspectable public var borderColor: UIColor? { didSet { self.setNeedsLayout() } }
 	
 	open override func textRect(forBounds bounds: CGRect) -> CGRect {
 		return bounds.insetBy(dx: self.cornerRadius, dy: 0)
@@ -154,7 +159,7 @@ open class RoundTextField: UITextField, BorderDrawable {
 		super.layoutSubviews()
 		
 		self.roundCorners()
-		self.updateBorder(of: self)
+		self.updateBorder()
 	}
 }
 
