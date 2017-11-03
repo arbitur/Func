@@ -13,6 +13,19 @@ import UIKit
 
 
 public extension UINavigationController {
+	
+	var rootViewController: UIViewController? {
+		get { return self.viewControllers.first }
+		set {
+			if let newValue = newValue {
+				self.setViewControllers([newValue], animated: false)
+			}
+			else {
+				self.setViewControllers([], animated: false)
+			}
+		}
+	}
+	
 	func popToRootViewController(animated: Bool, completion: @escaping (UINavigationController)->()) {
 		CATransaction.setCompletionBlock({ completion(self) })
 		CATransaction.begin()

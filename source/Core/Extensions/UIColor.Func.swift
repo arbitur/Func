@@ -15,6 +15,7 @@ import UIKit
 public extension UIColor {
 	static var extraLightGray: UIColor	{ return UIColor(hex: 0xEEEEEE) }
 	static var extraDarkGray: UIColor  	{ return UIColor(hex: 0x333333) }
+	static var lightBlack: UIColor		{ return UIColor(hex: 0x282828) }
 	static var pink: UIColor      		{ return UIColor(hex: 0xFF69B4) }
 	
 	

@@ -13,6 +13,7 @@ import UIKit
 
 
 public extension UIBezierPath {
+	
 	func addRect(_ p1: CGPoint, p2: CGPoint) {
 		self.move(to: p1)
 		self.addLine(to: CGPoint(p2.x, p1.y))
@@ -21,9 +22,22 @@ public extension UIBezierPath {
 		self.close()
 	}
 	
+	
 	func addRect(_ rect: CGRect) {
 		let topLeft = rect.origin
 		let bottomRight = CGPoint(x: topLeft.x + rect.size.width, y: topLeft.y + rect.size.height)
 		self.addRect(topLeft, p2: bottomRight)
+	}
+	
+	
+	
+	func stroke(_ color: UIColor) {
+		color.setStroke()
+		self.stroke()
+	}
+	
+	func fill(_ color: UIColor) {
+		color.setStroke()
+		self.fill()
 	}
 }

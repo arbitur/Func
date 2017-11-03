@@ -12,7 +12,18 @@ import Foundation
 
 
 
+extension Optional {
+	
+	var isNil: Bool {
+		switch self {
+		case .none: return true
+		case .some: return false
+		}
+	}
+}
+
 extension Optional: CustomStringConvertible {
+	
 	public var description: String {
 		switch self {
 			case .none: return "\(Wrapped.self)(nil)"

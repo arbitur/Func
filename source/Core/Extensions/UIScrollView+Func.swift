@@ -13,6 +13,7 @@ import UIKit
 
 
 public extension UIScrollView {
+	
 	var maximumContentOffset: CGPoint {
 		let x: CGFloat
 		let y: CGFloat
@@ -32,5 +33,15 @@ public extension UIScrollView {
 		}
 		
 		return CGPoint(x, y)
+	}
+	
+	
+	
+	var contentFrame: CGRect {
+		get { return CGRect(origin: self.contentOffset, size: self.contentSize) }
+		set {
+			self.contentOffset = newValue.origin
+			self.contentSize = newValue.size
+		}
 	}
 }
