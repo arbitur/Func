@@ -9,5 +9,7 @@ target 'FuncExample' do
 #	pod 'Func/Geocoding', :path => '../'
 #	pod 'Func/API', :path => '../'
 #	pod 'Func/JSON', :path => '../'
+
+	pod 'AlamofireImage', '~> 3.3'
 	
 end

@@ -9,6 +9,7 @@
 import UIKit
 import Func
 import Alamofire
+import AlamofireImage
 import CoreLocation
 
 
@@ -28,7 +29,51 @@ class AppDelegate: UIResponder {
 		let vc = Page1()
 		let nc = UINavigationController(rootViewController: vc)
 		nc.navigationBar.isTranslucent = false
-		window.rootViewController = nc
+//		window.rootViewController = nc
+		
+		
+		let slide = SlideMenuController()
+		slide.rootViewController = RootVC()
+		slide.menuViewController = MenuVC()
+		window.rootViewController = slide
+	}
+}
+
+class MenuVC: DebugViewController, MenuViewControllable {
+	weak var controller: SlideMenuController?
+	
+	func attached(to controller: SlideMenuController) {
+	}
+	
+	
+	private class VC: DebugViewController {
+		override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+			self.slideMenuController?.openMenu()
+		}
+		override func loadView() {
+			let label = UILabel(font: UIFont.systemFont(ofSize: 18), alignment: .center)
+			label.backgroundColor = .white
+			label.text = self.title
+			label.isUserInteractionEnabled = true
+			self.view = label
+		}
+	}
+	
+	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+		let vc = VC()
+		vc.title = "Text \(Random.range(0..<10))"
+		controller?.rootViewController = vc
+		self.close()
+	}
+	
+	override func loadView() {
+		self.view = UIView(backgroundColor: .red)
+	}
+}
+
+class RootVC: DebugViewController {
+	override func loadView() {
+		self.view = UIView(backgroundColor: .green)
 	}
 }
 
@@ -39,6 +84,7 @@ extension AppDelegate: UIApplicationDelegate {
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
 		loadWindow()
+		
 		
 //		let color = UIColor.cyan
 //		print(color.rgba)
@@ -57,32 +103,16 @@ extension AppDelegate: UIApplicationDelegate {
 //		let test: Dict? = Archiver.unarchive(forKey: "test")
 //		print("Unarchived", test ?? "nil")
 
-		GeocodingAPI.loggingMode = .url
-		GeocodingAPI.key = "AIzaSyCBWku312Br8Rsh8YXhzNkDN3vsy2Iz6yA"
+//		GeocodingAPI.loggingMode = .url
+//		GeocodingAPI.key = "AIzaSyCBWku312Br8Rsh8YXhzNkDN3vsy2Iz6yA"
 		
-		ReverseGeocode(
-			coordinate: CLLocationCoordinate2D(latitude: 10, longitude: 10),
-			resultTypes: [.streetAddress],
-			locationTypes: [.roofTop]
-		)
-		.fetch(
-			success: { response in
-				print(response)
-			},
-			failure: { error in
-				print("Error:", error)
-			}
-		)
-		
-		Geocode(address: "Östermalmstorg 1", components: [.locality: "Östermalm"], region: "sv")
-		.fetch(
-			success: { response in
-				print(response)
-			},
-			failure: { error in
-				print("Error:", error)
-			}
-		)
+//		GeocodingAPI.request(Geocode(address: "Östermalmstorg 1, Stockholm"))
+//		.success { status, response in
+//			print(response)
+//		}
+//		.failure { error in
+//			print(error)
+//		}
 		
 		return true
 	}
