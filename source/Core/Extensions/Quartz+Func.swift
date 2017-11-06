@@ -13,6 +13,7 @@ import QuartzCore
 
 
 public extension CAMediaTimingFunction {
+	
 	static var linear: CAMediaTimingFunction { return CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) }
 	static var easeIn: CAMediaTimingFunction { return CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn) }
 	static var easeOut: CAMediaTimingFunction { return CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut) }

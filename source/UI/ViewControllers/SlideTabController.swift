@@ -59,12 +59,12 @@ open class SlideTabController: UIViewController {
 			
 			for vc in viewControllers {
 				self.addChildViewController(vc)
-//				scrollView.stackView.addArrangedSubview(vc.view)
+				scrollView.stackView.addArrangedSubview(vc.view)
 				menu.addTab(title: vc.title ?? "Title")
 				
-//				vc.view.snp.makeConstraints {
-//					$0.width.equalTo(self.view.snp.width)
-//				}
+				vc.view.snp.makeConstraints {
+					$0.width.equalTo(self.view.snp.width)
+				}
 			}
 			
 //			selectViewController(index: 0)
@@ -136,12 +136,12 @@ extension SlideTabController: UIScrollViewDelegate {
 		let leftPosition = scrollView.contentOffset.x
 		let rightPosition = scrollView.contentOffset.x + scrollView.bounds.width
 		
-		let index = Int((rightPosition - 1) / scrollView.bounds.width)
-//		print(index)
-		
-		if let vc = self.childViewControllers[safe: index] {
-			showViewController(vc)
-		}
+//		let index = Int((rightPosition - 1) / scrollView.bounds.width)
+////		print(index)
+//
+//		if let vc = self.childViewControllers[safe: index] {
+//			showViewController(vc)
+//		}
 		
 //		print("Left: \(leftPosition / fullWidth)%", "Right: \(rightPosition / fullWidth)%")
 		
@@ -190,38 +190,38 @@ extension SlideTabController: UIScrollViewDelegate {
 
 fileprivate class ScrollView: UIScrollView {
 	var tabController: SlideTabController { return self.superViewController as! SlideTabController }
-//	let stackView = UIStackView()
+	let stackView = UIStackView()
 	
 	
 	
-	fileprivate override func layoutSubviews() {
-		super.layoutSubviews()
-		
-		self.contentSize.height = self.bounds.height
-		self.contentSize.width = self.bounds.width * CGFloat(tabController.childViewControllers.count)
-		
-		for (i, vc) in tabController.childViewControllers.enumerated() {
-			if let view = vc.viewIfLoaded {
-				view.frame.size = self.bounds.size
-				view.frame.left = self.bounds.width * CGFloat(i)
-			}
-		}
-	}
+//	fileprivate override func layoutSubviews() {
+//		super.layoutSubviews()
+//
+//		self.contentSize.height = self.bounds.height
+//		self.contentSize.width = self.bounds.width * CGFloat(tabController.childViewControllers.count)
+//
+//		for (i, vc) in tabController.childViewControllers.enumerated() {
+//			if let view = vc.viewIfLoaded {
+//				view.frame.size = self.bounds.size
+//				view.frame.left = self.bounds.width * CGFloat(i)
+//			}
+//		}
+//	}
 	
 	convenience init() {
 		self.init(frame: CGRect.zero)
 		
 		self.showsHorizontalScrollIndicator = false
 		
-//		stackView.axis = .horizontal
-//		stackView.alignment = .fill
-//		stackView.distribution = .fillEqually
-//		self.addSubview(stackView)
-//		
-//		stackView.snp.makeConstraints {
-//			$0.edges.equalToSuperview()
-//			$0.height.equalToSuperview()
-//		}
+		stackView.axis = .horizontal
+		stackView.alignment = .fill
+		stackView.distribution = .fillEqually
+		self.addSubview(stackView)
+		
+		stackView.snp.makeConstraints {
+			$0.edges.equalToSuperview()
+			$0.height.equalToSuperview()
+		}
 	}
 }
 

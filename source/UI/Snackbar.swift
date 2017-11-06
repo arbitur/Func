@@ -102,7 +102,7 @@ private class SnackbarHandler {
 	func present(snackbar: Snackbar) {
 		let view = SnackbarView(snackbar: snackbar, id: numberOfSnackbars, width: window.bounds.width)
 		view.startDate = Date()
-		view.endDate = view.startDate + .millisecond( Int(snackbar.duration.rawValue * 1000) )
+		view.endDate = view.startDate + .milliseconds( Int(snackbar.duration.rawValue * 1000) )
 		
 		//Give up
 		

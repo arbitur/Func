@@ -23,6 +23,9 @@ open class SlideMenuController: DebugViewController {
 		return !(menuViewController?.presentingViewController).isNil
 	}
 	
+	private let transitionManager = TransitionManager()
+	
+	
 	open override var childViewControllerForStatusBarStyle: UIViewController? {
 		return self.presentedViewController ?? rootViewController
 	}
@@ -36,25 +39,14 @@ open class SlideMenuController: DebugViewController {
 		return self.childViewControllerForStatusBarStyle
 	}
 	
-	private let transitionManager = TransitionManager()
 	
-	
-	
-	open func toggleMenu() {
-		if isMenuShowing {
-			closeMenu()
-		}
-		else {
-			openMenu()
-		}
-	}
 	
 	@objc open func openMenu() {
 		self.present(menuViewController, animated: true, completion: nil)
 	}
 	
-	open func closeMenu() {
-		menuViewController?.dismiss(animated: true, completion: nil)
+	open func closeMenu(animated: Bool = true) {
+		menuViewController?.dismiss(animated: animated, completion: nil)
 	}
 	
 	
@@ -122,6 +114,12 @@ open class SlideMenuController: DebugViewController {
 		let edgePanGesture = UIScreenEdgePanGestureRecognizer(target: transitionManager, action: #selector(TransitionManager.gestureOpen(_:)))
 		edgePanGesture.edges = .left
 		self.view.addGestureRecognizer(edgePanGesture)
+	}
+	
+	open override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		
+		closeMenu(animated: false)
 	}
 }
 
@@ -234,7 +232,7 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
 		}
 		
 		let duration = transitionDuration(using: transitionContext)
-		let options: UIViewAnimationOptions = isInteractive ? .curveLinear : .curveEaseOut
+		let options: UIViewAnimationOptions = .curveEaseOut
 		
 		UIView.animate(withDuration: duration, delay: 0, options: options,
 			animations: animations,

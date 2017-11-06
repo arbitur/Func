@@ -12,7 +12,7 @@ import Foundation
 
 
 
-public protocol NumberType {
+public protocol Number {
 	init()
 	init(_ v: Int)
 	init(_ v: UInt)
@@ -27,18 +27,19 @@ public protocol NumberType {
 	init(_ v: Float)
 	init(_ v: Double)
 	init(_ v: CGFloat)
-	init?(text: String)
-	
-	init(number: NumberType)
+	init?(_ string: String)
+
+	// `number` as labeled parameter to rid of ambiguous inits
+	init(number: Number)
 	func toDouble() -> Double
 }
 
-public protocol Arithmetics: NumberType {
-	static func +(lhs: Self, rhs: Self) -> Self
-	static func -(lhs: Self, rhs: Self) -> Self
-	static func *(lhs: Self, rhs: Self) -> Self
-	static func /(lhs: Self, rhs: Self) -> Self
-//	static func %(lhs: Self, rhs: Self) -> Self
+public protocol Arithmetics: Number {
+	static func + (lhs: Self, rhs: Self) -> Self
+	static func - (lhs: Self, rhs: Self) -> Self
+	static func * (lhs: Self, rhs: Self) -> Self
+	static func / (lhs: Self, rhs: Self) -> Self
+//	static func % (lhs: Self, rhs: Self) -> Self
 }
 
 
@@ -64,11 +65,6 @@ public extension FloatingNumber {
 	static var max: Self { return self.greatestFiniteMagnitude }
 	
 	var deg: Self {
-//		var v = self
-//		if v < 0 {
-//			v = abs(v)
-//			v += (Self.pi - v)*2
-//		}
 		return self * Self(180.0) / Self.pi
 	}
 	
@@ -77,10 +73,7 @@ public extension FloatingNumber {
 	}
 	
 	func ifNan(_ value: Self) -> Self {
-		if self.isNaN {
-			return value
-		}
-		return self
+		return self.isNaN ? value : self
 	}
 	
 	func shorten(decimals: Int) -> Self {
@@ -89,16 +82,17 @@ public extension FloatingNumber {
 		let b = a.rounded()
 		return b / nr
 	}
+	
+	static func % (lhs: Self, rhs: Self) -> Self {
+		return lhs.remainder(dividingBy: rhs)
+	}
 }
 
 
 
 extension Int: IntegerNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self.init(number.toDouble())
-	}
-	public init?(text: String) {
-		self.init(text)
 	}
 	public func toDouble() -> Double {
 		return Double(self)
@@ -106,11 +100,8 @@ extension Int: IntegerNumber {
 }
 
 extension UInt: IntegerNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self.init(number.toDouble())
-	}
-	public init?(text: String) {
-		self.init(text)
 	}
 	public func toDouble() -> Double {
 		return Double(self)
@@ -118,11 +109,8 @@ extension UInt: IntegerNumber {
 }
 
 extension Int8: IntegerNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self.init(number.toDouble())
-	}
-	public init?(text: String) {
-		self.init(text)
 	}
 	public func toDouble() -> Double {
 		return Double(self)
@@ -130,11 +118,8 @@ extension Int8: IntegerNumber {
 }
 
 extension UInt8: IntegerNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self.init(number.toDouble())
-	}
-	public init?(text: String) {
-		self.init(text)
 	}
 	public func toDouble() -> Double {
 		return Double(self)
@@ -142,11 +127,8 @@ extension UInt8: IntegerNumber {
 }
 
 extension Int16: IntegerNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self.init(number.toDouble())
-	}
-	public init?(text: String) {
-		self.init(text)
 	}
 	public func toDouble() -> Double {
 		return Double(self)
@@ -154,11 +136,8 @@ extension Int16: IntegerNumber {
 }
 
 extension UInt16: IntegerNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self.init(number.toDouble())
-	}
-	public init?(text: String) {
-		self.init(text)
 	}
 	public func toDouble() -> Double {
 		return Double(self)
@@ -166,11 +145,8 @@ extension UInt16: IntegerNumber {
 }
 
 extension Int32: IntegerNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self.init(number.toDouble())
-	}
-	public init?(text: String) {
-		self.init(text)
 	}
 	public func toDouble() -> Double {
 		return Double(self)
@@ -178,11 +154,8 @@ extension Int32: IntegerNumber {
 }
 
 extension UInt32: IntegerNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self.init(number.toDouble())
-	}
-	public init?(text: String) {
-		self.init(text)
 	}
 	public func toDouble() -> Double {
 		return Double(self)
@@ -190,11 +163,8 @@ extension UInt32: IntegerNumber {
 }
 
 extension Int64: IntegerNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self.init(number.toDouble())
-	}
-	public init?(text: String) {
-		self.init(text)
 	}
 	public func toDouble() -> Double {
 		return Double(self)
@@ -202,11 +172,8 @@ extension Int64: IntegerNumber {
 }
 
 extension UInt64: IntegerNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self.init(number.toDouble())
-	}
-	public init?(text: String) {
-		self.init(text)
 	}
 	public func toDouble() -> Double {
 		return Double(self)
@@ -214,11 +181,8 @@ extension UInt64: IntegerNumber {
 }
 
 extension Float: FloatingNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self.init(number.toDouble())
-	}
-	public init?(text: String) {
-		self.init(text)
 	}
 	public func toDouble() -> Double {
 		return Double(self)
@@ -226,11 +190,8 @@ extension Float: FloatingNumber {
 }
 
 extension Double: FloatingNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self = number.toDouble()
-	}
-	public init?(text: String) {
-		self.init(text)
 	}
 	public func toDouble() -> Double {
 		return self
@@ -238,11 +199,11 @@ extension Double: FloatingNumber {
 }
 
 extension CGFloat: FloatingNumber {
-	public init(number: NumberType) {
+	public init(number: Number) {
 		self.init(number.toDouble())
 	}
-	public init?(text: String) {
-		guard let v = NumberFormatter().number(from: text)?.doubleValue else {
+	public init?(_ string: String) {
+		guard let v = Double(string) else {
 			return nil
 		}
 		self.init(v)

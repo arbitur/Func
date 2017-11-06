@@ -40,7 +40,6 @@ public extension UIColor {
 	}
 	
 	func darkened(by v: CGFloat) -> UIColor {
-		defer {print()}
 		let (h, s, l) = self.hsl
 		let delta = l
 		return UIColor(hue: h/360, saturation: s, lightness: l - delta * v, alpha: self.rgba.a)
@@ -95,6 +94,7 @@ public extension UIColor {
 
 
 public extension UIColor {
+	
 	var rgba: (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) {
 		var (r, g, b, a) = (CGFloat(), CGFloat(), CGFloat(), CGFloat())
 		getRed(&r, green: &g, blue: &b, alpha: &a)

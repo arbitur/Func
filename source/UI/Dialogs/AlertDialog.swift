@@ -66,12 +66,11 @@ open class AlertDialog: Dialog, DialogBuilder {
 		self.transitioningDelegate = self
 		
 		contentView.cornerRadius = 13.5
-		contentView.lac.make {
-			$0.top.greaterThanSuperview(20)
-			$0.bottom.lessThanSuperview(-20)
-			$0.centerX.equalToSuperview()
-			$0.centerY.equalToSuperview()
-			$0.width.equal(to: 270)
+		contentView.snp.makeConstraints {
+			$0.width.equalTo(270)
+			$0.center.equalToSuperview()
+			$0.top.greaterThanOrEqualTo(self.topLayoutGuide.snp.bottom).offset(10)
+			$0.bottom.lessThanOrEqualTo(self.bottomLayoutGuide.snp.top).offset(-10)
 		}
 		
 		promptContentView?.layoutMargins = UIEdgeInsets(horizontal: 16, vertical: 20)
@@ -121,12 +120,13 @@ open class AlertDialog: Dialog, DialogBuilder {
 }
 
 extension AlertDialog: UIViewControllerTransitioningDelegate {
+	
 	public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-		return AlertAnimator(dismissing: false, duration: 0.3, controlPoints: (CGPoint(0.1, 1), CGPoint(1, 1)))
+		return AlertAnimator(dismissing: false, duration: 0.3, controlPoints: (CGPoint(0.1, 1), CGPoint(0.85, 1)))
 	}
 	
 	public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-		return AlertAnimator(dismissing: true, duration: 0.3, controlPoints: (CGPoint(0.1, 1), CGPoint(1, 1)))
+		return AlertAnimator(dismissing: true, duration: 0.3, controlPoints: (CGPoint(0.1, 1), CGPoint(0.85, 1)))
 	}
 }
 
@@ -134,9 +134,8 @@ extension AlertDialog: UIViewControllerTransitioningDelegate {
 
 
 
-
-
-fileprivate class AlertAnimator: DialogAnimator<AlertDialog> {
+private class AlertAnimator: DialogAnimator<AlertDialog> {
+	
 	override func prepareAnimation(_ viewController: AlertDialog) {
 		viewController.contentBlurView.backgroundColor = .white
 		

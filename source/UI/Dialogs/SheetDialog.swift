@@ -13,6 +13,7 @@ import UIKit
 
 
 open class SheetDialog: Dialog, DialogBuilder {
+	
 	private let contentStackView = UIStackView(axis: .vertical)
 	open override var contentView: UIView { return contentStackView }
 	fileprivate var cancelActionView: UIView?
@@ -93,11 +94,12 @@ open class SheetDialog: Dialog, DialogBuilder {
 		
 		contentStackView.spacing = 8
 		
-		contentView.lac.make {
-			$0.top.greaterThanSuperview(20)
-			$0.left.equalToSuperview(10)
-			$0.right.equalToSuperview(-10)
-			$0.bottom.equalToSuperview(-10)
+		contentView.snp.makeConstraints {
+			$0.left.right.equalToSuperview().inset(10)
+			$0.top.greaterThanOrEqualTo(self.topLayoutGuide.snp.bottom).offset(10)
+			// iPhone X
+			$0.bottom.equalTo(self.bottomLayoutGuide.snp.top).priority(750)
+			$0.bottom.lessThanOrEqualToSuperview().offset(-10)
 		}
 		
 		contentStackView.add(arrangedView: contentBlurView)
@@ -177,13 +179,15 @@ open class SheetDialog: Dialog, DialogBuilder {
 	}
 }
 
+
 extension SheetDialog: UIViewControllerTransitioningDelegate {
+	
 	public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-		return SheetAnimator(dismissing: false, duration: 1.0/3.0, controlPoints: (CGPoint(0.1, 1), CGPoint(1, 1)))
+		return SheetAnimator(dismissing: false, duration: 1.0/3.0, controlPoints: (CGPoint(0.1, 1), CGPoint(0.85, 1)))
 	}
 	
 	public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-		return SheetAnimator(dismissing: true, duration: 1.0/3.0, controlPoints: (CGPoint(0.1, 1), CGPoint(1, 1)))
+		return SheetAnimator(dismissing: true, duration: 1.0/3.0, controlPoints: (CGPoint(0.1, 1), CGPoint(0.85, 1)))
 	}
 }
 
@@ -191,9 +195,8 @@ extension SheetDialog: UIViewControllerTransitioningDelegate {
 
 
 
-
-
-fileprivate class SheetAnimator: DialogAnimator<SheetDialog> {
+private class SheetAnimator: DialogAnimator<SheetDialog> {
+	
 	override func prepareAnimation(_ viewController: SheetDialog) {
 		viewController.contentBlurView.backgroundColor = .white
 		viewController.cancelActionView?.backgroundColor = .white

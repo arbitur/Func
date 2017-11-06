@@ -34,12 +34,10 @@ public extension Date {
 	
 	
 	init?(_ string: String, format: Format) {
-		if let date = DateFormatter(format: format.format).date(from: string) {
-			self.init(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate)
-		}
-		else {
+		guard let date = DateFormatter(format: format.format).date(from: string) else {
 			return nil
 		}
+		self.init(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate)
 	}
 }
 
@@ -129,11 +127,11 @@ public extension Date {
 		
 		public var format: String {
 			switch self {
-				case .date:				return "yyyy-MM-dd"
-				case .time:				return "HH:mm"
-				case .dateTime:			return "yyyy-MM-dd HH:mm"
-				case .dateTimeSec:		return "yyyy-MM-dd HH:mm:ss"
-				case .custom(let f):	return f
+				case .date			: return "yyyy-MM-dd"
+				case .time			: return "HH:mm"
+				case .dateTime		: return "yyyy-MM-dd HH:mm"
+				case .dateTimeSec	: return "yyyy-MM-dd HH:mm:ss"
+				case .custom(let f)	: return f
 			}
 		}
 	}
@@ -144,28 +142,28 @@ public extension Date {
 public extension Date {
 	
 	public enum Component {
-		case year(Int)
-		case month(Int)
-		case week(Int)
-		case day(Int)
+		case years(Int)
+		case months(Int)
+		case weeks(Int)
+		case days(Int)
 		
-		case hour(Int)
-		case minute(Int)
-		case second(Int)
-		case millisecond(Int)
+		case hours(Int)
+		case minutes(Int)
+		case seconds(Int)
+		case milliseconds(Int)
 		
 		
 		fileprivate var properties: (component: Calendar.Component, value: Int) {
 			switch self {
-				case .year(let v)		: return (.year, v)
-				case .month(let v)		: return (.month, v)
-				case .week(let v)		: return (.weekOfYear, v)
-				case .day(let v)		: return (.day, v)
+				case .years(let v)			: return (.year, v)
+				case .months(let v)			: return (.month, v)
+				case .weeks(let v)			: return (.weekOfYear, v)
+				case .days(let v)			: return (.day, v)
 				
-				case .hour(let v)		: return (.hour, v)
-				case .minute(let v)		: return (.minute, v)
-				case .second(let v)		: return (.second, v)
-				case .millisecond(let v): return (.nanosecond, v * 1_000_000)
+				case .hours(let v)			: return (.hour, v)
+				case .minutes(let v)		: return (.minute, v)
+				case .seconds(let v)		: return (.second, v)
+				case .milliseconds(let v)	: return (.nanosecond, v * 1_000_000)
 			}
 		}
 	}
@@ -185,8 +183,7 @@ public func + (date: Date, components: [Date.Component]) -> Date {
 	var date = date
 	
 	for component in components {
-		let (c, v) = component.properties
-		date = Calendar.current.date(byAdding: c, value: v, to: date)!
+		date += component
 	}
 	
 	return date
@@ -203,8 +200,7 @@ public func - (date: Date, components: [Date.Component]) -> Date {
 	var date = date
 	
 	for component in components {
-		let (c, v) = component.properties
-		date = Calendar.current.date(byAdding: c, value: -v, to: date)!
+		date -= component
 	}
 	
 	return date

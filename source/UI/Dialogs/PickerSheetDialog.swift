@@ -12,17 +12,20 @@ import UIKit
 
 
 
-open class PickerSheetDialog: SheetDialog, UIPickerViewDelegate, UIPickerViewDataSource {
-	public let pickerView = UIPickerView()
+open class PickerSheetDialog: SheetDialog {
 	
+	public let pickerView = UIPickerView()
 	public var data = [[String]]()
+	
+	
 	
 	public func addColumn(rows: [String]) {
 		data.append(rows)
 	}
 	
-	private var _didSelectRow: ((_ column: Int, _ row: Int)->())?
-	public func setDidSelectRow(_ action: @escaping (_ column: Int, _ row: Int)->()) {
+	
+	private var _didSelectRow: ((IndexPath)->())?
+	public func didSelectRow(_ action: @escaping (IndexPath)->()) {
 		_didSelectRow = action
 	}
 	
@@ -34,7 +37,7 @@ open class PickerSheetDialog: SheetDialog, UIPickerViewDelegate, UIPickerViewDat
 		super.viewDidLoad()
 		
 		for c in 0..<pickerView.numberOfComponents {
-			_didSelectRow?(c, pickerView.selectedRow(inComponent: c))
+			_didSelectRow?(IndexPath(row: pickerView.selectedRow(inComponent: c), section: c))
 		}
 	}
 	
@@ -43,12 +46,13 @@ open class PickerSheetDialog: SheetDialog, UIPickerViewDelegate, UIPickerViewDat
 		pickerView.delegate = self
 		pickerView.dataSource = self
 	}
+	
 	public override init(nibName: String?, bundle: Bundle?) { fatalError() }
 	public required init?(coder aDecoder: NSCoder) { fatalError() }
-	
-	
-	
-	
+}
+
+
+extension PickerSheetDialog: UIPickerViewDelegate, UIPickerViewDataSource {
 	
 	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return data.count
@@ -63,7 +67,7 @@ open class PickerSheetDialog: SheetDialog, UIPickerViewDelegate, UIPickerViewDat
 	}
 	
 	open func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		_didSelectRow?(component, row)
+		_didSelectRow?(IndexPath(row: row, section: component))
 	}
 }
 

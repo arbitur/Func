@@ -14,7 +14,8 @@ import WebKit
 
 
 /// If no actions will add a generic cancel action
-public final class WebSheetDialog: SheetDialog, WKNavigationDelegate {
+public final class WebSheetDialog: SheetDialog {
+	
 	public let webView = WKWebView()
 	var activityIndicator: UIActivityIndicatorView?
 	
@@ -59,8 +60,10 @@ public final class WebSheetDialog: SheetDialog, WKNavigationDelegate {
 	
 	public override init(nibName: String?, bundle: Bundle?) { fatalError() }
 	public required init?(coder aDecoder: NSCoder) { fatalError() }
-	
-	
+}
+
+
+extension WebSheetDialog: WKNavigationDelegate {
 	
 	public func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
 		UIView.animate(withDuration: 0.2) {

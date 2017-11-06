@@ -18,7 +18,6 @@ public extension CGSize {
 		Returns an aspect ratio of `width / height`
 	
 		## Usage:
-	
 			let width = height * aspectRatio
 	*/
 	var aspectRatio: CGFloat {
@@ -27,11 +26,11 @@ public extension CGSize {
 	
 	
 	
-	init <T> (_ width: T, _ height: T) where T: NumberType {
+	init <T> (_ width: T, _ height: T) where T: Number {
 		self.init(width: width.toDouble(), height: height.toDouble())
 	}
 	
-	init <T> (_ size: T) where T: NumberType {
+	init <T> (_ size: T) where T: Number {
 		self.init(size, size)
 	}
 }

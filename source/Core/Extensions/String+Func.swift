@@ -14,54 +14,35 @@ import Foundation
 
 public extension String {
 	
-	var length: Int {
-		return self.count
-	}
-	
 	var reversed: String {
 		return String(self.reversed())
 	}
 	
 	
 	
-	func `default`(str: String) -> String {
-		if self.isEmpty { return str }
-		return self
+	func ifEmpty(_ str: String) -> String {
+		return self.isEmpty ? str : self
 	}
 	
 	
 	
 	func extracted(to index: Int) -> String {
 		let i = self.index(self.startIndex, offsetBy: index)
-		return self.substring(to: i)
+		return String(self[..<i])
 	}
 	
 	func extracted(from index: Int) -> String {
 		let i = self.index(self.startIndex, offsetBy: index)
-		return self.substring(from: i)
+		return String(self[i...])
 	}
 	
-	func extract(characters: CharacterSet) -> String {
-		return remove(characters: characters.inverted)
+	func extracted(characters: CharacterSet) -> String {
+		return removed(characters: characters.inverted)
 	}
 	
-	func remove(characters: CharacterSet) -> String {
+	func removed(characters: CharacterSet) -> String {
 		return self.components(separatedBy: characters).joined(separator: "")
 	}
-	
-	
-	
-	subscript (range: Range<Int>) -> String {
-		let start = index(startIndex, offsetBy: range.lowerBound)
-		let end = index(startIndex, offsetBy: range.upperBound)
-		return self.substring(with: start..<end)
-	}
-	
-//	subscript (_ i: Int) -> Substring {
-//		return self[i]
-//	}
-	
-	
 	
 	func replaced(_ str: String, with rep: String) -> String {
 		return self.replacingOccurrences(of: str, with: rep, options: [], range: nil)
@@ -73,6 +54,35 @@ public extension String {
 		self = self.replaced(str, with: rep)
 		return temp != self
 	}
+	
+	
+	
+	/**
+		Substrings from lowerBound up to upperBound
+	
+			"123456789"[0...5] = "12345"
+	
+			"123456789"
+			^^   ^^
+			0    5
+	*/
+	subscript (range: CountableClosedRange<Int>) -> String {
+		let start = self.index(self.startIndex, offsetBy: range.lowerBound)
+		let end = self.index(self.startIndex, offsetBy: range.upperBound)
+		return String(self[start..<end])
+	}
+	
+	subscript (range: CountablePartialRangeFrom<Int>) -> String {
+		let start = self.index(self.startIndex, offsetBy: range.lowerBound)
+		return String(self[start...])
+	}
+	
+	subscript (range: PartialRangeThrough<Int>) -> String {
+		let end = self.index(self.startIndex, offsetBy: range.upperBound)
+		return String(self[..<end])
+	}
+	
+	
 	
 	
 	
@@ -137,45 +147,6 @@ public extension String {
 
 
 
-public struct StringIndex {
-	private var string: String
-	var index: String.Index
-	
-	
-	
-	func successing() -> String.Index {
-		return string.index(after: index)
-	}
-	
-	mutating func predecessing() -> String.Index {
-		return string.index(before: index)
-	}
-	
-	func advance(_ offset: Int) -> String.Index {
-		return string.index(index, offsetBy: offset, limitedBy: string.endIndex)!
-	}
-	
-	
-	init(stringStart string: String) {
-		self.string = string
-		self.index = string.startIndex
-	}
-	
-	init(stringEnd string: String) {
-		self.string = string
-		self.index = string.endIndex
-	}
-	
-	init(string: String, index: String.Index) {
-		self.string = string
-		self.index = index
-	}
-}
-
-
-
-
-
 /// Left exists inside right
 public func ?== (s1: String, s2: String) -> Bool {
 	return s2.contains(s1)
@@ -186,11 +157,10 @@ public func ?== (s1: String, s2: String) -> Bool {
 
 
 public func + (lhs: String, rhs: String?) -> String {
-	if let rhs = rhs {
-		return lhs + rhs
+	guard let rhs = rhs else {
+		return lhs
 	}
-	
-	return lhs
+	return lhs + rhs
 }
 
 

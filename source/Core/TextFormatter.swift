@@ -36,7 +36,7 @@ public class TextFormatter {
 	
 	
 	public static func phoneNumber( _ p: String) -> String {
-		let p = p.extract(characters: CharacterSet.decimalDigits)
+		let p = p.extracted(characters: CharacterSet.decimalDigits)
 		
 		let format: String
 		switch p.count {

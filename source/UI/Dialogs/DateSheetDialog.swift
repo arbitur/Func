@@ -20,10 +20,4 @@ open class DateSheetDialog: SheetDialog {
 		self.customViews.append(datePicker)
 		super.viewDidLoad()
 	}
-	
-//	public required init(title: String?, subtitle: String?) {
-//		super.init(title: title, subtitle: subtitle)
-//	}
-//	public override init(nibName: String?, bundle: Bundle?) { fatalError() }
-//	public required init?(coder aDecoder: NSCoder) { fatalError() }
 }

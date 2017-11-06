@@ -19,8 +19,8 @@ public enum TextAttributes {
 	case background(UIColor)
 	case ligature(Int)
 	case kern(Float)
-	case strikeThroughStyle(Int)
-	case strikeThrough(UIColor)
+	case strikethroughStyle(NSUnderlineStyle)
+	case strikethrough(UIColor)
 	case underlineStyle(NSUnderlineStyle)
 	case underlineColor(UIColor)
 	case strokeColor(UIColor)
@@ -32,8 +32,8 @@ public enum TextAttributes {
 	case baselineOffset(Float)
 	case obliqueness(Float)
 	case expansion(Float)
-	case writingDirection([NSNumber])
-	case verticalGlyphForm(Float)
+	case writingDirection([Int])
+	case verticalGlyphForm(Int)
 	
 	
 	var component: (key: NSAttributedStringKey, value: Any) {
@@ -44,8 +44,8 @@ public enum TextAttributes {
 			case .background(let color)			: return (.backgroundColor, color)
 			case .ligature(let ligature)		: return (.ligature, ligature)
 			case .kern(let kern)				: return (.kern, kern)
-			case .strikeThroughStyle(let style)	: return (.strikethroughStyle, style)
-			case .strikeThrough(let color)		: return (.strikethroughColor, color)
+			case .strikethroughStyle(let style)	: return (.strikethroughStyle, style.rawValue)
+			case .strikethrough(let color)		: return (.strikethroughColor, color)
 			case .underlineStyle(let style)		: return (.underlineStyle, style.rawValue)
 			case .underlineColor(let color)		: return (.underlineColor, color)
 			case .strokeColor(let color)		: return (.strokeColor, color)
@@ -77,7 +77,7 @@ public extension Sequence where Iterator.Element == TextAttributes {
 			let component = attr.component
 			dict[component.key] = component.value
 		}
-		
+
 		return dict
 	}
 }

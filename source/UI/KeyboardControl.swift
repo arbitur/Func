@@ -36,8 +36,9 @@ public class KeyboardControl: NSObject {
 		if isOpening {
 			UIView.performWithoutAnimation {
 				toolbar?.frame.widt = data.frame.width
-				updateArrows()
+//				updateArrows()
 			}
+			updateArrows()
 		}
 		
 		UIView.animate(withDuration: data.duration, delay: 0, options: data.options,
@@ -66,6 +67,7 @@ public class KeyboardControl: NSObject {
 	
 	
 	@objc private func keyboardDidShow(_ notification: Notification) {
+		
 	}
 	
 	@objc private func keyboardDidHide(_ notification: Notification) {
@@ -76,12 +78,14 @@ public class KeyboardControl: NSObject {
 	@objc private func back() {
 		let index = max(0, selectedIndex! - 1)
 		let input = inputs[safe: index]
+		UIResponder.first?.resignFirstResponder()
 		input?.becomeFirstResponder()
 	}
 	
 	@objc private func forward() {
 		let index = min(inputs.count - 1, selectedIndex! + 1)
 		let input = inputs[safe: index]
+		UIResponder.first?.resignFirstResponder()
 		input?.becomeFirstResponder()
 	}
 	

@@ -37,7 +37,7 @@ public extension UIBezierPath {
 	}
 	
 	func fill(_ color: UIColor) {
-		color.setStroke()
+		color.setFill()
 		self.fill()
 	}
 }

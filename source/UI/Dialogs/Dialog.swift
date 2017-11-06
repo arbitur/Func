@@ -10,69 +10,10 @@ import UIKit
 
 
 
-public protocol DialogBuilder: class {
-	associatedtype T: UIViewController
-	var actions: [DialogAction] {get set}
-	var customViews: [UIView] {get set}
-	var didDismiss: Closure? {get set}
-	
-	var didAddCustomViewToSuperview: ((T, UIView)->())? {get set}
-}
-
-public extension DialogBuilder {
-	public func addAction(_ action: DialogAction) {
-		actions.append(action)
-	}
-	
-	public func addNormal(title: String, action: @escaping Closure) {
-		addAction(DialogAction(title: title, type: .normal, action: action))
-	}
-	
-	public func addDelete(title: String, action: @escaping Closure) {
-		addAction(DialogAction(title: title, type: .delete, action: action))
-	}
-	
-	public func addCancel(title: String, action: Closure? = nil) {
-		addAction(DialogAction(title: title, type: .cancel, action: action))
-	}
-	
-	public func addCustomView(_ view: UIView, at index: Int? = nil) {
-		if let index = index {
-			customViews.insert(view, at: index)
-		}
-		else {
-			customViews.append(view)
-		}
-	}
-	
-	public func setDidDismiss(_ action: Closure?) {
-		self.didDismiss = action
-	}
-}
-
-
-
-public class DialogAction {
-	let title: String
-	let type: DialogActionType
-	let action: Closure?
-	
-	public init(title: String, type: DialogActionType, action: Closure? = nil) {
-		self.title = title
-		self.type = type
-		self.action = action
-	}
-}
-
-public enum DialogActionType {
-	case normal, delete, cancel
-}
-
-
-
 
 
 open class Dialog: UIViewController {
+	
 	public final let contentBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
 	public final let mainContentStack = UIStackView(axis: .vertical)
 	open var contentView: UIView { return contentBlurView }
@@ -83,8 +24,6 @@ open class Dialog: UIViewController {
 	
 	public final var actions = [DialogAction]()
 	public final var didDismiss: Closure?
-	
-	
 	
 	
 	
@@ -164,10 +103,73 @@ open class Dialog: UIViewController {
 
 
 
+public protocol DialogBuilder: class {
+	associatedtype T: UIViewController
+	
+	var actions: [DialogAction] { get set }
+	var customViews: [UIView] { get set }
+	var didDismiss: Closure? { get set }
+	var didAddCustomViewToSuperview: ((T, UIView)->())? { get set }
+}
+
+
+public extension DialogBuilder {
+	
+	public func addAction(_ action: DialogAction) {
+		actions.append(action)
+	}
+	
+	public func addNormal(title: String, action: @escaping Closure) {
+		addAction(DialogAction(title: title, type: .normal, action: action))
+	}
+	
+	public func addDelete(title: String, action: @escaping Closure) {
+		addAction(DialogAction(title: title, type: .delete, action: action))
+	}
+	
+	public func addCancel(title: String, action: Closure? = nil) {
+		addAction(DialogAction(title: title, type: .cancel, action: action))
+	}
+	
+	public func addCustomView(_ view: UIView, at index: Int? = nil) {
+		switch index {
+			case .some(let i)	: customViews.insert(view, at: i)
+			case .none			: customViews.append(view)
+		}
+	}
+	
+	public func setDidDismiss(_ action: Closure?) {
+		self.didDismiss = action
+	}
+	
+	public func didAddCustomView(_ action: @escaping (T, UIView)->()) {
+		self.didAddCustomViewToSuperview = action
+	}
+}
 
 
 
-fileprivate class MaskBackgroundView: UIView {
+public class DialogAction {
+	let title: String
+	let type: DialogActionType
+	let action: Closure?
+	
+	public init(title: String, type: DialogActionType, action: Closure? = nil) {
+		self.title = title
+		self.type = type
+		self.action = action
+	}
+}
+
+public enum DialogActionType {
+	case normal, delete, cancel
+}
+
+
+
+
+
+private class MaskBackgroundView: UIView {
 	weak var viewController: Dialog?
 	
 	
@@ -175,9 +177,7 @@ fileprivate class MaskBackgroundView: UIView {
 		let bezier = UIBezierPath(rect: rect)
 		viewController?.drawBackgroundHole(bezier: bezier)
 		bezier.usesEvenOddFillRule = true
-		
-		UIColor.black.alpha(0.4).setFill()
-		bezier.fill()
+		bezier.fill(UIColor.black.alpha(0.4))
 	}
 }
 
