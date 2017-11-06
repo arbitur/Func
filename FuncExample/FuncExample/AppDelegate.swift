@@ -9,7 +9,6 @@
 import UIKit
 import Func
 import Alamofire
-import AlamofireImage
 import CoreLocation
 
 
@@ -33,7 +32,7 @@ class AppDelegate: UIResponder {
 		
 		
 		let slide = SlideMenuController()
-		slide.rootViewController = RootVC()
+		slide.rootViewController = nc//RootVC()
 		slide.menuViewController = MenuVC()
 		window.rootViewController = slide
 	}

@@ -146,14 +146,14 @@ class CGPointTests: XCTestCase {
 	func test() {
 		XCTAssertEqual(CGPoint.init(10, 10), CGPoint(x: 10.0, y: 10.0))
 
-		let p = CGPoint.init(angle: .pi/2, magnitude: 10)
-		XCTAssertTrue(p.x < 0.00000000001 && p.x > 0)
-		XCTAssertEqual(p.y, 10)
+		let p = CGPoint.init(angle: .pi, magnitude: 10)
+		XCTAssertTrue(p.x.shorten(decimals: 10) == -10)
+		XCTAssertTrue(p.y.shorten(decimals: 10) == 0)
 
 		XCTAssertEqual(CGPoint.init(angle: CGFloat(90).rad, magnitude: 100).angle, CGFloat(90).rad)
 		XCTAssertEqual(CGPoint.init(angle: CGFloat(-90).rad, magnitude: 100).angle, CGFloat(-90).rad)
-		XCTAssertEqual(CGPoint.init(angle: CGFloat(45).rad, magnitude: 100).angle, CGFloat(45).rad)
-		XCTAssertEqual(CGPoint.init(angle: CGFloat(-45).rad, magnitude: 100).angle, CGFloat(-45).rad)
+		XCTAssertEqual(CGPoint.init(angle: CGFloat(50).rad, magnitude: 100).angle, CGFloat(50).rad)
+		XCTAssertEqual(CGPoint.init(angle: CGFloat(-50).rad, magnitude: 100).angle, CGFloat(-50).rad)
 		XCTAssertEqual(CGPoint.init(angle: CGFloat(22.5).rad, magnitude: 100).angle, CGFloat(22.5).rad)
 		XCTAssertEqual(CGPoint.init(angle: 10, magnitude: 100).magnitude, 100)
 
@@ -320,6 +320,263 @@ class MathTests: XCTestCase {
 
 
 
+
+
+
+
+
+
+class StringTests: XCTestCase {
+	
+	func test() {
+		let string = "Hello World!"
+		
+		XCTAssertEqual(string.reversed, "!dlroW olleH")
+		XCTAssertEqual("".ifEmpty(string), string)
+		XCTAssertEqual(string.extracted(to: 5), "Hello")
+		XCTAssertEqual(string.extracted(from: 6), "World!")
+		XCTAssertEqual(string.extracted(characters: .letters), "HelloWorld")
+		XCTAssertEqual(string.removed(characters: .letters), " !")
+		XCTAssertEqual(string[2...5], "llo")
+		XCTAssertEqual(string[...5], "Hello")
+		XCTAssertEqual(string[2...], "llo World!")
+		XCTAssertEqual(string.split(" "), ["Hello", "World!"])
+		XCTAssertEqual("12345678".grouped(separator: " ", size: 4), "1234 5678")
+		XCTAssertEqual("123456".grouped(separator: " ", size: 4), "1234 56")
+		XCTAssertEqual("123456789".grouped(separator: " ", size: 4), "1234 5678 9")
+		
+		let base64 = string.base64Encoded()!
+		XCTAssertEqual(string, base64.base64Decoded()!)
+		
+		XCTAssertTrue("ello" ?== string)
+	}
+	
+	
+	func testTextAttributes() {
+		let p: [TextAttributes] = [
+			.font(UIFont.systemFont(ofSize: 17)),
+			.paragraphStyle(NSParagraphStyle.default),
+			.foreground(UIColor.red),
+			.background(UIColor.blue),
+			.ligature(1),
+			.kern(1.0),
+			.strikethroughStyle(NSUnderlineStyle.byWord),
+			.strikethrough(UIColor.green),
+			.underlineStyle(NSUnderlineStyle.patternDash),
+			.underlineColor(UIColor.yellow),
+			.strokeColor(UIColor.orange),
+			.strokeWidth(2.0),
+//			.shadow(NSShadow),
+//			.textEffect(String),
+//			.attachment(NSTextAttachment),
+			.link("https://google.se"),
+			.baselineOffset(1.0),
+			.obliqueness(1.0),
+			.expansion(1.0),
+//			.writingDirection([NSNumber]),
+			.verticalGlyphForm(1)
+		]
+		let pd = p.attributedDictionary
+		
+		let d: [NSAttributedStringKey: Any] = [
+			.font: UIFont.systemFont(ofSize: 17),
+			.paragraphStyle: NSParagraphStyle.default,
+			.foregroundColor: UIColor.red,
+			.backgroundColor: UIColor.blue,
+			.ligature: 1,
+			.kern: Float(1.0),
+			.strikethroughStyle: NSUnderlineStyle.byWord.rawValue,
+			.strikethroughColor: UIColor.green,
+			.underlineStyle: NSUnderlineStyle.patternDash.rawValue,
+			.underlineColor: UIColor.yellow,
+			.strokeColor: UIColor.orange,
+			.strokeWidth: Float(2.0),
+//			.shadow(NSShadow),
+//			.textEffect(String),
+//			.attachment(NSTextAttachment),
+			.link: "https://google.se",
+			.baselineOffset: Float(1.0),
+			.obliqueness: Float(1.0),
+			.expansion: Float(1.0),
+//			.writingDirection([NSNumber]),
+			.verticalGlyphForm: 1
+		]
+		
+		for key in pd.keys {
+			let a = "\(pd[key]!)"
+			let b = "\(d[key]!)"
+			XCTAssertEqual(a, b)
+		}
+	}
+}
+
+
+
+
+
+
+
+
+class DateTests: XCTestCase {
+	
+	func testFormat() {
+		let dateText = "2017-05-19 05:30:20"
+		let date = Date(dateText, format: .dateTimeSec)!
+		var dc = DateComponents()
+		dc.year = 2017
+		dc.month = 5
+		dc.day = 19
+		dc.hour = 5
+		dc.minute = 30
+		dc.second = 20
+		let date2 = Calendar.current.date(from: dc)!
+		
+		XCTAssertEqual(date, date2)
+		XCTAssertEqual(dateText, date2.format(.dateTimeSec))
+	}
+	
+	func testMutations() {
+		var date = Date("2017-05-19 05:30:20", format: .dateTimeSec)!
+		date.year += 3
+		XCTAssertEqual(date, Date("2020-05-19 05:30:20", format: .dateTimeSec))
+		date.month -= 10
+		XCTAssertEqual(date, Date("2019-07-19 05:30:20", format: .dateTimeSec))
+		date.day += 13
+		XCTAssertEqual(date, Date("2019-08-01 05:30:20", format: .dateTimeSec))
+		date.hour += 10
+		XCTAssertEqual(date, Date("2019-08-01 15:30:20", format: .dateTimeSec))
+		date.minute += 15
+		XCTAssertEqual(date, Date("2019-08-01 15:45:20", format: .dateTimeSec))
+		date.second += 90
+		XCTAssertEqual(date, Date("2019-08-01 15:46:50", format: .dateTimeSec))
+	}
+	
+	func testOperators() {
+		var date = Date("2017-05-19 05:30:20", format: .dateTimeSec)!
+		date += .years(3)
+		XCTAssertEqual(date, Date("2020-05-19 05:30:20", format: .dateTimeSec))
+		date -= .months(10)
+		XCTAssertEqual(date, Date("2019-07-19 05:30:20", format: .dateTimeSec))
+		date += .days(13)
+		XCTAssertEqual(date, Date("2019-08-01 05:30:20", format: .dateTimeSec))
+		date += .hours(10)
+		XCTAssertEqual(date, Date("2019-08-01 15:30:20", format: .dateTimeSec))
+		date += .minutes(15)
+		XCTAssertEqual(date, Date("2019-08-01 15:45:20", format: .dateTimeSec))
+		date += .seconds(90)
+		XCTAssertEqual(date, Date("2019-08-01 15:46:50", format: .dateTimeSec))
+		
+		let date2 = Date("2017-05-19 05:30:20", format: .dateTimeSec)!
+		XCTAssertEqual(date2 + .years(3), Date("2020-05-19 05:30:20", format: .dateTimeSec))
+		XCTAssertEqual(date2 + [.years(3), .months(-10)], Date("2019-07-19 05:30:20", format: .dateTimeSec))
+		XCTAssertEqual(date2 + [.years(3), .months(-10), .days(13)], Date("2019-08-01 05:30:20", format: .dateTimeSec))
+		XCTAssertEqual(date2 + [.years(3), .months(-10), .days(13), .hours(10)], Date("2019-08-01 15:30:20", format: .dateTimeSec))
+		XCTAssertEqual(date2 + [.years(3), .months(-10), .days(13), .hours(10), .minutes(15)], Date("2019-08-01 15:45:20", format: .dateTimeSec))
+		XCTAssertEqual(date2 + [.years(3), .months(-10), .days(13), .hours(10), .minutes(15), .seconds(90)], Date("2019-08-01 15:46:50", format: .dateTimeSec))
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+class NumberTests: XCTestCase {
+	
+	func testInits() {
+		XCTAssertEqual(Int("100"), 100)
+		XCTAssertEqual(Int("-100"), -100)
+		XCTAssertNil(Int("100.00"))
+		XCTAssertNil(Int("--100"))
+		XCTAssertNil(Int("aaa100"))
+		
+		XCTAssertEqual(CGFloat("100"), 100)
+		XCTAssertEqual(CGFloat("-100"), -100)
+		XCTAssertEqual(CGFloat("100.5005"), 100.5005)
+		XCTAssertNil(CGFloat("--100"))
+		XCTAssertNil(CGFloat("aaa100"))
+	}
+	
+	func testArithmetics() {
+		XCTAssertEqual(f(Int(10), +, Int(20)), 30)
+		XCTAssertEqual(f(Int(10), -, Int(20)), -10)
+		XCTAssertEqual(f(Int(10), *, Int(20)), 200)
+		XCTAssertEqual(f(Int(10), /, Int(20)), 0)
+		XCTAssertEqual(f(Int(10), %, Int(20)), 10)
+		
+		XCTAssertEqual(f(UInt(10), +, UInt(20)), 30)
+		XCTAssertEqual(f(UInt(10), -, UInt(10)), 0)
+		XCTAssertEqual(f(UInt(10), *, UInt(20)), 200)
+		XCTAssertEqual(f(UInt(10), /, UInt(20)), 0)
+		XCTAssertEqual(f(UInt(10), %, UInt(20)), 10)
+		
+		XCTAssertEqual(f(Float(10.5), +, Float(20.1)), 30.6)
+		XCTAssertEqual(f(Float(10.5), -, Float(20.1)), -9.6)
+		XCTAssertEqual(f(Float(10.5), *, Float(20.1)), 211.05)
+		XCTAssertEqual(f(Float(10.5), /, Float(2.5)), 4.2)
+		XCTAssertEqual(f(Float(10.5), %, Float(20.1)), -9.6)
+		
+		XCTAssertEqual(f(CGFloat(10.5), +, CGFloat(20.1)), 30.6)
+		XCTAssertEqual(f(CGFloat(10.5), -, CGFloat(20.5)), -10)
+		XCTAssertEqual(f(CGFloat(10.5), *, CGFloat(20.1)), 211.05)
+		XCTAssertEqual(f(CGFloat(10.5), /, CGFloat(2.5)), 4.2)
+		XCTAssertEqual(f(CGFloat(10.5), %, CGFloat(20)), -9.5)
+	}
+	
+	func f <T: Arithmetics> (_ lhs: T, _ function: (T, T) -> T, _ rhs: T) -> T {
+		return function(lhs, rhs)
+	}
+	
+	
+	func testConversions() {
+		func i <T: Number> (_ lhs: T) -> Int {
+			return Int(number: lhs) + 100
+		}
+		func ui <T: Number> (_ lhs: T) -> UInt {
+			return UInt(number: lhs) + 100
+		}
+		func d <T: Number> (_ lhs: T) -> Double {
+			return Double(number: lhs) + 100.5
+		}
+		
+		XCTAssertEqual(i(Int(100)), 200)
+		XCTAssertEqual(i(UInt(100.5)), 200)
+		XCTAssertEqual(i(Float(100)), 200)
+		XCTAssertEqual(i(Double(100)), 200)
+		
+		XCTAssertEqual(ui(Int(100)), 200)
+		XCTAssertEqual(ui(UInt(100.5)), 200)
+		XCTAssertEqual(ui(Float(100)), 200)
+		XCTAssertEqual(ui(Double(100)), 200)
+		
+		XCTAssertEqual(d(Int(100)), 200.5)
+		XCTAssertEqual(d(UInt(100.5)), 200.5)
+		XCTAssertEqual(d(Float(100)), 200.5)
+		XCTAssertEqual(d(Double(100)), 200.5)
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+class ColorTests: XCTestCase {
+	
+	
+}
 
 
 

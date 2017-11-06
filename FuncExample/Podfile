@@ -1,15 +1,24 @@
 
-platform :ios, '9.0'
+platform :ios, '10.0'
 
 target 'FuncExample' do
 	use_frameworks!
 	
 	pod 'Func', :path => '../'
-#	pod 'Func/Views', :path => '../'
-#	pod 'Func/Geocoding', :path => '../'
-#	pod 'Func/API', :path => '../'
-#	pod 'Func/JSON', :path => '../'
+	pod 'Func/UI', :path => '../'
+	pod 'Func/Geocoding', :path => '../'
+	pod 'Func/API', :path => '../'
+	pod 'Func/Decoding', :path => '../'
 
-	pod 'AlamofireImage', '~> 3.3'
-	
+#	pod 'AlamofireImage', '~> 3.3'
+
+	target 'FuncExampleTests' do
+		use_frameworks!
+		pod 'Func', :path => '../'
+		pod 'Func/UI', :path => '../'
+		pod 'Func/Geocoding', :path => '../'
+		pod 'Func/API', :path => '../'
+		pod 'Func/Decoding', :path => '../'
+	end
+
 end

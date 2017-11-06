@@ -35,7 +35,7 @@ class ViewsVC: UIViewController {
 		
 		let label = UILabel()
 		label.text = "asdf"
-		label.setAttributes([.font(UIFont.systemFont(ofSize: 40)), TextAttributes.background(.red)])
+		label.textAttributes = ([.font(UIFont.systemFont(ofSize: 40)), .background(.red)])
 		label.addAttributes([TextAttributes.foreground(.blue)], to: "sd")
 		label.sizeToFit()
 		self.view.add(view: label)
