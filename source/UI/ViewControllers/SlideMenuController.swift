@@ -232,7 +232,7 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
 		}
 		
 		let duration = transitionDuration(using: transitionContext)
-		let options: UIViewAnimationOptions = .curveEaseOut
+		let options: UIViewAnimationOptions = isInteractive ? .curveLinear : .curveEaseOut
 		
 		UIView.animate(withDuration: duration, delay: 0, options: options,
 			animations: animations,

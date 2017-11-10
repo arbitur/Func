@@ -13,9 +13,22 @@ import UIKit
 
 
 open class ScrollStackView: UIScrollView {
-	public let contentStack: UIStackView
+	open let contentStack: UIStackView = UIStackView()
+	open var axis: UILayoutConstraintAxis {
+		get { return contentStack.axis }
+		set {
+			contentStack.axis = newValue
+			switch newValue {
+				case .horizontal: widthConstraint.deactivate() ; heightConstraint.activate()
+				case .vertical: widthConstraint.activate() ; heightConstraint.deactivate()
+			}
+		}
+	}
 	
-	private func setup() {
+	private var widthConstraint: NSLayoutConstraint!
+	private var heightConstraint: NSLayoutConstraint!
+	
+	private func initz() {
 		self.addSubview(contentStack)
 		
 		self.add(view: contentStack) {
@@ -24,29 +37,29 @@ open class ScrollStackView: UIScrollView {
 			$0.right.equalToSuperview()
 			$0.bottom.equalToSuperview()
 			
-			switch contentStack.axis {
-				case .horizontal: $0.height.equalToSuperview()
-				case .vertical	: $0.width.equalToSuperview()
-			}
+			widthConstraint =  $0.width.equalToSuperview()
+			heightConstraint =  $0.height.equalToSuperview()
+			widthConstraint.deactivate()
+			heightConstraint.deactivate()
 		}
 	}
 	
 	public init(axis: UILayoutConstraintAxis) {
-		contentStack = UIStackView(axis: axis)
 		super.init(frame: .zero)
-		setup()
+		initz()
+		self.axis = axis
 	}
 	
 	public override init(frame: CGRect) {
-		contentStack = UIStackView(axis: .vertical)
 		super.init(frame: frame)
-		setup()
+		initz()
+		self.axis = .vertical
 	}
 	
 	public required init?(coder aDecoder: NSCoder) {
-		contentStack = UIStackView(axis: .vertical)
 		super.init(coder: aDecoder)
-		setup()
+		initz()
+		self.axis = .vertical
 	}
 }
 

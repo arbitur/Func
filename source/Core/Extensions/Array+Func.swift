@@ -150,14 +150,34 @@ public extension Array where Element: UIView {
 
 
 
+public extension MutableCollection where Iterator.Element: Equatable, Index == Int {
+	
+	func element(before element: Iterator.Element) -> Iterator.Element? {
+		guard let index = self.index(of: element) else {
+			return nil
+		}
+		return self[safe: index - 1]
+	}
+
+	func element(after element: Iterator.Element) -> Iterator.Element? {
+		guard let index = self.index(of: element) else {
+			return nil
+		}
+		return self[safe: index + 1]
+	}
+	
+}
+
+
+
 public extension RangeReplaceableCollection where Iterator.Element: Equatable {
 	
 	@discardableResult
 	mutating func remove(element: Iterator.Element) -> Iterator.Element? {
-		if let index = self.index(of: element) {
-			return self.remove(at: index)
+		guard let index = self.index(of: element) else {
+			return nil
 		}
-		return nil
+		return self.remove(at: index)
 	}
 }
 
@@ -172,6 +192,7 @@ public extension Sequence where Iterator.Element == String {
 
 
 
+//TODO: Kinda weirdly done, consider redoing it...
 public extension Array where Iterator.Element: ExpressibleByDictionaryLiteral & DictionaryMergable {
 	
 	/// Merges Dictionaries
@@ -185,6 +206,7 @@ public extension Array where Iterator.Element: ExpressibleByDictionaryLiteral & 
 }
 
 public protocol DictionaryMergable {
+	/// Capitalized to not accidentally use it, bad practice but hey...
 	func DictionaryMergableMerge(with: inout Self)
 }
 

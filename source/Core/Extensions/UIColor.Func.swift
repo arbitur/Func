@@ -21,7 +21,7 @@ public extension UIColor {
 	
 	
 	static var random: UIColor {
-		let h: CGFloat = Random.range(min: 0, max: 360)
+		let h: CGFloat = Random.range(min: 0.0, max: 1.0)
 		let s: CGFloat = 0.25 + Random.range(min: 0.0, max: 0.75)
 		let b: CGFloat = 0.25 + Random.range(min: 0.0, max: 0.75)
 		return UIColor(hue: h, saturation: s, brightness: b, alpha: 1.0)
@@ -34,15 +34,15 @@ public extension UIColor {
 	}
 	
 	func lightened(by v: CGFloat) -> UIColor {
-		let (h, s, l) = self.hsl
+		let (h, s, l, a) = self.hsla
 		let delta = 1.0 - l
-		return UIColor(hue: h/360, saturation: s, lightness: l + delta * v, alpha: self.rgba.a)
+		return UIColor(hue: h, saturation: s, lightness: l + delta * v, alpha: a)
 	}
 	
 	func darkened(by v: CGFloat) -> UIColor {
-		let (h, s, l) = self.hsl
+		let (h, s, l, a) = self.hsla
 		let delta = l
-		return UIColor(hue: h/360, saturation: s, lightness: l - delta * v, alpha: self.rgba.a)
+		return UIColor(hue: h, saturation: s, lightness: l - delta * v, alpha: a)
 	}
 	
 	
@@ -59,9 +59,9 @@ public extension UIColor {
 	
 	/// All parameters range 0...1
 	convenience init(hue h: CGFloat, saturation s: CGFloat, lightness l: CGFloat, alpha: CGFloat) {
-		var r: CGFloat = 0.0
-		var g: CGFloat = 0.0
-		var b: CGFloat = 0.0
+		let r: CGFloat
+		let g: CGFloat
+		let b: CGFloat
 		
 		if s == 0.0 {
 			r = l
@@ -101,67 +101,26 @@ public extension UIColor {
 		return (r, g, b, a)
 	}
 	
-	var hsl: (h: CGFloat, s: CGFloat, l: CGFloat) {
-		let (r, g, b, _) = self.rgba
-		
-		let min = Swift.min(r, g, b)
-		let max = Swift.max(r, g, b)
-		let delta = max - min
-		
-		var h: CGFloat
-		switch true {
-			case delta == 0	: h = 0
-			case max == r	: h = ((g - b) / delta).remainder(dividingBy: 6)
-			case max == g	: h = ((b - r) / delta) + 2.0
-			case max == b	: h = ((r - g) / delta) + 4.0
-			default			: fatalError()
-		}
-		h *= 60
-		if h < 0 {
-			h += 360
-		}
-		
-		let l = (min + max) / 2
-		
-		let s: CGFloat
-		switch true {
-			case delta == 0	: s = 0
-			default			: s = delta / (1.0 - abs(l * 2.0 - 1.0))
-		}
-		
-		return (h, s, l)
+	var hsba: (h: CGFloat, s: CGFloat, b: CGFloat, a: CGFloat) {
+		var (h, s, b, a) = (CGFloat(), CGFloat(), CGFloat(), CGFloat())
+		getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+		return (h, s, b, a)
 	}
 	
-	@available(*, deprecated: 1.0.3, message: "Will be removed or modified")
-	var hsb: (h: CGFloat, s: CGFloat, l: CGFloat) {
-		let (r, g, b, _) = self.rgba
+	var hsla: (h: CGFloat, s: CGFloat, l: CGFloat, a: CGFloat) {
+		var (h, s, b, a) = hsba
 		
-		let min = Swift.min(r, g, b)
-		let max = Swift.max(r, g, b)
-		let delta = max - min
+		let l = (2 - s) * b / 2;
 		
-		var h: CGFloat
-		switch true {
-			case delta == 0	: h = 0
-			case max == r	: h = ((g - b) / delta).remainder(dividingBy: 6)
-			case max == g	: h = ((b - r) / delta) + 2.0
-			case max == b	: h = ((r - g) / delta) + 4.0
-			default			: fatalError()
-		}
-		h *= 60
-		if h < 0 {
-			h += 360
+		if (l > 0) {
+			switch true {
+				case l < 0.5: s = s * b / (l * 2)
+				case l < 1.0: s = s * b / (2 - l * 2)
+				default: s = 0
+			}
 		}
 		
-		let v = max
-		
-		let s: CGFloat
-		switch v {
-			case 0.0: s = 0
-			default	: s = delta / v
-		}
-		
-		return (h, s, v)
+		return (h, s, l, a)
 	}
 }
 
