@@ -97,8 +97,8 @@ open class SlideTabController: UIViewController {
 			$0.left.right.equalToSuperview()
 			
 			switch SlideTabAppearance.align {
-				case .top: $0.top.equalToSuperview()
-				case .bottom: $0.bottom.equalToSuperview()
+				case .top: $0.top.equalTo(self.topLayoutGuide.snp.bottom)
+				case .bottom: $0.bottom.equalTo(self.bottomLayoutGuide.snp.top)
 			}
 		}
 		

@@ -13,6 +13,8 @@ import UIKit
 
 open class SlideMenuController: DebugViewController {
 	
+	private typealias MenuViewController = UIViewController & MenuViewControllable
+	
 	open var rootViewController: UIViewController! { didSet {
 		updateRootViewController(old: oldValue, new: rootViewController)
 	}}
@@ -68,27 +70,22 @@ open class SlideMenuController: DebugViewController {
 			$0.bottom.equalToSuperview()
 		}
 		
-		if let nc = new as? UINavigationController, let rc = nc.rootViewController {
-			let bundle = Bundle(for: SlideMenuController.self)
-			let image = UIImage(named: "hamburger-icon.png", in: bundle, compatibleWith: nil)!
-			let menuButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(openMenu))
-			rc.navigationItem.leftBarButtonItem = menuButton
-			
-			if let c = rc as? RootViewControllable {
-				let edgePanGesture = UIScreenEdgePanGestureRecognizer(target: transitionManager, action: #selector(TransitionManager.gestureOpen(_:)))
-				edgePanGesture.edges = .left
-				c.viewForEdgePanGestureRecognizer().addGestureRecognizer(edgePanGesture)
-			}
+		if let containerViewController = new as? RootContainerViewControllable {
+			containerViewController.wasAddedToSlideMenuController(self)
 		}
 		
-		if let c = new as? RootViewControllable {
-			let edgePanGesture = UIScreenEdgePanGestureRecognizer(target: transitionManager, action: #selector(TransitionManager.gestureOpen(_:)))
-			edgePanGesture.edges = .left
-			c.viewForEdgePanGestureRecognizer().addGestureRecognizer(edgePanGesture)
+		let edgePanGesture = UIScreenEdgePanGestureRecognizer(target: transitionManager, action: #selector(TransitionManager.gestureOpen(_:)))
+		edgePanGesture.edges = .left
+		
+		if let rootViewControllable = new as? RootViewControllable {
+			rootViewControllable.viewForEdgePanGestureRecognizer().addGestureRecognizer(edgePanGesture)
+		}
+		else {
+			new.view.addGestureRecognizer(edgePanGesture)
 		}
 	}
 	
-	private func updateMenuViewController(old: (UIViewController & MenuViewControllable)?, new: UIViewController & MenuViewControllable) {
+	private func updateMenuViewController(old: MenuViewController?, new: MenuViewController) {
 		if isMenuShowing {
 			old!.dismiss(animated: true, completion: openMenu)
 		}
@@ -127,7 +124,30 @@ open class SlideMenuController: DebugViewController {
 
 
 
-class TransitionManager: UIPercentDrivenInteractiveTransition {
+public protocol RootContainerViewControllable {
+	
+	func wasAddedToSlideMenuController(_ controller: SlideMenuController)
+}
+
+extension UINavigationController: RootContainerViewControllable {
+	
+	public func wasAddedToSlideMenuController(_ controller: SlideMenuController) {
+		guard let rootViewController = self.rootViewController else {
+			return
+		}
+		
+		let bundle = Bundle(for: SlideMenuController.self)
+		let image = UIImage(named: "hamburger-icon.png", in: bundle, compatibleWith: nil)!
+		let menuButton = UIBarButtonItem(image: image, style: .plain, target: controller, action: #selector(SlideMenuController.openMenu))
+		rootViewController.navigationItem.leftBarButtonItem = menuButton
+	}
+}
+
+
+
+
+
+private class TransitionManager: UIPercentDrivenInteractiveTransition {
 	var isPresenting = false
 	var isInteractive = false
 	
@@ -232,7 +252,8 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
 		}
 		
 		let duration = transitionDuration(using: transitionContext)
-		let options: UIViewAnimationOptions = isInteractive ? .curveLinear : .curveEaseOut
+//		let options: UIViewAnimationOptions = isInteractive ? .curveLinear : .curveEaseOut
+		let options: UIViewAnimationOptions = .curveEaseOut
 		
 		UIView.animate(withDuration: duration, delay: 0, options: options,
 			animations: animations,
@@ -297,8 +318,30 @@ public extension UIViewController {
 
 
 public protocol RootViewControllable: class {
+	
 	func viewForEdgePanGestureRecognizer() -> UIView
 }
+
+extension UINavigationController: RootViewControllable {
+	
+	public func viewForEdgePanGestureRecognizer() -> UIView {
+		guard let rootViewController = self.rootViewController else {
+			self.loadViewIfNeeded()
+			return self.view
+		}
+		
+		rootViewController.loadViewIfNeeded()
+		return rootViewController.view
+	}
+}
+
+//extension UIViewController: RootViewControllable {
+//
+//	public func viewForEdgePanGestureRecognizer() -> UIView {
+//		self.loadViewIfNeeded()
+//		return self.view
+//	}
+//}
 
 
 
