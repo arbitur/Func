@@ -13,6 +13,7 @@ import UIKit
 
 
 open class ScrollStackView: UIScrollView {
+	
 	open let contentStack: UIStackView = UIStackView()
 	open var axis: UILayoutConstraintAxis {
 		get { return contentStack.axis }
@@ -39,9 +40,8 @@ open class ScrollStackView: UIScrollView {
 			
 			widthConstraint =  $0.width.equalToSuperview()
 			heightConstraint =  $0.height.equalToSuperview()
-			widthConstraint.deactivate()
-			heightConstraint.deactivate()
 		}
+		axis = contentStack.axis
 	}
 	
 	public init(axis: UILayoutConstraintAxis) {

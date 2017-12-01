@@ -14,6 +14,7 @@ import UIKit
 
 @available(iOS 9.0, *)
 open class StackView: UIStackView {
+	
 	private var _backgroundColor: UIColor?
 	open override var backgroundColor: UIColor? {
 		get { return _backgroundColor }
@@ -26,6 +27,14 @@ open class StackView: UIStackView {
 	private let backgroundLayer = CAShapeLayer()
 	open override var layer: CALayer {
 		return backgroundLayer
+	}
+	
+	open override var layoutMargins: UIEdgeInsets {
+		get { return super.layoutMargins }
+		set {
+			self.isLayoutMarginsRelativeArrangement = true
+			super.layoutMargins = newValue
+		}
 	}
 	
 	

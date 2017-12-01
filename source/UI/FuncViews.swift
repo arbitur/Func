@@ -146,7 +146,7 @@ open class RoundTintImageView: RoundImageView {
 open class RoundTextField: UITextField, BorderDrawable {
 	
 	open override func textRect(forBounds bounds: CGRect) -> CGRect {
-		return bounds.insetBy(dx: self.cornerRadius, dy: 0)
+		return bounds.insetBy(dx: self.cornerRadius / 2, dy: 0)
 	}
 	
 	open override func placeholderRect(forBounds bounds: CGRect) -> CGRect {

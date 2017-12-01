@@ -40,7 +40,24 @@ open class LinearGradientView: UIView {
 	}
 	
 	open override func prepareForInterfaceBuilder() {
-		gradientLayer.colors = [UIColor.white.cgColor, UIColor.black.cgColor]
+		gradientLayer.colorComponents = [
+			(.white, 0),
+			(.black, 1)
+		]
+	}
+	
+	
+	public init(colorComponents: [(color: UIColor, location: Double)]) {
+		super.init(frame: .zero)
+		self.colorComponents = colorComponents
+	}
+	
+	public override init(frame: CGRect) {
+		super.init(frame: frame)
+	}
+	
+	public required init?(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
 	}
 }
 
@@ -70,19 +87,24 @@ open class LinearGradientLayer: CAGradientLayer {
 	}
 	
 	
+	private func initz() {
+		self.needsDisplayOnBoundsChange = true
+		self.isOpaque = false
+	}
+	
 	public override init() {
 		super.init()
-		self.needsDisplayOnBoundsChange = true
+		initz()
 	}
 	
 	public override init(layer: Any) {
 		super.init(layer: layer)
-		self.needsDisplayOnBoundsChange = true
+		initz()
 	}
 	
 	public required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
-		self.needsDisplayOnBoundsChange = true
+		initz()
 	}
 }
 
