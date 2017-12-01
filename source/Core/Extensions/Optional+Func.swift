@@ -14,12 +14,16 @@ import Foundation
 
 extension Optional {
 	
+	// Why? Remove it
 	var isNil: Bool {
 		switch self {
-		case .none: return true
-		case .some: return false
+			case .none: return true
+			case .some: return false
 		}
 	}
+	
+	
+	
 }
 
 extension Optional: CustomStringConvertible {

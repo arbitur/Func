@@ -20,4 +20,9 @@ public extension Data {
 		}
 		self.init(data)
 	}
+	
+	init <T: Number> (_ int: T) {
+		var i = int
+		self.init(bytes: &i, count: MemoryLayout.size(ofValue: int))
+	}
 }

@@ -14,7 +14,7 @@ import UIKit
 
 public extension UIResponder {
 	
-	private static var currentFirstResponder: UIResponder?
+	private static weak var currentFirstResponder: UIResponder?
 	
 	public static var first: UIResponder? {
 		currentFirstResponder = nil
@@ -24,21 +24,5 @@ public extension UIResponder {
 	
 	@objc private func findFirstResponder(sender: AnyObject) {
 		UIResponder.currentFirstResponder = self
-	}
-	
-	
-	
-	var superViewController: UIViewController? {
-		var parentResponder: UIResponder? = self
-		
-		while let responder = parentResponder {
-			parentResponder = responder.next
-			
-			if let viewController = parentResponder as? UIViewController {
-				return viewController
-			}
-		}
-		
-		return nil
 	}
 }

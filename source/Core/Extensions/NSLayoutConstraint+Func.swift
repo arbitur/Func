@@ -128,26 +128,26 @@ public struct LAC {
 	public var height:		LayoutItem { return LayoutItem(view: view, attribute: .height) }
 	public var centerX:		LayoutItem { return LayoutItem(view: view, attribute: .centerX) }
 	public var centerY:		LayoutItem { return LayoutItem(view: view, attribute: .centerY) }
-//	public var lastBaseline: LayoutItem { return LayoutItem(view: view, attribute: .lastBaseline) }
-//	
-//	@available(iOS 8.0, *)
-//	public var firstBaseline: LayoutItem			{ return LayoutItem(view: view, attribute: .firstBaseline) }
-//	@available(iOS 8.0, *)
-//	public var leftMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .leftMargin) }
-//	@available(iOS 8.0, *)
-//	public var rightMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .rightMargin) }
-//	@available(iOS 8.0, *)
-//	public var topMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .topMargin) }
-//	@available(iOS 8.0, *)
-//	public var bottomMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .bottomMargin) }
-//	@available(iOS 8.0, *)
-//	public var leadingMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .leadingMargin) }
-//	@available(iOS 8.0, *)
-//	public var trailingMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .trailingMargin) }
-//	@available(iOS 8.0, *)
-//	public var centerXWithinMargins: LayoutItem	{ return LayoutItem(view: view, attribute: .centerXWithinMargins) }
-//	@available(iOS 8.0, *)
-//	public var centerYWithinMargins: LayoutItem	{ return LayoutItem(view: view, attribute: .centerYWithinMargins) }
+	public var lastBaseline: LayoutItem { return LayoutItem(view: view, attribute: .lastBaseline) }
+	
+	@available(iOS 8.0, *)
+	public var firstBaseline: LayoutItem			{ return LayoutItem(view: view, attribute: .firstBaseline) }
+	@available(iOS 8.0, *)
+	public var leftMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .leftMargin) }
+	@available(iOS 8.0, *)
+	public var rightMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .rightMargin) }
+	@available(iOS 8.0, *)
+	public var topMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .topMargin) }
+	@available(iOS 8.0, *)
+	public var bottomMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .bottomMargin) }
+	@available(iOS 8.0, *)
+	public var leadingMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .leadingMargin) }
+	@available(iOS 8.0, *)
+	public var trailingMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .trailingMargin) }
+	@available(iOS 8.0, *)
+	public var centerXWithinMargins: LayoutItem	{ return LayoutItem(view: view, attribute: .centerXWithinMargins) }
+	@available(iOS 8.0, *)
+	public var centerYWithinMargins: LayoutItem	{ return LayoutItem(view: view, attribute: .centerYWithinMargins) }
 }
 
 

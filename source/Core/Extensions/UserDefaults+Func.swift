@@ -13,6 +13,7 @@ import Foundation
 
 
 public extension UserDefaults {
+	
 	/// Clears all saved data
 	func clear() {
 		self.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)

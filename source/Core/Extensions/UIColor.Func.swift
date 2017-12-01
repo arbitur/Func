@@ -50,9 +50,9 @@ public extension UIColor {
 	
 	
 	convenience init(hex: UInt, alpha: CGFloat = 1.0) {
-		let red = CGFloat((hex & 0xFF0000) >> 16) / 255.0
-		let green = CGFloat((hex & 0xFF00) >> 8) / 255.0
-		let blue = CGFloat((hex & 0xFF)) / 255.0
+		let red   = CGFloat( (hex >> 16) & 0xff ) / 255
+		let green = CGFloat( (hex >> 8)  & 0xff ) / 255
+		let blue  = CGFloat( (hex >> 0)  & 0xff ) / 255
 		self.init(red: red, green: green, blue: blue, alpha: alpha)
 	}
 	
@@ -116,7 +116,7 @@ public extension UIColor {
 			switch true {
 				case l < 0.5: s = s * b / (l * 2)
 				case l < 1.0: s = s * b / (2 - l * 2)
-				default: s = 0
+				default		: s = 0
 			}
 		}
 		

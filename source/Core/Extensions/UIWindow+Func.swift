@@ -13,6 +13,7 @@ import UIKit
 
 
 public extension UIWindow {
+	
 	static var current: UIWindow? {
 		if let w = UIApplication.shared.delegate?.window, let window = w {
 			return window

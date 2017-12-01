@@ -78,6 +78,22 @@ public extension UIView {
 	
 	
 	
+	var superViewController: UIViewController? {
+		var responder: UIResponder? = self
+		
+		repeat {
+			responder = responder?.next
+			if let viewController = responder as? UIViewController {
+				return viewController
+			}
+		}
+		while responder != nil
+		
+		return nil
+	}
+	
+	
+	
 	var capturedImage: UIImage! {
 		UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.isOpaque, 0.0)
 		defer { UIGraphicsEndImageContext() }

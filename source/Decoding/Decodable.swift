@@ -49,7 +49,7 @@ private func decode <T> (_ json: Dict, _ key: String) throws -> T {
 
 
 
-private func decode <T> (_ json: Dict, _ key: String) throws -> T where T: Decodable {
+private func decode <T> (_ json: Dict, _ key: String) throws -> T where T: Func.Decodable {
 	let dict: Dict = try getParse(json, key: key)
 	guard let decodable = T(json: dict) else {
 		throw DecodingError.parseFailed(key: key, value: dict, valueType: T.self)
@@ -58,7 +58,7 @@ private func decode <T> (_ json: Dict, _ key: String) throws -> T where T: Decod
 	return decodable
 }
 
-private func decode <T> (_ json: Dict, _ key: String) throws -> [T] where T: Decodable {
+private func decode <T> (_ json: Dict, _ key: String) throws -> [T] where T: Func.Decodable {
 	let dict: [Dict] = try getParse(json, key: key)
 	return dict.flatMap(T.init)
 }

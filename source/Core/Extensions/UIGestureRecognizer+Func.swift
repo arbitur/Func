@@ -13,6 +13,7 @@ import UIKit
 
 
 public extension UIGestureRecognizer {
+	
 	var point: CGPoint {
 		return self.location(in: self.view)
 	}

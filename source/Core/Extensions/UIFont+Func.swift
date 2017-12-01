@@ -13,6 +13,7 @@ import UIKit
 
 
 public extension UIFont {
+	
 	/// Just for debugging custom fonts
 	static func print() {
 		let families = UIFont.familyNames.sorted()
@@ -41,7 +42,9 @@ public protocol FontBuildable: RawRepresentable {
 }
 
 public extension FontBuildable {
+	
 	var fontName: String { return "\(type(of: self))" + self.rawValue }
+	
 	func size(_ size: CGFloat) -> UIFont {
 		return UIFont(name: fontName, size: size)!
 	}

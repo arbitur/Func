@@ -81,7 +81,7 @@ open class AlertDialog: Dialog, DialogBuilder {
 			didAddCustomViewToSuperview?(self, view)
 		}
 		
-		if !actions.isEmpty {
+		if actions.isNotEmpty {
 			let buttonContentView = UIStackView(axis: (actions.count == 2) ? .horizontal : .vertical)
 			buttonContentView.setContentCompressionResistancePriority(.required, for: .vertical)
 			

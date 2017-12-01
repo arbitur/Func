@@ -14,6 +14,7 @@ import Accelerate
 
 
 public extension UIImage {
+	
 	var base64: String {
 		let data = UIImagePNGRepresentation(self)!
 		return data.base64EncodedString(options: .lineLength64Characters)
@@ -42,8 +43,8 @@ public extension UIImage {
 		case aspectFit
 		
 		func aspectRatio(between size: CGSize, and otherSize: CGSize) -> CGFloat {
-			let aspectWidth  = size.width/otherSize.width
-			let aspectHeight = size.height/otherSize.height
+			let aspectWidth  = size.width / otherSize.width
+			let aspectHeight = size.height / otherSize.height
 			
 			switch self {
 				case .aspectFill: return max(aspectWidth, aspectHeight)
@@ -58,25 +59,22 @@ public extension UIImage {
 	
 	func resized(to newSize: CGSize, scalingMode: UIImage.ScalingMode) -> UIImage {
 		
-		let aspectRatio = scalingMode.aspectRatio(between: newSize, and: size)
+		let aspectRatio = scalingMode.aspectRatio(between: newSize, and: self.size)
 		
-		/* Build the rectangle representing the area to be drawn */
 		var scaledImageRect = CGRect.zero
 		
 		scaledImageRect.size.width  = self.size.width * aspectRatio
 		scaledImageRect.size.height = self.size.height * aspectRatio
-		scaledImageRect.origin.x    = (newSize.width - self.size.width * aspectRatio) / 2.0
-		scaledImageRect.origin.y    = (newSize.height - self.size.height * aspectRatio) / 2.0
+		scaledImageRect.origin.x    = (newSize.width - scaledImageRect.size.width) / 2.0
+		scaledImageRect.origin.y    = (newSize.height - scaledImageRect.size.height) / 2.0
 		
-		/* Draw and retrieve the scaled image */
 		UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
+		defer {
+			UIGraphicsEndImageContext()
+		}
 		
 		self.draw(in: scaledImageRect)
-		let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
-		
-		UIGraphicsEndImageContext()
-		
-		return scaledImage!
+		return UIGraphicsGetImageFromCurrentImageContext()!
 	}
 	
 	func resized(to size: CGSize) -> UIImage! {

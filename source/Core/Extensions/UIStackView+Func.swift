@@ -16,9 +16,10 @@ import UIKit
 public extension UIStackView {
 	
 	func add(arrangedView view: UIView?) {
-		if let view = view {
-			self.addArrangedSubview(view)
+		guard let view = view else {
+			return
 		}
+		self.addArrangedSubview(view)
 	}
 	
 	func add(arrangedViews views: UIView? ...) {

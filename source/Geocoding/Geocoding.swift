@@ -37,13 +37,6 @@ public extension Geocodable {
 	var url: String {
 		return "json"
 	}
-	
-	func decode(_ obj: Any) throws -> GeoResponse {
-		guard let response = GeoResponse(json: obj as! Dict) else {
-			throw AFError.responseSerializationFailed(reason: AFError.ResponseSerializationFailureReason.inputDataNil) //TODO: Proper error
-		}
-		return response
-	}
 }
 
 
@@ -52,10 +45,12 @@ public extension Geocodable {
 
 //TODO: Bounds
 public struct Geocode: Geocodable {
-	public typealias Bounds = (sW: CLLocationCoordinate2D, nE: CLLocationCoordinate2D)
+	public typealias Model = GeoResponse
 	
 	public let parameters: Parameters?
 	
+	
+	public typealias Bounds = (sW: CLLocationCoordinate2D, nE: CLLocationCoordinate2D)
 	
 	public init(address: String, bounds: Bounds? = nil, components: [Component: String]? = nil, region: String? = nil) {
 		parameters = [
@@ -84,6 +79,7 @@ public struct Geocode: Geocodable {
 
 
 public struct ReverseGeocode: Geocodable {
+	public typealias Model = GeoResponse
 	
 	public let parameters: Parameters?
 	

@@ -33,17 +33,23 @@ public extension URL {
 extension URL: ExpressibleByStringLiteral {
 	
 	public init(stringLiteral value: StringLiteralType) {
-		guard let url = URL(string: value) else { fatalError("Could not create URL from: \(value)") }
+		guard let url = URL(string: value) else {
+			fatalError("Could not create URL from: \(value)")
+		}
 		self = url
 	}
 	
 	public init(extendedGraphemeClusterLiteral value: StringLiteralType) {
-		guard let url = URL(string: value) else { fatalError("Could not create URL from: \(value)") }
+		guard let url = URL(string: value) else {
+			fatalError("Could not create URL from: \(value)")
+		}
 		self = url
 	}
 	
 	public init(unicodeScalarLiteral value: StringLiteralType) {
-		guard let url = URL(string: value) else { fatalError("Could not create URL from: \(value)") }
+		guard let url = URL(string: value) else {
+			fatalError("Could not create URL from: \(value)")
+		}
 		self = url
 	}
 }
