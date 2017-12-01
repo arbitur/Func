@@ -16,25 +16,21 @@ public protocol Requestable {
 	var url: String { get }
 	var headers: HTTPHeaders? { get }
 	
-	associatedtype Serializer: ResponseSerializer
-	var responseSerializer: Serializer { get }
 	
 	associatedtype Request: Alamofire.Request
-	func request <A: API>(_ api: A.Type) -> Request
+	func request <A: API> (_ api: A.Type) -> Request
 	
 	associatedtype Model
-	func decode(_ obj: Serializer.T) throws -> Model
 }
 
-
-
-public extension Requestable where Serializer == JSONResponseSerializer, Model: Func.Decodable {
+public extension Requestable {
 	
-	func decode(_ obj: Any) throws -> Model {
-		guard let model = Model(json: obj as! Dict) else {
-			throw AFError.responseSerializationFailed(reason: AFError.ResponseSerializationFailureReason.inputDataNil)
-		}
-		return model
+	var method: HTTPMethod {
+		return .get
+	}
+	
+	var headers: HTTPHeaders? {
+		return nil
 	}
 }
 
@@ -46,14 +42,10 @@ public protocol DataRequestable: Requestable {
 	var parameters: Parameters? { get }
 	var parameterEncoding: ParameterEncoding { get }
 	
-	func request <A> (_ api: A.Type) -> DataRequest where A: API
+	func request <A: API> (_ api: A.Type) -> DataRequest
 }
 
 public extension DataRequestable {
-	
-	var method: HTTPMethod {
-		return .get
-	}
 	
 	var parameters: Parameters? {
 		return nil
@@ -63,17 +55,32 @@ public extension DataRequestable {
 		return URLEncoding.default
 	}
 	
-	var headers: HTTPHeaders? {
-		return nil
-	}
-	
-	var responseSerializer: JSONResponseSerializer {
-		return .default
-	}
 	
 	func request<A>(_ api: A.Type) -> DataRequest where A : API {
 		let url = api.baseUrl + "/" + self.url
 		let headers = (api.baseHeaders ?? [:]) + (self.headers ?? [:])
 		return Alamofire.request(url, method: method, parameters: parameters, encoding: parameterEncoding, headers: headers)
+	}
+}
+
+
+
+
+
+// Have to inherit `DataRequestable` due to generics getting fucked in API.request functions, fix this in the future
+public protocol UploadRequestable: DataRequestable {
+	
+	var data: Data { get }
+	
+	// Fix this, not overriding DataRequestable's extension
+//	func request <A: API> (_ api: A.Type) -> UploadRequest
+}
+
+public extension UploadRequestable {
+	
+	func request<A>(_ api: A.Type) -> DataRequest where A : API {
+		let url = api.baseUrl + "/" + self.url
+		let headers = (api.baseHeaders ?? [:]) + (self.headers ?? [:])
+		return Alamofire.upload(data, to: url, method: method, headers: headers)
 	}
 }

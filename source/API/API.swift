@@ -40,8 +40,13 @@ public extension API {
 			headers.forEach { print($0 + ":", $1) }
 		}
 		
-		if loggingMode ?== [.body, .all], let data = request.httpBody, let str = String(data) {
-			print(str)
+		if loggingMode ?== [.body, .all], let data = request.httpBody {
+			if let str = String(data) {
+				print(str)
+			}
+			else {
+				print(data)
+			}
 		}
 	}
 	
@@ -65,9 +70,9 @@ public extension API {
 		}
 	}
 	
-	static func request <R> (_ req: R) -> ResponseHandler<DataRequest, R.Model> where R: DataRequestable {
+	static func dataRequest <R: DataRequestable, M> (_ req: R, decode: @escaping (Data) throws -> M) -> ResponseHandler<M> {
 		let request = req.request(Self.self)
-		let responseHandler = ResponseHandler<DataRequest, R.Model>(request: request)
+		let responseHandler = ResponseHandler<M>()
 		
 		log(request: request.request)
 		
@@ -82,10 +87,12 @@ public extension API {
 				responseHandler.failure?(error.localizedDescription)
 				return
 			}
+			
 			do {
-				let a = req.responseSerializer
-				let obj = try a.serialize(data: response.data)
-				let model = try req.decode(obj)
+				guard let data = response.data, data.isNotEmpty else {
+					throw AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
+				}
+				let model = try decode(data)
 				responseHandler.success?(response.response?.statusCode ?? 0, model)
 			}
 			catch {
@@ -95,8 +102,62 @@ public extension API {
 		
 		return responseHandler
 	}
+	
+	// Array / Dictionary
+	static func requestJson <R: DataRequestable> (_ req: R) -> ResponseHandler<R.Model> {
+		
+		return dataRequest(req) { data in
+			let obj = try JSONResponseSerializer.default.serialize(data: data)
+			guard let model = obj as? R.Model else {
+				throw APIError.castingError
+			}
+			return model
+		}
+	}
+	
+	// Array of type `M` ### Might be unnecessary
+//	static func requestJson <R, M> (_ req: R) -> ResponseHandler<R.Model> where R: DataRequestable, R.Model == [M] {
+//
+//		return dataRequest(req) { data -> R.Model in
+//			let obj = try JSONResponseSerializer.default.serialize(data: data)
+//			guard let arr = obj as? [Any] else {
+//				throw APIError.castingError
+//			}
+//
+//			return arr.flatMap { $0 as? M }
+//		}
+//	}
+	
+	
+	static func requestJson <R: DataRequestable> (_ req: R) -> ResponseHandler<R.Model> where R.Model: Func.Decodable {
+		
+		return dataRequest(req) { data in
+			let obj = try JSONResponseSerializer.default.serialize(data: data)
+			guard let dict = obj as? Dict, let model = R.Model(json: dict) else {
+				throw APIError.castingError
+			}
+			return model
+		}
+	}
+	
+	static func requestJson <R: DataRequestable, M> (_ req: R) -> ResponseHandler<R.Model> where M: Func.Decodable, R.Model == [M] {
+		
+		return dataRequest(req) { data in
+			let obj = try JSONResponseSerializer.default.serialize(data: data)
+			guard let arr = obj as? [Dict] else {
+				throw APIError.castingError
+			}
+			
+			return arr.flatMap(M.init)
+		}
+	}
 }
 
+
+
+public enum APIError: String, Error {
+	case castingError = "Failed to cast object into specified model"
+}
 
 
 

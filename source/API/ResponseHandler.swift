@@ -11,8 +11,7 @@ import Alamofire
 
 
 
-public class ResponseHandler<R: Alamofire.Request, M> {
-	public let request: R
+public class ResponseHandler <M> {
 	
 	public var success: ((Int, M)->())?
 	public var failure: ((String)->())?
@@ -36,8 +35,17 @@ public class ResponseHandler<R: Alamofire.Request, M> {
 		self.finally = finally
 		return self
 	}
-	
-	public init(request: R) {
-		self.request = request
-	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
