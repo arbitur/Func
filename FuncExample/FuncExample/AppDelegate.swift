@@ -25,16 +25,29 @@ class AppDelegate: UIResponder {
 		window.makeKeyAndVisible()
 		self.window = window
 		
-		let vc = Page1()
-		let nc = UINavigationController(rootViewController: vc)
-		nc.navigationBar.isTranslucent = false
+//		let vc = Page1()
+//		let nc = UINavigationController(rootViewController: vc)
+//		nc.navigationBar.isTranslucent = false
 //		window.rootViewController = nc
 		
 		
-		let slide = SlideMenuController()
-		slide.rootViewController = nc//RootVC()
-		slide.menuViewController = MenuVC()
-		window.rootViewController = slide
+//		let slide = SlideMenuController()
+//		slide.rootViewController = RootVC()
+//		slide.menuViewController = MenuVC()
+//		window.rootViewController = slide
+		
+		let slide2 = SlideMenuViewController()
+		slide2.rootViewController = RootVC()
+		slide2.menuViewController = MenuVC()
+		window.rootViewController = slide2
+		
+//		let tabController = SlideTabController_NEW()
+//		tabController.addChildViewController(RootVC())
+//		tabController.addChildViewController(RootVC())
+//		tabController.addChildViewController(RootVC())
+//		window.rootViewController = tabController
+		
+		print("iPhone screen size:", UIScreen.main.screenSize.rawValue)
 	}
 }
 
@@ -71,8 +84,21 @@ class MenuVC: DebugViewController, MenuViewControllable {
 }
 
 class RootVC: DebugViewController {
+	
+	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+		let vc = RootVC()
+		vc.title = "Text \(Random.range(0..<10))"
+		self.slideMenuViewController?.rootViewController = vc
+	}
+	
 	override func loadView() {
-		self.view = UIView(backgroundColor: .green)
+		let label = UILabel()
+		label.backgroundColor = .random
+		label.isUserInteractionEnabled = true
+		label.textAlignment = .center
+		label.textColor = .white
+		label.text = self.title ?? "RootVC"
+		self.view = label
 	}
 }
 

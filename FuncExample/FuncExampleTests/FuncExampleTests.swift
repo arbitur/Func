@@ -575,7 +575,61 @@ class NumberTests: XCTestCase {
 
 class ColorTests: XCTestCase {
 	
+	func testRepresentations() {
+		let c = UIColor.red
+		let rgb = c.rgba
+		let hsb = c.hsba
+		let hsl = c.hsla
+		XCTAssertEqual(c, UIColor(red: rgb.r, green: rgb.g, blue: rgb.b, alpha: rgb.a))
+		XCTAssertEqual(c, UIColor(hue: hsb.h, saturation: hsb.s, brightness: hsb.b, alpha: hsb.a))
+		XCTAssertEqual(c, UIColor(hue: hsl.h, saturation: hsl.s, lightness: hsl.l, alpha: hsl.a))
+		
+		XCTAssertEqual(hex(UIColor(hex: 0xcccccc)), 0xcccccc)
+	}
 	
+	func testRGBA() {
+		XCTAssertTrue(UIColor.red.rgba == (CGFloat(1),CGFloat(0),CGFloat(0),CGFloat(1)))
+		XCTAssertTrue(UIColor.green.rgba == (CGFloat(0),CGFloat(1),CGFloat(0),CGFloat(1)))
+		XCTAssertTrue(UIColor.blue.rgba == (CGFloat(0),CGFloat(0),CGFloat(1),CGFloat(1)))
+		
+		self.measure {
+			let random = UIColor.random
+			XCTAssertEqual(hex(random), hex(UIColor(hex: hex(random))))
+		}
+	}
+	
+	func testHSBA() {
+		XCTAssertTrue(UIColor.red.hsba == (CGFloat(0),CGFloat(1),CGFloat(1),CGFloat(1)))
+		XCTAssertTrue(UIColor.green.hsba == (CGFloat(120.0/360.0),CGFloat(1),CGFloat(1),CGFloat(1)))
+		XCTAssertTrue(UIColor.blue.hsba == (CGFloat(240/360.0),CGFloat(1),CGFloat(1),CGFloat(1)))
+		
+		self.measure {
+			let random = UIColor.random
+			let (h, s, b, a) = random.hsba
+			XCTAssertEqual(hex(random), hex(UIColor(hue: h, saturation: s, brightness: b, alpha: a)))
+		}
+	}
+	
+	func testHSLA() {
+		XCTAssertTrue(UIColor.red.hsla == (CGFloat(0),CGFloat(1),CGFloat(0.5),CGFloat(1)))
+		XCTAssertTrue(UIColor.green.hsla == (CGFloat(120.0/360.0),CGFloat(1),CGFloat(0.5),CGFloat(1)))
+		XCTAssertTrue(UIColor.blue.hsla == (CGFloat(240/360.0),CGFloat(1),CGFloat(0.5),CGFloat(1)))
+		
+		self.measure {
+			let random = UIColor.random
+			let (h, s, l, a) = random.hsla
+			XCTAssertEqual(hex(random), hex(UIColor(hue: h, saturation: s, lightness: l, alpha: a)))
+		}
+	}
+	
+	private func hex(_ color: UIColor) -> UInt {
+		let (r, g, b, _) = color.rgba
+		var hex: UInt = 0
+		hex |= UInt((b * 255.0))
+		hex |= UInt((g * 255.0)) << 8
+		hex |= UInt((r * 255.0)) << 16
+		return hex
+	}
 }
 
 
