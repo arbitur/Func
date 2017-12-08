@@ -19,8 +19,8 @@ public class KeyboardControl: NSObject {
 	private var leftArrow: UIBarButtonItem?
 	private var rightArrow: UIBarButtonItem?
 	
-	fileprivate let inputs: [KeyboardDisplayable]
-	fileprivate var individualDelegates = [Weak<NSObjectProtocol>]()
+	private let inputs: [KeyboardDisplayable]
+	private var individualDelegates = [Weak<NSObjectProtocol>]()
 	
 	private let handler: EventHandler
 	private var selectedIndex: Int? {

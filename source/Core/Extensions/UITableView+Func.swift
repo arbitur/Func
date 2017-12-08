@@ -14,7 +14,7 @@ import UIKit
 
 public extension UITableView {
 	
-	func cell <T> (for id: String) -> T! where T: UITableViewCell {
+	func cell <T: UITableViewCell> (for id: String) -> T? {
 		return self.dequeueReusableCell(withIdentifier: id) as? T
 	}
 	

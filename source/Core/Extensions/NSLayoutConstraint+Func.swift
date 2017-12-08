@@ -118,32 +118,32 @@ public struct LAC {
 		instructions(self)
 	}
 	
-	public var left:		LayoutItem { return LayoutItem(view: view, attribute: .left) }
-	public var right:		LayoutItem { return LayoutItem(view: view, attribute: .right) }
-	public var top:			LayoutItem { return LayoutItem(view: view, attribute: .top) }
-	public var bottom:		LayoutItem { return LayoutItem(view: view, attribute: .bottom) }
-	public var leading:		LayoutItem { return LayoutItem(view: view, attribute: .leading) }
-	public var trailing:	LayoutItem { return LayoutItem(view: view, attribute: .trailing) }
-	public var width:		LayoutItem { return LayoutItem(view: view, attribute: .width) }
-	public var height:		LayoutItem { return LayoutItem(view: view, attribute: .height) }
-	public var centerX:		LayoutItem { return LayoutItem(view: view, attribute: .centerX) }
-	public var centerY:		LayoutItem { return LayoutItem(view: view, attribute: .centerY) }
+	public var left: LayoutItem 		{ return LayoutItem(view: view, attribute: .left) }
+	public var right: LayoutItem 		{ return LayoutItem(view: view, attribute: .right) }
+	public var top: LayoutItem 			{ return LayoutItem(view: view, attribute: .top) }
+	public var bottom: LayoutItem 		{ return LayoutItem(view: view, attribute: .bottom) }
+	public var leading: LayoutItem 		{ return LayoutItem(view: view, attribute: .leading) }
+	public var trailing: LayoutItem 	{ return LayoutItem(view: view, attribute: .trailing) }
+	public var width: LayoutItem 		{ return LayoutItem(view: view, attribute: .width) }
+	public var height: LayoutItem 		{ return LayoutItem(view: view, attribute: .height) }
+	public var centerX: LayoutItem 		{ return LayoutItem(view: view, attribute: .centerX) }
+	public var centerY: LayoutItem 		{ return LayoutItem(view: view, attribute: .centerY) }
 	public var lastBaseline: LayoutItem { return LayoutItem(view: view, attribute: .lastBaseline) }
 	
 	@available(iOS 8.0, *)
-	public var firstBaseline: LayoutItem			{ return LayoutItem(view: view, attribute: .firstBaseline) }
+	public var firstBaseline: LayoutItem		{ return LayoutItem(view: view, attribute: .firstBaseline) }
 	@available(iOS 8.0, *)
-	public var leftMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .leftMargin) }
+	public var leftMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .leftMargin) }
 	@available(iOS 8.0, *)
-	public var rightMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .rightMargin) }
+	public var rightMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .rightMargin) }
 	@available(iOS 8.0, *)
-	public var topMargin: LayoutItem				{ return LayoutItem(view: view, attribute: .topMargin) }
+	public var topMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .topMargin) }
 	@available(iOS 8.0, *)
 	public var bottomMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .bottomMargin) }
 	@available(iOS 8.0, *)
-	public var leadingMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .leadingMargin) }
+	public var leadingMargin: LayoutItem		{ return LayoutItem(view: view, attribute: .leadingMargin) }
 	@available(iOS 8.0, *)
-	public var trailingMargin: LayoutItem			{ return LayoutItem(view: view, attribute: .trailingMargin) }
+	public var trailingMargin: LayoutItem		{ return LayoutItem(view: view, attribute: .trailingMargin) }
 	@available(iOS 8.0, *)
 	public var centerXWithinMargins: LayoutItem	{ return LayoutItem(view: view, attribute: .centerXWithinMargins) }
 	@available(iOS 8.0, *)
@@ -164,7 +164,7 @@ public extension UIView {
 public extension UIView {
 	
 	func add(view: UIView, instructions: (LAC)->()) {
-		self.add(view: view)
+		self.addSubview(view)
 		view.lac.make(instructions)
 	}
 }
@@ -172,7 +172,12 @@ public extension UIView {
 public extension UIStackView {
 	
 	func add(arrangedView: UIView, instructions: (LAC)->()) {
-		self.add(arrangedView: arrangedView)
+		self.addArrangedSubview(arrangedView)
+		arrangedView.lac.make(instructions)
+	}
+	
+	func insert(arrangedView: UIView, at index: Int, instructions: (LAC)->()) {
+		self.insertArrangedSubview(arrangedView, at: index)
 		arrangedView.lac.make(instructions)
 	}
 }

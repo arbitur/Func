@@ -133,7 +133,7 @@ public class ActivityIndicator: UIView {
 
 
 
-fileprivate class Spinner: UIView {
+private class Spinner: UIView {
 	let numberOfLines: Int
 	let spacing: CGFloat = 0
 	let innerRadius: CGFloat = 45

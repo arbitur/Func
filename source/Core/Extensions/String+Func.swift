@@ -56,6 +56,11 @@ public extension String {
 	}
 	
 	
+	func percentEncoding(for characters: CharacterSet) -> String? {
+		return self.addingPercentEncoding(withAllowedCharacters: characters.inverted)
+	}
+	
+	
 	
 	/**
 		Substrings from lowerBound up to upperBound
@@ -118,7 +123,10 @@ public extension String {
 	}
 	
 	func base64Decoded() -> String? {
-		let data = Data(base64Encoded: self)
+		guard let data = Data(base64Encoded: self) else {
+			return nil
+		}
+		
 		return String(data)
 	}
 	
@@ -133,12 +141,14 @@ public extension String {
 	
 	func base64URLDecoded() -> String? {
 		let str = self.replaced("-1", with: "+").replaced("-2", with: "/").replaced("-3", with: "=")
-		let data = Data(base64Encoded: str)
+		guard let data = Data(base64Encoded: str) else {
+			return nil
+		}
+		
 		return String(data)
 	}
 	
-	init?(_ data: Data?) {
-		guard let data = data else { return nil }
+	init?(_ data: Data) {
 		self.init(data: data, encoding: .utf8)
 	}
 }
@@ -148,8 +158,8 @@ public extension String {
 
 
 /// Left exists inside right
-public func ?== (s1: String, s2: String) -> Bool {
-	return s2.contains(s1)
+public func ?== (lhs: String, rhs: String) -> Bool {
+	return rhs.contains(lhs)
 }
 
 

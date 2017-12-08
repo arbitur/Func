@@ -33,7 +33,7 @@ public extension Date {
 	
 	
 	
-	init?(_ string: String, format: Format) {
+	init?(_ string: String, format: Format = .dateTime) {
 		guard let date = DateFormatter(format: format.format).date(from: string) else {
 			return nil
 		}

@@ -14,7 +14,7 @@ import SnapKit
 
 open class SlideTabController: UIViewController {
 	fileprivate let scrollView = ScrollView()
-	fileprivate let menu = Menu()
+	private let menu = Menu()
 	
 	public var selectedIndex: Int { return menu.index }
 	
@@ -39,7 +39,7 @@ open class SlideTabController: UIViewController {
 //	}
 	
 	
-	fileprivate func showViewController(_ vc: UIViewController) {
+	private func showViewController(_ vc: UIViewController) {
 		if !vc.isViewLoaded {
 			vc.loadViewIfNeeded()
 			
@@ -188,13 +188,13 @@ extension SlideTabController: UIScrollViewDelegate {
 
 
 
-fileprivate class ScrollView: UIScrollView {
+private class ScrollView: UIScrollView {
 	var tabController: SlideTabController { return self.superViewController as! SlideTabController }
 	let stackView = UIStackView()
 	
 	
 	
-//	fileprivate override func layoutSubviews() {
+//	private override func layoutSubviews() {
 //		super.layoutSubviews()
 //
 //		self.contentSize.height = self.bounds.height
@@ -272,7 +272,7 @@ protocol MenuDelegate {
 
 
 	
-fileprivate class Menu: UIScrollView {
+private class Menu: UIScrollView {
 	let stackView = StackView()
 	var indicator: UIView { return stackView.indicator }
 	var index: Int = 0 {

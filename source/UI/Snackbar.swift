@@ -44,7 +44,7 @@ public struct Snackbar {
 
 
 @available(*, deprecated, message: "Maybe discontinued")
-private class SnackbarView: UIView {
+fileprivate class SnackbarView: UIView {
 	let label: UILabel
 	let snackbar: Snackbar
 	let id: UInt

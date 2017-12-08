@@ -6,7 +6,7 @@
 //
 //
 
-import CoreLocation
+import CoreLocation.CLLocation
 
 
 
@@ -22,12 +22,11 @@ public extension CLLocation {
 
 
 
-extension CLLocationCoordinate2D: CustomStringConvertible, Equatable {
+public extension CLLocationCoordinate2D {
 	
-	public var description: String {
-		return "\(self.latitude),\(self.longitude)"
+	init(_ latitude: CLLocationDegrees, _ longitude: CLLocationDegrees) {
+		self.init(latitude: latitude, longitude: longitude)
 	}
-	
 	
 	
 	func coordinateFrom(distance: Double, angle bearing: Double) -> CLLocationCoordinate2D {
@@ -56,8 +55,20 @@ extension CLLocationCoordinate2D: CustomStringConvertible, Equatable {
 		
 		return CLLocationCoordinate2D(latitude: φ2.deg, longitude: λ2.deg)
 	}
+}
+
+
+
+
+extension CLLocationCoordinate2D: CustomStringConvertible {
 	
-	
+	public var description: String {
+		return "\(self.latitude),\(self.longitude)"
+	}
+}
+
+
+extension CLLocationCoordinate2D: Equatable {
 	
 	public static func == (coord1: CLLocationCoordinate2D, coord2: CLLocationCoordinate2D) -> Bool {
 		return coord1.description == coord2.description
