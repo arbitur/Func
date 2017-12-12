@@ -16,6 +16,7 @@
 		7F411D8A1E65CB3200153692 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7F411D891E65CB3200153692 /* Assets.xcassets */; };
 		7F411D8D1E65CB3200153692 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F411D8B1E65CB3200153692 /* LaunchScreen.storyboard */; };
 		7F6EDF281FC5C2880037048A /* FuncExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6EDF271FC5C2880037048A /* FuncExampleUITests.swift */; };
+		7F8AAEE31FDAEEF100817546 /* StarRatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8AAEE21FDAEEF100817546 /* StarRatingViewController.swift */; };
 		7F9F0DD51F432033007751C6 /* FuncExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9F0DD41F432033007751C6 /* FuncExampleTests.swift */; };
 		7FE3EC8D1EA4DDF300347E88 /* Page1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE3EC8C1EA4DDF300347E88 /* Page1.swift */; };
 		EF933AA1D2A21697114996C2 /* Pods_FuncExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F0D896746B76223B2DC088A /* Pods_FuncExample.framework */; };
@@ -55,6 +56,7 @@
 		7F6EDF251FC5C2880037048A /* FuncExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FuncExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F6EDF271FC5C2880037048A /* FuncExampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuncExampleUITests.swift; sourceTree = "<group>"; };
 		7F6EDF291FC5C2880037048A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7F8AAEE21FDAEEF100817546 /* StarRatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarRatingViewController.swift; sourceTree = "<group>"; };
 		7F9F0DD21F432032007751C6 /* FuncExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FuncExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F9F0DD41F432033007751C6 /* FuncExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuncExampleTests.swift; sourceTree = "<group>"; };
 		7F9F0DD61F432033007751C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				7F411D8B1E65CB3200153692 /* LaunchScreen.storyboard */,
 				7F411D8E1E65CB3200153692 /* Info.plist */,
 				7F01D04D1E6EE9A50050B5B2 /* Func.podspec */,
+				7F8AAEE21FDAEEF100817546 /* StarRatingViewController.swift */,
 			);
 			path = FuncExample;
 			sourceTree = "<group>";
@@ -425,6 +428,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F8AAEE31FDAEEF100817546 /* StarRatingViewController.swift in Sources */,
 				7F20104F1EB1F6D7005BD378 /* Views.swift in Sources */,
 				7F411D851E65CB3200153692 /* TableViewController.swift in Sources */,
 				7F411D831E65CB3200153692 /* AppDelegate.swift in Sources */,
@@ -585,6 +589,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = se.arbitur.FuncExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -599,6 +604,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = se.arbitur.FuncExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

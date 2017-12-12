@@ -44,6 +44,32 @@ public func boundary <T> (_ value: T, max: T) -> T where T: Comparable {
 
 
 
+public final class Observable<T> {
+	
+	public var value: T {
+		didSet {
+			observers.forEach { $0(value) }
+		}
+	}
+	
+	public typealias Listener = (T) -> ()
+	private var observers = [Listener]()
+	
+	public init(_ value: T) {
+		self.value = value
+	}
+	
+	/// Use [weak/unowned self] to prevent retain cycle
+	public func bind(_ observer: @escaping Listener) {
+		observers ++= observer
+		observer(value)
+	}
+}
+
+
+
+
+
 
 
 

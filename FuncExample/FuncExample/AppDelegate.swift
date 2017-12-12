@@ -108,7 +108,7 @@ class RootVC: DebugViewController {
 extension AppDelegate: UIApplicationDelegate {
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
-		loadWindow()
+//		loadWindow()
 		
 		
 //		let color = UIColor.cyan
