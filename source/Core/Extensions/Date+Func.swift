@@ -24,22 +24,51 @@ public extension Date {
 //		return Calendar.current.dateComponents(units, from: self)
 //	}
 	
-	
-	
-	
-	func format(_ format: Format = .dateTime) -> String {
-		return DateFormatter(format: format.format).string(from: self)
+	public static var now: Date {
+		return Date()
 	}
 	
 	
 	
-	init?(_ string: String, format: Format = .dateTime) {
-		guard let date = DateFormatter(format: format.format).date(from: string) else {
+	func format(_ format: DateFormat = .dateTime) -> String {
+		return DateFormatter(format: format.rawValue).string(from: self)
+	}
+	
+	
+	
+	init?(_ string: String, format: DateFormat = .dateTime) {
+		guard let date = DateFormatter(format: format.rawValue).date(from: string) else {
 			return nil
 		}
 		self.init(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate)
 	}
 }
+
+
+
+public struct DateFormat: RawRepresentable, ExpressibleByStringLiteral {
+	public static let date: DateFormat = "yyyy-MM-dd"
+	public static let time: DateFormat = "HH:mm"
+	public static let dateTime: DateFormat = "yyyy-MM-dd HH:mm"
+	public static let dateTimeSec: DateFormat = "yyyy-MM-dd HH:mm:ss"
+	
+	public let rawValue: String
+	
+	public init?(rawValue: String) {
+		self.rawValue = rawValue
+	}
+	
+	public init(_ rawValue: String) {
+		self.rawValue = rawValue
+	}
+	
+	public init(stringLiteral value: StringLiteralType) {
+		self.rawValue = value
+	}
+}
+
+
+
 
 
 public extension Date {
@@ -116,27 +145,7 @@ public extension Date {
 }
 
 
-public extension Date {
-	
-	public enum Format {
-		case date
-		case time
-		case dateTime
-		case dateTimeSec
-		case custom(String)
-		
-		public var format: String {
-			switch self {
-				case .date			: return "yyyy-MM-dd"
-				case .time			: return "HH:mm"
-				case .dateTime		: return "yyyy-MM-dd HH:mm"
-				case .dateTimeSec	: return "yyyy-MM-dd HH:mm:ss"
-				case .custom(let f)	: return f
-			}
-		}
-	}
-	
-}
+
 
 
 public extension Date {
@@ -169,13 +178,6 @@ public extension Date {
 	}
 	
 }
-
-
-
-
-
-
-
 
 
 

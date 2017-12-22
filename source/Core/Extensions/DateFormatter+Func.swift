@@ -15,7 +15,7 @@ import Foundation
 public extension DateFormatter {
 	
 	static func reformat(dateString: String, format old: String, newFormat new: String) -> String? {
-		return Date(dateString, format: .custom(old))?.format(.custom(new))
+		return Date(dateString, format: DateFormat(old))?.format(DateFormat(new))
 	}
 	
 	

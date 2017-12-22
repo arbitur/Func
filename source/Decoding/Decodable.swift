@@ -96,10 +96,10 @@ private func decode(_ json: Dict, _ key: String) throws -> [URL] {
 
 
 
-private func decode(_ json: Dict, _ key: String, format: Date.Format = .dateTime) throws -> Date {
+private func decode(_ json: Dict, _ key: String, format: DateFormat = .dateTime) throws -> Date {
 	let str: String = try getParse(json, key: key)
 	guard let date = Date(str, format: format) else {
-		throw DecodingError.dateFormat(key: key, value: str, format: format.format)
+		throw DecodingError.dateFormat(key: key, value: str, format: format.rawValue)
 	}
 	return date
 }
@@ -154,7 +154,7 @@ public extension Dictionary where Key == String {
 	
 	
 	
-	public func decode (_ key: String, format: Date.Format = .dateTime) throws -> Date {
+	public func decode (_ key: String, format: DateFormat = .dateTime) throws -> Date {
 		return try Func.decode(self, key, format: format)
 	}
 	
