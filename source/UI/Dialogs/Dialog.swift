@@ -119,7 +119,7 @@ public extension DialogBuilder {
 		actions.append(action)
 	}
 	
-	public func addNormal(title: String, action: @escaping Closure) {
+	public func addNormal(title: String, action: Closure? = nil) {
 		addAction(DialogAction(title: title, type: .normal, action: action))
 	}
 	

@@ -13,16 +13,13 @@ import UIKit
 
 
 public extension UISegmentedControl {
+	
 	var items: [String] {
 		get {
 			return (0..<self.numberOfSegments).map { self.titleForSegment(at: $0) ?? "" }
 		}
 		set {
-			self.removeAllSegments()
-			
-			for (i, item) in newValue.enumerated() {
-				self.insertSegment(withTitle: item, at: i, animated: false)
-			}
+			self.setItems(newValue, animated: false)
 		}
 	}
 	

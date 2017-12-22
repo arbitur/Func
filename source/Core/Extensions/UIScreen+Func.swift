@@ -22,11 +22,11 @@ public extension UIScreen {
 	
 	
 	public enum ScreenSize: Int, Comparable {
-		case inch3_5
-		case inch4
-		case inch4_7
-		case inch5_5
-		case inch5_8
+		case inch3_5 // iPhone 4
+		case inch4 // iPhone SE
+		case inch4_7 // iPhone 8
+		case inch5_5 // iPhone 8 plus
+		case inch5_8 // iPhone X
 		
 		fileprivate init() {
 			switch UIScreen.main.nativeBounds.size {

@@ -27,7 +27,7 @@ public extension UIView {
 	}
 	
 	func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
-		let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+		let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(radius))
 		let mask = CAShapeLayer()
 		mask.path = path.cgPath
 		self.layer.mask = mask
@@ -39,8 +39,11 @@ public extension UIView {
 		self.layer.borderWidth = width
 		self.layer.borderColor = color.cgColor
 	}
-	
-	
+}
+
+
+
+public extension UIView {
 	
 	func add(view: UIView?) {
 		if let view = view {
@@ -59,6 +62,11 @@ public extension UIView {
 			view.removeFromSuperview()
 		}
 	}
+}
+
+
+
+public extension UIView {
 	
 	/// Go down the hiarchy
 	var descendants: [UIView] {
@@ -91,17 +99,11 @@ public extension UIView {
 		
 		return nil
 	}
-	
-	
-	
-	var capturedImage: UIImage! {
-		UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.isOpaque, 0.0)
-		defer { UIGraphicsEndImageContext() }
-		self.drawHierarchy(in: self.bounds, afterScreenUpdates: false)
-		return UIGraphicsGetImageFromCurrentImageContext()
-	}
-	
-	
+}
+
+
+
+public extension UIView {
 	
 	func transform(scaleX x: CGFloat, y: CGFloat) {
 		self.transform = CGAffineTransform(scaleX: x, y: y)
@@ -121,6 +123,29 @@ public extension UIView {
 	
 	
 	
+	/// `point`: The point in `self` coordinate space. `view` the view to project the `point` onto
+	func projectedPoint(_ point: CGPoint, to view: UIView) -> CGPoint {
+		guard let superview = self.superview else {
+			fatalError()
+		}
+		
+		return superview.convert(point, to: view)
+	}
+	
+	/// `rect`: The rectangle in `self` coordinate space. `view` the view to project the `rect` onto
+	func projectedRect(_ rect: CGRect, to view: UIView) -> CGRect {
+		guard let superview = self.superview else {
+			fatalError()
+		}
+		
+		return superview.convert(rect, to: view)
+	}
+}
+
+
+
+public extension UIView {
+	
 	func applyMotion(magnitude: CGFloat) {
 		let motionX = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
 		motionX.minimumRelativeValue = -magnitude
@@ -136,10 +161,22 @@ public extension UIView {
 	}
 	
 	
+	func captureImage() -> UIImage? {
+		UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.isOpaque, 0)
+		defer { UIGraphicsEndImageContext() }
+		self.drawHierarchy(in: self.bounds, afterScreenUpdates: false)
+		return UIGraphicsGetImageFromCurrentImageContext()
+	}
+}
+
+
+
+public extension UIView {
 	
 	static func nib(name: String, owner: AnyObject) -> UIView? {
 		return Bundle.main.loadNibNamed(name, owner: owner, options: nil)?.first as? UIView
 	}
+	
 	
 	convenience init(frame: CGRect = .zero, backgroundColor: UIColor?) {
 		self.init(frame: frame)

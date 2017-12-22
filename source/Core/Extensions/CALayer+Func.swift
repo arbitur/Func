@@ -13,6 +13,13 @@ import Foundation
 
 
 public extension CALayer {
+	
+	func addAnimation(_ animation: CABasicAnimation) {
+		self.add(animation, forKey: animation.keyPath)
+		self.setValue(animation.toValue, forKey: animation.keyPath!)
+	}
+	
+	
 	func setShadow(offset: CGSize?, radius: CGFloat?, opacity: Float?, color: UIColor? = nil, animationDuration: Double = 0) {
 		let oldOpacity = self.shadowOpacity
 		

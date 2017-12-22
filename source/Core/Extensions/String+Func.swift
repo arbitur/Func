@@ -60,6 +60,10 @@ public extension String {
 		return self.addingPercentEncoding(withAllowedCharacters: characters.inverted)
 	}
 	
+	func percentEncoding(except characters: CharacterSet) -> String? {
+		return self.addingPercentEncoding(withAllowedCharacters: characters)
+	}
+	
 	
 	
 	/**

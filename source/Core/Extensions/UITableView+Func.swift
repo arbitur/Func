@@ -18,7 +18,7 @@ public extension UITableView {
 		return self.dequeueReusableCell(withIdentifier: id) as? T
 	}
 	
-	func deselectRow(animated: Bool) {
+	func deselectSelectedRow(animated: Bool) {
 		guard let indexPath = self.indexPathForSelectedRow else {
 			return
 		}
@@ -26,7 +26,7 @@ public extension UITableView {
 		self.deselectRow(at: indexPath, animated: animated)
 	}
 	
-	func deselectRows(animated: Bool) {
+	func deselectSelectedRows(animated: Bool) {
 		self.indexPathsForSelectedRows?.forEach {
 			self.deselectRow(at: $0, animated: animated)
 		}

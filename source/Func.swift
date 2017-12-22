@@ -46,14 +46,18 @@ public func boundary <T> (_ value: T, max: T) -> T where T: Comparable {
 
 public final class Observable<T> {
 	
+	public typealias Listener = (T) -> ()
+	private var observers = [Listener]()
+	
 	public var value: T {
 		didSet {
-			observers.forEach { $0(value) }
+			notify()
 		}
 	}
 	
-	public typealias Listener = (T) -> ()
-	private var observers = [Listener]()
+	public func notify() {
+		observers.forEach { $0(value) }
+	}
 	
 	public init(_ value: T) {
 		self.value = value
@@ -63,6 +67,10 @@ public final class Observable<T> {
 	public func bind(_ observer: @escaping Listener) {
 		observers ++= observer
 		observer(value)
+	}
+	
+	public func bindNext(_ observer: @escaping Listener) {
+		observers ++= observer
 	}
 }
 

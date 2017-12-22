@@ -14,11 +14,11 @@ import UIKit
 
 public extension UIStoryboard {
 	
-	func viewController <T> (for id: String = "") -> T where T: UIViewController {
-		if !id.isEmpty {
-			return self.instantiateViewController(withIdentifier: id) as! T
+	func viewController <T: UIViewController> (for id: String? = nil) -> T {
+		guard let id = id else {
+			return self.instantiateInitialViewController() as! T
 		}
 		
-		return self.instantiateInitialViewController() as! T
+		return self.instantiateViewController(withIdentifier: id) as! T
 	}
 }
