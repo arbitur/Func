@@ -30,25 +30,10 @@ public protocol BorderDrawable: class {
 	var borderColor: UIColor { get set }
 }
 
-extension BorderDrawable where Self: UIView {
+private extension BorderDrawable where Self: UIView {
 	
-	public var borderWidth: CGFloat {
-		get { return self.layer.borderWidth }
-		set { self.layer.borderWidth = newValue }
-	}
-	
-	public var borderColor: UIColor {
-		get {
-			if let cgColor = self.layer.borderColor {
-				return UIColor(cgColor: cgColor)
-			}
-			else {
-				return self.tintColor
-			}
-		}
-		set {
-			self.layer.borderColor = newValue.cgColor
-		}
+	func drawBorder() {
+		self.border(width: borderWidth, color: borderColor == .black ? self.tintColor : borderColor)
 	}
 }
 
@@ -59,11 +44,13 @@ extension BorderDrawable where Self: UIView {
 @IBDesignable
 open class RoundView: UIView, BorderDrawable {
 	
+	@IBInspectable public var borderWidth: CGFloat = 0 		 { didSet { self.drawBorder() } }
+	@IBInspectable public var borderColor: UIColor = .black  { didSet { self.drawBorder() } }
+	
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
-		self.borderColor = self.tintColor
+		borderColor = self.tintColor
 	}
-	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 		self.roundCorners()
@@ -75,9 +62,12 @@ open class RoundView: UIView, BorderDrawable {
 @IBDesignable
 open class RoundLabel: UILabel, BorderDrawable {
 	
+	@IBInspectable public var borderWidth: CGFloat = 0 		 { didSet { self.drawBorder() } }
+	@IBInspectable public var borderColor: UIColor = .black  { didSet { self.drawBorder() } }
+	
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
-		self.borderColor = self.tintColor
+		borderColor = self.tintColor
 	}
 	
 	open override func layoutSubviews() {
@@ -91,9 +81,12 @@ open class RoundLabel: UILabel, BorderDrawable {
 @IBDesignable
 open class RoundButton: UIButton, BorderDrawable {
 	
+	@IBInspectable public var borderWidth: CGFloat = 0 		 { didSet { self.drawBorder() } }
+	@IBInspectable public var borderColor: UIColor = .black  { didSet { self.drawBorder() } }
+	
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
-		self.borderColor = self.tintColor
+		borderColor = self.tintColor
 	}
 	
 	open override func layoutSubviews() {
@@ -118,9 +111,12 @@ open class TintImageView: UIImageView {
 @IBDesignable
 open class RoundImageView: UIImageView, BorderDrawable {
 	
+	@IBInspectable public var borderWidth: CGFloat = 0 		 { didSet { self.drawBorder() } }
+	@IBInspectable public var borderColor: UIColor = .black  { didSet { self.drawBorder() } }
+	
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
-		self.borderColor = self.tintColor
+		borderColor = self.tintColor
 	}
 	
 	open override func layoutSubviews() {
@@ -157,11 +153,13 @@ open class RoundTextField: UITextField, BorderDrawable {
 		return self.textRect(forBounds: bounds)
 	}
 	
+	@IBInspectable public var borderWidth: CGFloat = 0 		 { didSet { self.drawBorder() } }
+	@IBInspectable public var borderColor: UIColor = .black  { didSet { self.drawBorder() } }
+	
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
-		self.borderColor = self.tintColor
+		borderColor = self.tintColor
 	}
-	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 		self.roundCorners()
