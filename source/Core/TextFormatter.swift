@@ -70,10 +70,25 @@ public class TextFormatter {
 
 
 // https://www.iban.com/currency-codes.html
-public enum CurrencyCode: String {
-	case sek = "SEK"
-	case usd = "USD"
-	case eur = "EUR"
+public struct CurrencyCode: RawRepresentable {
+	public var rawValue: String
+	
+	public init(rawValue: String) {
+		self.rawValue = rawValue
+	}
+	
+	
+	public static let sek: CurrencyCode = "SEK"
+	public static let usd: CurrencyCode = "USD"
+	public static let eur: CurrencyCode = "EUR"
+}
+
+
+extension CurrencyCode: ExpressibleByStringLiteral {
+	
+	public init(stringLiteral value: StringLiteralType) {
+		self.init(rawValue: value)
+	}
 }
 
 
