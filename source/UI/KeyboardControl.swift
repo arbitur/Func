@@ -178,8 +178,8 @@ public class KeyboardControl: NSObject {
 			
 			if inputs.count > 1 {
 				let bundle = Bundle(for: self.classForCoder)
-				let leftImage = UIImage(named: "arrow-left", in: bundle, compatibleWith: nil)
-				let rightImage = UIImage(named: "arrow-right", in: bundle, compatibleWith: nil)
+				let leftImage = UIImage(named: "arrow-up", in: bundle, compatibleWith: nil)
+				let rightImage = UIImage(named: "arrow-down", in: bundle, compatibleWith: nil)
 				
 				leftArrow = UIBarButtonItem(image: leftImage, style: .done, target: self, action: #selector(back))
 				rightArrow = UIBarButtonItem(image: rightImage, style: .done, target: self, action: #selector(forward))
