@@ -6,7 +6,7 @@
 //  Copyright © 2016 Philip Fryklund. All rights reserved.
 //
 
-import SnapKit
+import Foundation
 
 
 
@@ -101,23 +101,27 @@ public class ActivityIndicator: UIView {
 		
 		contentView.cornerRadius = 30
 		self.addSubview(contentView)
-		contentView.snp.makeConstraints {
-			$0.center.equalToSuperview()
+		contentView.lac.make {
+			$0.centerX.equalToSuperview()
+			$0.centerY.equalToSuperview()
 			$0.width.equalTo(200)
-			$0.height.greaterThanOrEqualTo(contentView.snp.width)
+			$0.height.greaterThan(contentView.lac.width)
 		}
 		
 		contentStack.spacing = 20
 		contentStack.isLayoutMarginsRelativeArrangement = true
 		contentStack.layoutMargins = UIEdgeInsets(inset: 40)
 		contentView.addSubview(contentStack)
-		contentStack.snp.makeConstraints {
-			$0.edges.equalToSuperview()
+		contentStack.lac.make {
+			$0.top.equalToSuperview()
+			$0.left.equalToSuperview()
+			$0.right.equalToSuperview()
+			$0.bottom.equalToSuperview()
 		}
 		
 //		spinner.backgroundColor = .red
-		spinner.snp.makeConstraints {
-			$0.height.equalTo(spinner.snp.width)
+		spinner.lac.make {
+			$0.height.equalTo($0.width)
 		}
 		contentStack.addArrangedSubview(spinner)
 	}

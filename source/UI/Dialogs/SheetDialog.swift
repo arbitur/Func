@@ -74,7 +74,7 @@ open class SheetDialog: Dialog, DialogBuilder {
 		button.titleLabel!.font = font
 		button.titleLabel!.textAlignment = .center
 		
-		button.lac.height.equal(to: 57)
+		button.lac.height.equalTo(57)
 		
 		return button
 	}
@@ -94,12 +94,13 @@ open class SheetDialog: Dialog, DialogBuilder {
 		
 		contentStackView.spacing = 8
 		
-		contentView.snp.makeConstraints {
-			$0.left.right.equalToSuperview().inset(10)
-			$0.top.greaterThanOrEqualTo(self.topLayoutGuide.snp.bottom).offset(10)
+		contentView.lac.make {
+			$0.left.equalToSuperview(10)
+			$0.right.equalToSuperview(-10) //TODO: Check still works
+			$0.top.greaterThan(self.topLayoutGuide.lac.bottom, constant: 10)
 			// iPhone X
-			$0.bottom.equalTo(self.bottomLayoutGuide.snp.top).priority(750)
-			$0.bottom.lessThanOrEqualToSuperview().offset(-10)
+			$0.bottom.equalTo(self.bottomLayoutGuide.lac.top, priority: .defaultHigh)
+			$0.bottom.lessThanSuperview(-10)
 		}
 		
 		contentStackView.add(arrangedView: contentBlurView)
@@ -127,7 +128,7 @@ open class SheetDialog: Dialog, DialogBuilder {
 			
 			if let _ = promptContentView {
 				mainContentStack.add(arrangedView: generateBorder()) {
-					$0.height.equal(to: points(pixels: 1))
+					$0.height.equalTo(points(pixels: 1))
 				}
 			}
 			
@@ -144,8 +145,8 @@ open class SheetDialog: Dialog, DialogBuilder {
 					if let _ = lastButton {
 						buttonContentView.add(arrangedView: generateBorder()) {
 							switch buttonContentView.axis {
-								case .horizontal: $0.width.equal(to: points(pixels: 1))
-								case .vertical	: $0.height.equal(to: points(pixels: 1))
+								case .horizontal: $0.width.equalTo(points(pixels: 1))
+								case .vertical	: $0.height.equalTo(points(pixels: 1))
 							}
 						}
 					}

@@ -191,14 +191,6 @@ private class MaskBackgroundView: UIView {
 
 
 
-
-
-
-
-
-
-
-
 public class DialogAnimator<T: Dialog>: NSObject, UIViewControllerAnimatedTransitioning {
 	public final let dismissing: Bool
 	public final let duration: TimeInterval

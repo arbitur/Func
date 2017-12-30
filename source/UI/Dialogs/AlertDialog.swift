@@ -48,7 +48,7 @@ open class AlertDialog: Dialog, DialogBuilder {
 		button.titleLabel!.font = font
 		button.titleLabel!.textAlignment = .center
 		
-		button.lac.height.equal(to: 44)
+		button.lac.height.equalTo(44)
 		
 		return button
 	}
@@ -66,11 +66,12 @@ open class AlertDialog: Dialog, DialogBuilder {
 		self.transitioningDelegate = self
 		
 		contentView.cornerRadius = 13.5
-		contentView.snp.makeConstraints {
+		contentView.lac.make {
 			$0.width.equalTo(270)
-			$0.center.equalToSuperview()
-			$0.top.greaterThanOrEqualTo(self.topLayoutGuide.snp.bottom).offset(10)
-			$0.bottom.lessThanOrEqualTo(self.bottomLayoutGuide.snp.top).offset(-10)
+			$0.centerX.equalToSuperview()
+			$0.centerY.equalToSuperview()
+			$0.top.greaterThan(self.topLayoutGuide.lac.bottom, constant: 10)
+			$0.bottom.lessThan(self.bottomLayoutGuide.lac.top, constant: -10) //TODO: Check still works
 		}
 		
 		promptContentView?.layoutMargins = UIEdgeInsets(horizontal: 16, vertical: 20)
@@ -87,7 +88,7 @@ open class AlertDialog: Dialog, DialogBuilder {
 			
 			if let _ = promptContentView {
 				mainContentStack.add(arrangedView: generateBorder()) {
-					$0.height.equal(to: points(pixels: 1))
+					$0.height.equalTo(points(pixels: 1))
 				}
 			}
 			
@@ -101,8 +102,8 @@ open class AlertDialog: Dialog, DialogBuilder {
 				if let _ = lastButton {
 					buttonContentView.add(arrangedView: generateBorder()) {
 						switch buttonContentView.axis {
-							case .horizontal: $0.width.equal(to: points(pixels: 1))
-							case .vertical	: $0.height.equal(to: points(pixels: 1))
+							case .horizontal: $0.width.equalTo(points(pixels: 1))
+							case .vertical	: $0.height.equalTo(points(pixels: 1))
 						}
 					}
 				}
@@ -110,7 +111,7 @@ open class AlertDialog: Dialog, DialogBuilder {
 				buttonContentView.add(arrangedView: button)
 				
 				if buttonContentView.axis == .horizontal, let last = lastButton {
-					button.lac.width.equal(to: last.lac.width)
+					button.lac.width.equalTo(last.lac.width)
 				}
 				
 				lastButton = button

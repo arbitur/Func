@@ -39,7 +39,7 @@ public final class WebSheetDialog: SheetDialog {
 		
 		super.viewDidLoad()
 		
-		webView.lac.height.equal(to: self.view.lac.height, priority: 500)
+		webView.lac.height.equalTo(self.view.lac.height, priority: 500.0)
 	}
 	
 	
@@ -94,7 +94,7 @@ extension WebSheetDialog: WKNavigationDelegate {
 		label.text = error.localizedDescription
 		
 		webView.add(view: label) {
-			$0.top.equal(to: activityIndicator!.lac.centerY, constant: 16)
+			$0.top.equalTo(activityIndicator!.lac.centerY, constant: 16)
 			$0.left.equalToSuperview(16)
 			$0.right.equalToSuperview(-16)
 			$0.centerX.equalToSuperview()

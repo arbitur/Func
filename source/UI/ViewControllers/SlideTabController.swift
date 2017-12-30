@@ -6,7 +6,7 @@
 //  Copyright © 2016 Philip Fryklund. All rights reserved.
 //
 
-import SnapKit
+import Foundation
 
 
 
@@ -62,9 +62,7 @@ open class SlideTabController: UIViewController {
 				scrollView.stackView.addArrangedSubview(vc.view)
 				menu.addTab(title: vc.title ?? "Title")
 				
-				vc.view.snp.makeConstraints {
-					$0.width.equalTo(self.view.snp.width)
-				}
+				vc.view.lac.width.equalTo(self.view.lac.width)
 			}
 			
 //			selectViewController(index: 0)
@@ -93,25 +91,27 @@ open class SlideTabController: UIViewController {
 		
 		self.view.add(views: menu, scrollView)
 		
-		menu.snp.makeConstraints {
-			$0.left.right.equalToSuperview()
+		menu.lac.make {
+			$0.left.equalToSuperview()
+			$0.right.equalToSuperview()
 			
 			switch SlideTabAppearance.align {
-				case .top: $0.top.equalTo(self.topLayoutGuide.snp.bottom)
-				case .bottom: $0.bottom.equalTo(self.bottomLayoutGuide.snp.top)
+				case .top: $0.top.equalTo(self.topLayoutGuide.lac.bottom)
+				case .bottom: $0.bottom.equalTo(self.bottomLayoutGuide.lac.top)
 			}
 		}
 		
-		scrollView.snp.makeConstraints {
-			$0.left.right.equalToSuperview()
+		scrollView.lac.make {
+			$0.left.equalToSuperview()
+			$0.right.equalToSuperview()
 			
 			switch SlideTabAppearance.align {
 				case .top:
-					$0.top.equalTo(menu.snp.bottom)
+					$0.top.equalTo(menu.lac.bottom)
 					$0.bottom.equalToSuperview()
 				case .bottom:
 					$0.top.equalToSuperview()
-					$0.bottom.equalTo(menu.snp.top)
+					$0.bottom.equalTo(menu.lac.top)
 			}
 		}
 	}
@@ -125,7 +125,7 @@ open class SlideTabController: UIViewController {
 	}
 	
 	public convenience init(viewControllers: [UIViewController]) {
-		self.init()
+		self.init(nibName: nil, bundle: nil)
 		load(viewControllers: viewControllers)
 	}
 }
@@ -218,8 +218,11 @@ private class ScrollView: UIScrollView {
 		stackView.distribution = .fillEqually
 		self.addSubview(stackView)
 		
-		stackView.snp.makeConstraints {
-			$0.edges.equalToSuperview()
+		stackView.lac.make {
+			$0.top.equalToSuperview()
+			$0.left.equalToSuperview()
+			$0.right.equalToSuperview()
+			$0.bottom.equalToSuperview()
 			$0.height.equalToSuperview()
 		}
 	}
@@ -315,13 +318,15 @@ private class Menu: UIScrollView {
 		btn.addTarget(self, action: #selector(press(button:)), for: .touchUpInside)
 		stackView.addArrangedSubview(btn)
 		
-		btn.snp.makeConstraints {
-			$0.width.greaterThanOrEqualTo(SlideTabAppearance.indicatorMinimumWidth)
-			$0.width.lessThanOrEqualTo(self.snp.width).multipliedBy(0.6)
+		btn.lac.make {
+			$0.width.greaterThan(SlideTabAppearance.indicatorMinimumWidth)
+			$0.width.lessThan(self.lac.width, multiplier: 0.6)
 		}
 	}
 	
 	
+	private var heightConstraint: NSLayoutConstraint?
+	private var topConstraint: NSLayoutConstraint?
 	@objc func didChangeStatusBar(_ notification: Notification) {
 		var vc: UIViewController? = self.superViewController
 		while(vc != nil) {
@@ -331,13 +336,8 @@ private class Menu: UIScrollView {
 		
 		let height = UIApplication.shared.statusBarFrame.height
 		
-		self.snp.updateConstraints {
-			$0.height.equalTo(44 + height)
-		}
-		
-		self.stackView.snp.updateConstraints {
-			$0.top.equalToSuperview().offset(height)
-		}
+		heightConstraint?.constant = 44 + height
+		topConstraint?.constant = height
 	}
 	
 	
@@ -355,13 +355,14 @@ private class Menu: UIScrollView {
 		
 		self.addSubview(stackView)
 		
-		self.snp.makeConstraints {
-			$0.height.equalTo(44)
-		}
+		heightConstraint = self.lac.height.equalTo(44)
 		
-		stackView.snp.makeConstraints {
-			$0.edges.equalToSuperview()
-			$0.width.greaterThanOrEqualTo(self.snp.width)
+		stackView.lac.make {
+			topConstraint = $0.top.equalToSuperview()
+			$0.left.equalToSuperview()
+			$0.right.equalToSuperview()
+			$0.bottom.equalToSuperview()
+			$0.width.greaterThan(self.lac.width)
 			$0.height.equalTo(44)
 		}
 		
