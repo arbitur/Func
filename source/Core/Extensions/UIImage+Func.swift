@@ -126,7 +126,7 @@ public extension UIImage {
 		let rgba = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: 4)
 		let colorSpace = CGColorSpaceCreateDeviceRGB()
 		let info = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-		let context: CGContext = CGContext(data: rgba, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4, space: colorSpace, bitmapInfo: info.rawValue)!
+		let context = CGContext(data: rgba, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4, space: colorSpace, bitmapInfo: info.rawValue)!
 		
 		context.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: 1, height: 1))
 		

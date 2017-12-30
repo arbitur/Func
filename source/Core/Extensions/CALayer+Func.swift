@@ -14,27 +14,15 @@ import Foundation
 
 public extension CALayer {
 	
-	func addAnimation(_ animation: CABasicAnimation) {
-		self.add(animation, forKey: animation.keyPath)
-		self.setValue(animation.toValue, forKey: animation.keyPath!)
+	var currentTime: CFTimeInterval {
+		return self.convertTime(CACurrentMediaTime(), from: nil)
 	}
 	
 	
-	func setShadow(offset: CGSize?, radius: CGFloat?, opacity: Float?, color: UIColor? = nil, animationDuration: Double = 0) {
-		let oldOpacity = self.shadowOpacity
-		
-		self.shadowOffset = offset ?? CGSize.zero
-		self.shadowColor = color?.cgColor ?? UIColor.black.cgColor
-		self.shadowRadius = radius ?? 5
-		self.shadowOpacity = opacity ?? 1
-		
-		if animationDuration != 0 {
-			let animation = CABasicAnimation(keyPath: "shadowOpacity")
-			animation.fromValue = oldOpacity
-			animation.toValue = self.shadowOpacity
-			animation.duration = animationDuration
-			self.add(animation, forKey: "shadowOpacity")
-		}
+	
+	func addAnimation(_ animation: CABasicAnimation) {
+		self.add(animation, forKey: animation.keyPath)
+		self.setValue(animation.toValue, forKey: animation.keyPath!)
 	}
 	
 	
