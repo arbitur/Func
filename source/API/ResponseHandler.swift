@@ -13,6 +13,17 @@ import Alamofire
 
 public class ResponseHandler <M> {
 	
+	private let request: Request
+	
+	init(request: Request) {
+		self.request = request
+	}
+	
+	public func cancelRequest() {
+		request.cancel()
+		finally?()
+	}
+	
 	public var success: ((Int, M)->())?
 	public var failure: ((String)->())?
 	public var finally: (()->())?

@@ -72,7 +72,7 @@ public extension API {
 	
 	static func dataRequest <R: DataRequestable, M> (_ req: R, decode: @escaping (Data) throws -> M) -> ResponseHandler<M> {
 		let request = req.request(Self.self)
-		let responseHandler = ResponseHandler<M>()
+		let responseHandler = ResponseHandler<M>(request: request)
 		
 		log(request: request.request)
 		
