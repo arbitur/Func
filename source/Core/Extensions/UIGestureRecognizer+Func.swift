@@ -18,3 +18,15 @@ public extension UIGestureRecognizer {
 		return self.location(in: self.view)
 	}
 }
+
+
+
+
+
+public extension UISwipeGestureRecognizer {
+	
+	convenience init(target: Any?, action: Selector?, direction: UISwipeGestureRecognizerDirection) {
+		self.init(target: target, action: action)
+		self.direction = direction
+	}
+}

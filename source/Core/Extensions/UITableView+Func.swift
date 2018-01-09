@@ -18,6 +18,26 @@ public extension UITableView {
 		return self.dequeueReusableCell(withIdentifier: id) as? T
 	}
 	
+	
+	func setTableHeaderViewWithAutoLayout(_ view: UIView) {
+		self.tableHeaderView = view
+		view.setNeedsLayout()
+		view.layoutIfNeeded()
+		view.frame.size = view.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+		self.tableHeaderView = view
+	}
+	
+	
+	func setTableFooterViewWithAutoLayout(_ view: UIView) {
+		self.tableFooterView = view
+		view.setNeedsLayout()
+		view.layoutIfNeeded()
+		view.frame.size = view.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+		self.tableFooterView = view
+	}
+	
+	
+	
 	func deselectSelectedRow(animated: Bool) {
 		guard let indexPath = self.indexPathForSelectedRow else {
 			return
@@ -25,6 +45,7 @@ public extension UITableView {
 		
 		self.deselectRow(at: indexPath, animated: animated)
 	}
+	
 	
 	func deselectSelectedRows(animated: Bool) {
 		self.indexPathsForSelectedRows?.forEach {

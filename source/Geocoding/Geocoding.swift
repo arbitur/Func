@@ -50,12 +50,12 @@ public struct Geocode: Geocodable {
 	public let parameters: Parameters?
 	
 	
-	public typealias Bounds = (sW: CLLocationCoordinate2D, nE: CLLocationCoordinate2D)
+	public typealias Bounds = (sw: CLLocationCoordinate2D, ne: CLLocationCoordinate2D)
 	
 	public init(address: String, bounds: Bounds? = nil, components: [Component: String]? = nil, region: String? = nil) {
 		parameters = [
 			"address": address,
-			"bounds": (bounds == nil) ? "" : "\(bounds!.sW.description)|\(bounds!.nE.description)",
+			"bounds": (bounds == nil) ? "" : "\(bounds!.sw.description)|\(bounds!.ne.description)",
 			"components": components?.map { "\($0.key.rawValue):\($0.value)" }.joined(by: "|") ?? "",
 			"region": region ?? "",
 			"language": GeocodingAPI.language,
@@ -66,7 +66,7 @@ public struct Geocode: Geocodable {
 	public init(components: [Component: String], bounds: Bounds? = nil, region: String? = nil) {
 		parameters = [
 			"components": components.map { "\($0.key.rawValue):\($0.value)" }.joined(by: "|"),
-			"bounds": (bounds == nil) ? "" : "\(bounds!.sW.description)|\(bounds!.nE.description)",
+			"bounds": (bounds == nil) ? "" : "\(bounds!.sw.description)|\(bounds!.ne.description)",
 			"region": region ?? "",
 			"language": GeocodingAPI.language,
 			"key": GeocodingAPI.key
@@ -95,7 +95,7 @@ public struct ReverseGeocode: Geocodable {
 		]
 	}
 	
-	public init(placeId: String, language: String? = nil, key: String? = nil) {
+	public init(placeId: String) {
 		parameters = [
 			"place_id": placeId,
 			"language": GeocodingAPI.language,

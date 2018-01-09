@@ -19,9 +19,9 @@ public extension Bool {
 	}
 	
 	
-	func `else`(_ bool: Bool) -> Bool {
-		return self ? self : bool
-	}
+//	func `else`(_ bool: Bool) -> Bool {
+//		return self ? self : bool
+//	}
 	
 	
 	init(_ int: Int) {

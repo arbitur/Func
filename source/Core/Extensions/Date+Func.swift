@@ -31,7 +31,15 @@ public extension Date {
 	
 	
 	func format(_ format: DateFormat = .dateTime) -> String {
-		return DateFormatter(format: format.rawValue).string(from: self)
+		return DateFormatter.init(format: format.rawValue).string(from: self)
+	}
+	
+	func format(_ style: DateFormatter.Style) -> String {
+		return DateFormatter.init(style: style).string(from: self)
+	}
+	
+	func format(_ dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String {
+		return DateFormatter.init(dateStyle: dateStyle, timeStyle: timeStyle).string(from: self)
 	}
 	
 	
@@ -42,21 +50,24 @@ public extension Date {
 		}
 		self.init(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate)
 	}
+	
+	
+	init?(_ string: String, style: DateFormatter.Style) {
+		guard let date = DateFormatter(style: style).date(from: string) else {
+			return nil
+		}
+		self.init(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate)
+	}
 }
 
 
 
-public struct DateFormat: RawRepresentable, ExpressibleByStringLiteral {
+public struct DateFormat: ExpressibleByStringLiteral {
 	public static let date: DateFormat = "yyyy-MM-dd"
 	public static let time: DateFormat = "HH:mm"
 	public static let dateTime: DateFormat = "yyyy-MM-dd HH:mm"
-	public static let dateTimeSec: DateFormat = "yyyy-MM-dd HH:mm:ss"
 	
 	public let rawValue: String
-	
-	public init?(rawValue: String) {
-		self.rawValue = rawValue
-	}
 	
 	public init(_ rawValue: String) {
 		self.rawValue = rawValue

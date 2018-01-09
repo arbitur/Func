@@ -58,7 +58,9 @@ public extension FullyConstraintable where Self.Item == ConstraintItemType.Item,
 	public subscript (_ attributes: NSLayoutAttribute...) -> ConstraintItemGroupType {
 		return ConstraintItemGroupType(item: item, attributes: attributes)
 	}
-	public var edges: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.top, .right, .bottom, .left]) }
+	public var horizontalEdges: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.right, .left]) }
+	public var verticalEdges: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.top, .bottom]) }
+	public var edges: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.top, .left, .bottom, .right]) }
 	public var center: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.centerX, .centerY]) }
 	public var size: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.width, .height]) }
 	
@@ -73,6 +75,8 @@ public extension FullyConstraintable where Self.Item == ConstraintItemType.Item,
 /// Convenience methods
 public extension FullyConstraintable where Self.Item == ConstraintItemType.Item, Self.Item == ConstraintItemGroupType.Item, Self.ConstraintItemType: ConstraintableConstraintItem {
 	
+	/// height = width * multiplier
+	@discardableResult
 	func aspectRatio(_ multiplier: CGFloat = 1.0) -> NSLayoutConstraint {
 		return self.height.equalTo(self.width, multiplier: multiplier)
 	}

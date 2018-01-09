@@ -24,4 +24,16 @@ public extension DateFormatter {
 		self.init()
 		self.dateFormat = format
 	}
+	
+	convenience init(style: Style) {
+		self.init()
+		self.timeStyle = style
+		self.dateStyle = style
+	}
+	
+	convenience init(dateStyle: Style, timeStyle: Style) {
+		self.init()
+		self.dateStyle = dateStyle
+		self.timeStyle = timeStyle
+	}
 }
