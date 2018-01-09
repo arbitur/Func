@@ -186,6 +186,14 @@ extension SlideTabController: UIScrollViewDelegate {
 }
 
 
+//extension SlideTabController: RootViewControllable {
+//
+//	public var viewForEdgePanGestureRecognizer: UIView {
+//		return self.scrollView
+//	}
+//}
+
+
 
 
 private class ScrollView: UIScrollView {

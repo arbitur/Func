@@ -6,6 +6,7 @@ target 'FuncExample' do
 	
 	pod 'Func', :path => '../'
 	pod 'Func/UI', :path => '../'
+	pod 'Func/Constraint', :path => '../'
 	pod 'Func/Geocoding', :path => '../'
 	pod 'Func/API', :path => '../'
 	pod 'Func/Decoding', :path => '../'
@@ -16,6 +17,7 @@ target 'FuncExample' do
 		use_frameworks!
 		pod 'Func', :path => '../'
 		pod 'Func/UI', :path => '../'
+		pod 'Func/Constraint', :path => '../'
 		pod 'Func/Geocoding', :path => '../'
 		pod 'Func/API', :path => '../'
 		pod 'Func/Decoding', :path => '../'
