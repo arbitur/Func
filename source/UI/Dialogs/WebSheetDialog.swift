@@ -94,9 +94,13 @@ extension WebSheetDialog: WKNavigationDelegate {
 		label.text = error.localizedDescription
 		
 		webView.add(view: label) {
-			$0.top.equalTo(activityIndicator!.lac.centerY, constant: 16)
-			$0.left.equalToSuperview(16)
-			$0.right.equalToSuperview(-16)
+			if let activityIndicator = activityIndicator {
+				$0.top.equalTo(activityIndicator.lac.bottom, constant: 16)
+			}
+			else {
+				$0.centerY.equalToSuperview()
+			}
+			$0.horizontalEdges.equalTo(UIEdgeInsets(inset: 16))
 			$0.centerX.equalToSuperview()
 		}
 	}
