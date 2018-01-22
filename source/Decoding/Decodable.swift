@@ -13,7 +13,13 @@ import Foundation
 
 
 public protocol Decodable {
+	
 	init?(json: Dict)
+}
+
+public protocol Encodable {
+	
+	func encoded() -> Dict
 }
 
 

@@ -13,6 +13,7 @@ import Foundation
 
 
 public extension CGRect {
+	
 	var top: CGFloat {
 		get { return self.origin.y }
 		set { self.origin.y = newValue }
@@ -68,6 +69,17 @@ public extension CGRect {
 	var heigt: CGFloat {
 		get { return self.size.height }
 		set { self.size.height = newValue }
+	}
+	
+	
+	
+	func insetBy(_ insets: UIEdgeInsets) -> CGRect {
+		var rect = self
+		rect.left += insets.left
+		rect.top += insets.top
+		rect.size.width -= insets.totalWidth
+		rect.size.height -= insets.totalHeight
+		return rect
 	}
 	
 	

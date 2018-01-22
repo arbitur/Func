@@ -57,7 +57,7 @@ public class JSONParser {
 	}
 	
 	
-	public static func encode(obj: Any, print: Bool = false) throws -> String? {
+	public static func encode(obj: Any, print: Bool = false) throws -> String {
 		let data = try JSONSerialization.data(withJSONObject: obj, options: [])
 		let json = String(data)!
 		
