@@ -82,6 +82,12 @@ open class Dialog: UIViewController {
 		mainContentStack.add(arrangedView: promptContentView)
 	}
 	
+	open override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		actions = []
+	}
+	
 	
 	
 	public required init(title: String?, subtitle: String?) {
@@ -161,7 +167,14 @@ public class DialogAction {
 	}
 }
 
-public enum DialogActionType {
+extension DialogAction: CustomStringConvertible {
+	
+	public var description: String {
+		return "DialogAction(\(title), \(type.rawValue)"
+	}
+}
+
+public enum DialogActionType: UInt {
 	case normal, delete, cancel
 }
 
