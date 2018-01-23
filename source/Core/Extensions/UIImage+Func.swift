@@ -111,9 +111,9 @@ public extension UIImage {
 		let ctx = UIGraphicsGetCurrentContext()!
 		let area = CGRect(origin: CGPoint.zero, size: self.size)
 		
-		ctx.translateBy(x: 0, y: -area.size.height)
-		ctx.scaleBy(x: 1, y: -1)
-		ctx.setBlendMode(CGBlendMode.multiply)
+		ctx.translateBy(x: 0, y: area.size.height)
+		ctx.scaleBy(x: 1.0, y: -1.0)
+		ctx.setBlendMode(CGBlendMode.normal)
 		ctx.setAlpha(alpha)
 		ctx.draw(self.cgImage!, in: area)
 		
@@ -446,7 +446,7 @@ public extension UIImage {
 
 
 	convenience init(color: UIColor) {
-		let rect = CGRect(origin: .zero, size: CGSize(width: 1, height: 1))
+		let rect = CGRect(origin: .zero, size: .zero + 1)
 		UIGraphicsBeginImageContextWithOptions(rect.size, false, 0)
 		defer { UIGraphicsEndImageContext() }
 		color.setFill()
