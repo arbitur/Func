@@ -98,9 +98,18 @@ open class RoundButton: UIButton, BorderDrawable {
 @IBDesignable
 open class TintImageView: UIImageView {
 	
-	open override var image: UIImage? {
-		get { return super.image }
-		set { super.image = newValue?.withRenderingMode(.alwaysTemplate) }
+	private func makeImageTemplate() {
+		self.image = self.image?.withRenderingMode(.alwaysTemplate)
+	}
+	
+	open override func awakeFromNib() {
+		super.awakeFromNib()
+		makeImageTemplate()
+	}
+	
+	open override func prepareForInterfaceBuilder() {
+		super.prepareForInterfaceBuilder()
+		makeImageTemplate()
 	}
 }
 
@@ -128,9 +137,18 @@ open class RoundImageView: UIImageView, BorderDrawable {
 @IBDesignable
 open class RoundTintImageView: RoundImageView {
 	
-	open override var image: UIImage? {
-		get { return super.image }
-		set { super.image = newValue?.withRenderingMode(.alwaysTemplate) }
+	private func makeImageTemplate() {
+		self.image = self.image?.withRenderingMode(.alwaysTemplate)
+	}
+	
+	open override func awakeFromNib() {
+		super.awakeFromNib()
+		makeImageTemplate()
+	}
+	
+	open override func prepareForInterfaceBuilder() {
+		super.prepareForInterfaceBuilder()
+		makeImageTemplate()
 	}
 }
 
