@@ -39,6 +39,13 @@ public extension UIView {
 		self.layer.borderWidth = width
 		self.layer.borderColor = color.cgColor
 	}
+	
+	
+	
+	func layout() {
+		self.setNeedsLayout()
+		self.layoutIfNeeded()
+	}
 }
 
 
@@ -173,8 +180,19 @@ public extension UIView {
 
 public extension UIView {
 	
-	static func nib(name: String, owner: AnyObject) -> UIView? {
-		return Bundle.main.loadNibNamed(name, owner: owner, options: nil)?.first as? UIView
+//	static func nib(name: String, owner: Any?) -> UIView? {
+//		return Bundle.main.loadNibNamed(name, owner: owner, options: nil)?.first as? UIView
+//	}
+	
+	
+	static func nib <T: UIView> (name: String, owner: Any?) -> T {
+		let objects = Bundle.main.loadNibNamed(name, owner: owner, options: nil)!
+		return objects.flatMap { $0 as? T }.first!
+	}
+	
+	static func nib <T: UIView> (name: String, owner: Any?) -> T! {
+		let objects = Bundle.main.loadNibNamed(name, owner: owner, options: nil)!
+		return objects.flatMap { $0 as? T }.first!
 	}
 	
 	

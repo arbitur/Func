@@ -68,6 +68,10 @@ public class JSONParser {
 		
 		return json
 	}
+	
+	public static func encodedData(obj: Any) throws -> Data {
+		return try JSONSerialization.data(withJSONObject: obj, options: [])
+	}
 }
 
 
