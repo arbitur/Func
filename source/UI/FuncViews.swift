@@ -102,6 +102,11 @@ open class TintImageView: UIImageView {
 		self.image = self.image?.withRenderingMode(.alwaysTemplate)
 	}
 	
+	open override func tintColorDidChange() {
+		super.tintColorDidChange()
+		makeImageTemplate()
+	}
+	
 	open override func awakeFromNib() {
 		super.awakeFromNib()
 		makeImageTemplate()
@@ -139,6 +144,11 @@ open class RoundTintImageView: RoundImageView {
 	
 	private func makeImageTemplate() {
 		self.image = self.image?.withRenderingMode(.alwaysTemplate)
+	}
+	
+	open override func tintColorDidChange() {
+		super.tintColorDidChange()
+		makeImageTemplate()
 	}
 	
 	open override func awakeFromNib() {
