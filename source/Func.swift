@@ -78,6 +78,32 @@ public final class Observable<T> {
 
 
 
+public final class Channel<T> {
+	
+	public typealias Listener = (T) -> ()
+	private var listeners = [Listener]()
+	
+	
+	public func broadcast(_ value: T) {
+		listeners.forEach {
+			$0(value)
+		}
+	}
+	
+	/// Use [weak/unowned self] to prevent retain cycle
+	public func listen(_ listener: @escaping Listener) {
+		listeners ++= listener
+	}
+	
+	
+	// Anti-Error: Channel<T> initializer is inacccessible due to 'internal' protection level
+	public init() {}
+}
+
+
+
+
+
 
 
 

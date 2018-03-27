@@ -58,6 +58,23 @@ public extension Date {
 		}
 		self.init(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate)
 	}
+	
+	
+	init?(year: Int? = nil, month: Int? = nil, day: Int? = nil, hour: Int? = nil, minute: Int = 0, second: Int = 0) {
+		var components = DateComponents()
+		components.year = year
+		components.month = month
+		components.day = day
+		components.hour = hour
+		components.minute = minute
+		components.second = second
+		components.nanosecond = 0
+		
+		guard let date = Calendar.current.date(from: components) else {
+			return nil
+		}
+		self = date
+	}
 }
 
 
