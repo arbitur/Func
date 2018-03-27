@@ -152,6 +152,7 @@ public extension String {
 		return String(data)
 	}
 	
+	
 	init?(_ data: Data) {
 		self.init(data: data, encoding: .utf8)
 	}

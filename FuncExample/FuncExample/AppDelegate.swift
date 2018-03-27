@@ -36,7 +36,7 @@ class AppDelegate: UIResponder {
 //		slide.menuViewController = MenuVC()
 //		window.rootViewController = slide
 		
-		let slide2 = SlideMenuViewController()
+		let slide2 = SlideMenuController()
 		slide2.rootViewController = RootVC()
 		slide2.menuViewController = MenuVC()
 		window.rootViewController = slide2
@@ -51,7 +51,7 @@ class AppDelegate: UIResponder {
 	}
 }
 
-class MenuVC: DebugViewController, MenuViewControllable {
+class MenuVC: DebugViewController {
 	weak var controller: SlideMenuController?
 	
 	func attached(to controller: SlideMenuController) {
@@ -75,7 +75,7 @@ class MenuVC: DebugViewController, MenuViewControllable {
 		let vc = VC()
 		vc.title = "Text \(Random.range(0..<10))"
 		controller?.rootViewController = vc
-		self.close()
+		self.dismiss(animated: true, completion: nil)
 	}
 	
 	override func loadView() {
@@ -88,7 +88,7 @@ class RootVC: DebugViewController {
 	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 		let vc = RootVC()
 		vc.title = "Text \(Random.range(0..<10))"
-		self.slideMenuViewController?.rootViewController = vc
+		self.slideMenuController?.rootViewController = vc
 	}
 	
 	override func loadView() {
