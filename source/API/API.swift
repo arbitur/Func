@@ -133,10 +133,10 @@ public extension API {
 		
 		return dataRequest(req) { data in
 			let obj = try JSONResponseSerializer.default.serialize(data: data)
-			guard let dict = obj as? Dict, let model = R.Model(json: dict) else {
+			guard let dict = obj as? Dict else {
 				throw APIError.castingError
 			}
-			return model
+			return try R.Model(json: dict)
 		}
 	}
 	
@@ -148,7 +148,7 @@ public extension API {
 				throw APIError.castingError
 			}
 			
-			return arr.flatMap(M.init)
+			return try arr.flatMap(M.init)
 		}
 	}
 }

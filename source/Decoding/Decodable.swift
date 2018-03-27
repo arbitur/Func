@@ -14,12 +14,16 @@ import Foundation
 
 public protocol Decodable {
 	
-	init?(json: Dict)
+	init(json: Dict) throws
 }
 
 public protocol Encodable {
 	
 	func encoded() -> Dict
+}
+
+
+public protocol Codable: Decodable, Encodable {
 }
 
 
@@ -57,16 +61,16 @@ private func decode <T> (_ json: Dict, _ key: String) throws -> T {
 
 private func decode <T> (_ json: Dict, _ key: String) throws -> T where T: Func.Decodable {
 	let dict: Dict = try getParse(json, key: key)
-	guard let decodable = T(json: dict) else {
-		throw DecodingError.parseFailed(key: key, value: dict, valueType: T.self)
-	}
-	
-	return decodable
+	return try T(json: dict)
 }
 
-private func decode <T> (_ json: Dict, _ key: String) throws -> [T] where T: Func.Decodable {
-	let dict: [Dict] = try getParse(json, key: key)
-	return dict.flatMap(T.init)
+private func decode <T> (_ json: Dict, _ key: String) throws -> T where T: RangeReplaceableCollection, T.Element: Decodable {
+	let dicts: [Dict] = try getParse(json, key: key)
+	var arr: T = T()
+	for dict in dicts {
+		arr.append(try T.Element.init(json: dict))
+	}
+	return arr
 }
 
 
@@ -80,9 +84,16 @@ private func decode <T> (_ json: Dict, _ key: String) throws -> T where T: RawRe
 	return enumm
 }
 
-private func decode <T> (_ json: Dict, _ key: String) throws -> [T] where T: RawRepresentable {
-	let raws: [T.RawValue] = try getParse(json, key: key)
-	return raws.flatMap(T.init)
+private func decode <T> (_ json: Dict, _ key: String) throws -> T where T: RangeReplaceableCollection, T.Element: RawRepresentable {
+	let raws: [T.Element.RawValue] = try getParse(json, key: key)
+	var arr: T = T()
+	for raw in raws {
+		guard let element = T.Element.init(rawValue: raw) else {
+			throw DecodingError.parseFailed(key: key, value: raw, valueType: T.Element.self)
+		}
+		arr.append(element)
+	}
+	return arr
 }
 
 
@@ -134,7 +145,7 @@ public extension Dictionary where Key == String {
 		return try Func.decode(self, key)
 	}
 	
-	public func decode <T> (_ key: String) throws -> [T] where T: Decodable {
+	public func decode <T> (_ key: String) throws -> T where T: RangeReplaceableCollection, T.Element: Decodable {
 		return try Func.decode(self, key)
 	}
 	
@@ -144,7 +155,7 @@ public extension Dictionary where Key == String {
 		return try Func.decode(self, key)
 	}
 	
-	public func decode <T> (_ key: String) throws -> [T] where T: RawRepresentable {
+	public func decode <T> (_ key: String) throws -> T where T: RangeReplaceableCollection, T.Element: RawRepresentable {
 		return try Func.decode(self, key)
 	}
 	
