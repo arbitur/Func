@@ -28,7 +28,9 @@ public extension CALayer {
 	
 	
 	func removeAllSublayers() {
-		self.sublayers?.forEach { $0.removeFromSuperlayer() }
+		self.sublayers?.forEach {
+			$0.removeFromSuperlayer()
+		}
 	}
 	
 	

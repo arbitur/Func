@@ -100,6 +100,11 @@ public extension String {
 	}
 	
 	
+	func trimmed() -> String {
+		return self.trimmingCharacters(in: .whitespacesAndNewlines)
+	}
+	
+	
 	
 	func grouped(separator: String, size: Int) -> String {
 		var holder = [String]()

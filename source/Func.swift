@@ -55,8 +55,12 @@ public final class Observable<T> {
 		}
 	}
 	
+	private var getValueModifier: ((T) -> T)?
+	
+	
+	
 	public func notify() {
-		observers.forEach { $0(value) }
+		observers.forEach { $0(getValueModifier?(value) ?? value) }
 	}
 	
 	public init(_ value: T) {
@@ -72,6 +76,10 @@ public final class Observable<T> {
 	public func bindNext(_ observer: @escaping Observer) {
 		observers ++= observer
 	}
+	
+	public func valueModifier(_ modifier: @escaping (T) -> T) {
+		getValueModifier = modifier
+	}
 }
 
 
@@ -83,16 +91,23 @@ public final class Channel<T> {
 	public typealias Listener = (T) -> ()
 	private var listeners = [Listener]()
 	
+	private var getValueModifier: ((T) -> T)?
+	
 	
 	public func broadcast(_ value: T) {
 		listeners.forEach {
-			$0(value)
+			$0(getValueModifier?(value) ?? value)
 		}
 	}
 	
 	/// Use [weak/unowned self] to prevent retain cycle
 	public func listen(_ listener: @escaping Listener) {
 		listeners ++= listener
+	}
+	
+	/// Use [weak/unowned self] to prevent retain cycle
+	public func onGet(_ modifier: @escaping (T) -> T) {
+		getValueModifier = modifier
 	}
 	
 	

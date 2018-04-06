@@ -44,7 +44,7 @@ public extension Dictionary {
 
 public extension Dictionary where Key == String {
 	
-	func valueFor<T>(path: String, separator: String = ".") -> T? {
+	func valueFor <T> (path: String, separator: String = ".") -> T? {
 		var value: Any = self
 		
 		for part in path.split(separator) {
