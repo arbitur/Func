@@ -21,7 +21,7 @@ public extension Collection {
 
 
 
-public extension Collection where Index == Int, IndexDistance == Int {
+public extension Collection where Index == Int {
 	
 	/// Returns random `Iterator.Element`
 	var random: Iterator.Element {
@@ -32,7 +32,7 @@ public extension Collection where Index == Int, IndexDistance == Int {
 
 
 
-public extension RangeReplaceableCollection where Index == Int, IndexDistance == Int {
+public extension RangeReplaceableCollection where Index == Int {
 	
 	/// Splits `Self` in half
 	func split() -> (first: SubSequence, last: SubSequence) {

@@ -187,12 +187,12 @@ public extension UIView {
 	
 	static func nib <T: UIView> (name: String, owner: Any?) -> T {
 		let objects = Bundle.main.loadNibNamed(name, owner: owner, options: nil)!
-		return objects.flatMap { $0 as? T }.first!
+		return objects.compactMap { $0 as? T }.first!
 	}
 	
 	static func nib <T: UIView> (name: String, owner: Any?) -> T! {
 		let objects = Bundle.main.loadNibNamed(name, owner: owner, options: nil)!
-		return objects.flatMap { $0 as? T }.first!
+		return objects.compactMap { $0 as? T }.first!
 	}
 	
 	

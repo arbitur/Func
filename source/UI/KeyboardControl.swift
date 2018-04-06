@@ -196,7 +196,7 @@ public class KeyboardControl: NSObject {
 	}
 	
 	public convenience init(superview: UIView, inputAccessoryView: Bool = true, handler: @escaping EventHandler) {
-		let inputs = superview.descendants.flatMap { $0 as? KeyboardDisplayable }
+		let inputs = superview.descendants.compactMap { $0 as? KeyboardDisplayable }
 		
 		self.init(inputs: inputs, inputAccessoryView: inputAccessoryView, handler: handler)
 	}

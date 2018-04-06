@@ -124,7 +124,7 @@ public extension API {
 //				throw APIError.castingError
 //			}
 //
-//			return arr.flatMap { $0 as? M }
+//			return arr.compactMap { $0 as? M }
 //		}
 //	}
 	
@@ -148,7 +148,7 @@ public extension API {
 				throw APIError.castingError
 			}
 			
-			return try arr.flatMap(M.init)
+			return try arr.compactMap(M.init)
 		}
 	}
 }

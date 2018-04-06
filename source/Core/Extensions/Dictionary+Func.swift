@@ -63,16 +63,16 @@ public extension Dictionary where Key == String {
 	}
 }
 
-extension Dictionary: Equatable {
-	
-	public static func == (lhs: [Key: Value], rhs: [Key: Value]) -> Bool {
-		return NSDictionary(dictionary: lhs).isEqual(to: rhs)
-	}
-	
-	public static func != (lhs: [Key: Value], rhs: [Key: Value]) -> Bool {
-		return !(lhs == rhs)
-	}
-}
+//extension Dictionary: Equatable {
+//	
+//	public static func == (lhs: [Key: Value], rhs: [Key: Value]) -> Bool {
+//		return NSDictionary(dictionary: lhs).isEqual(to: rhs)
+//	}
+//	
+//	public static func != (lhs: [Key: Value], rhs: [Key: Value]) -> Bool {
+//		return !(lhs == rhs)
+//	}
+//}
 
 
 

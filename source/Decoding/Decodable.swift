@@ -108,7 +108,7 @@ private func decode(_ json: Dict, _ key: String) throws -> URL {
 
 private func decode(_ json: Dict, _ key: String) throws -> [URL] {
 	let strs: [String] = try getParse(json, key: key)
-	return strs.flatMap(URL.init)
+	return strs.compactMap(URL.init)
 }
 
 
