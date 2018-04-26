@@ -23,8 +23,12 @@ public class KeyboardControl: NSObject {
 	private var individualDelegates = [Weak<NSObjectProtocol>]()
 	
 	private let handler: EventHandler
+	
+	private var currentInput: KeyboardDisplayable?
 	private var selectedIndex: Int? {
-		return inputs.index(where: { $0.isFirstResponder })
+		return inputs.index {
+			$0 === currentInput
+		}
 	}
 	
 	
@@ -38,18 +42,20 @@ public class KeyboardControl: NSObject {
 				toolbar?.frame.widt = data.frame.width
 //				updateArrows()
 			}
-			updateArrows()
+			updateToolbar()
 		}
 		
 		UIView.animate(withDuration: data.duration, delay: 0, options: data.options,
 			animations: {
-				if let index = self.selectedIndex {
-					let input = self.inputs[index]
+				if let input = self.currentInput {
 					let projectedBottom = input.superview!.convert(input.frame, to: nil).bottom + 8
 					let top = data.frame.top
 					let distance = top - projectedBottom
 					
 					self.handler(KeyboardEvent(isOpening: isOpening, keyboardFrame: data.frame, input: input, distance: distance))
+				}
+				else {
+					self.handler(KeyboardEvent(isOpening: isOpening, keyboardFrame: data.frame, input: nil, distance: nil)) 
 				}
 			},
 			completion: nil)
@@ -78,14 +84,14 @@ public class KeyboardControl: NSObject {
 	@objc private func back() {
 		let index = max(0, selectedIndex! - 1)
 		let input = inputs[safe: index]
-		UIResponder.first?.resignFirstResponder()
+		currentInput?.resignFirstResponder()
 		input?.becomeFirstResponder()
 	}
 	
 	@objc private func forward() {
 		let index = min(inputs.count - 1, selectedIndex! + 1)
 		let input = inputs[safe: index]
-		UIResponder.first?.resignFirstResponder()
+		currentInput?.resignFirstResponder()
 		input?.becomeFirstResponder()
 	}
 	
@@ -95,7 +101,7 @@ public class KeyboardControl: NSObject {
 	}
 	
 	
-	private func updateArrows() {
+	private func updateToolbar() {
 		guard
 			let index = selectedIndex,
 			let toolbar = toolbar
@@ -134,9 +140,7 @@ public class KeyboardControl: NSObject {
 	public func deactivate() {
 		print("KeyboardControl deactvated")
 		
-		if let index = selectedIndex {
-			inputs[index].resignFirstResponder()
-		}
+		currentInput?.resignFirstResponder()
 		
 		NotificationCenter.default.removeObserver(self, name: .UIKeyboardDidShow, object: nil)
 		NotificationCenter.default.removeObserver(self, name: .UIKeyboardDidHide, object: nil)
@@ -157,7 +161,7 @@ public class KeyboardControl: NSObject {
 	
 	
 	/// Remember, `handler` with `self` WILL cause retain-cycle, add [unowned/weak self] in closure
-	public init(inputs: [KeyboardDisplayable], inputAccessoryView: Bool = true, handler: @escaping EventHandler) {
+	public init(inputs: [KeyboardDisplayable], inputAccessoryView: Bool = true, arrows: Bool = true, handler: @escaping EventHandler) {
 		self.handler = handler
 		self.inputs = inputs
 		
@@ -176,7 +180,7 @@ public class KeyboardControl: NSObject {
 			toolbar!.frame.heigt = 44
 			toolbar!.items = []
 			
-			if inputs.count > 1 {
+			if arrows && inputs.count > 1 {
 				let bundle = Bundle(for: self.classForCoder)
 				let leftImage = UIImage(named: "arrow-up", in: bundle, compatibleWith: nil)
 				let rightImage = UIImage(named: "arrow-down", in: bundle, compatibleWith: nil)
@@ -214,9 +218,9 @@ public class KeyboardControl: NSObject {
 public struct KeyboardEvent {
 	public let isOpening: Bool
 	public let keyboardFrame: CGRect
-	public let input: KeyboardDisplayable
 	
-	public let distance: CGFloat
+	public let input: KeyboardDisplayable!
+	public let distance: CGFloat!
 }
 
 
@@ -316,6 +320,7 @@ extension KeyboardControl: UITextFieldDelegate {
 	}
 	
 	public func textFieldDidBeginEditing(_ textField: UITextField) {
+		self.currentInput = textField
 		delegate(for: textField)?.textFieldDidBeginEditing?(textField)
 	}
 	
@@ -329,6 +334,9 @@ extension KeyboardControl: UITextFieldDelegate {
 	
 	@available(iOS 10.0, *)
 	public func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
+//		if currentInput === textField {
+//			self.currentInput = nil
+//		}
 		let d = delegate(for: textField)
 		if d?.textFieldDidEndEditing?(textField) == nil {
 			d?.textFieldDidEndEditing?(textField, reason: reason)
@@ -345,8 +353,8 @@ extension KeyboardControl: UITextFieldDelegate {
 	
 	public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		switch textField.returnKeyType {
-		case .next: self.forward()
-		default: self.done()
+			case .next: self.forward()
+			default: self.done()
 		}
 		
 		return delegate(for: textField)?.textFieldShouldReturn?(textField) ?? true

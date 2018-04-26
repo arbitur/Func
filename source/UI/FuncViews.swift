@@ -98,6 +98,11 @@ open class RoundButton: UIButton, BorderDrawable {
 @IBDesignable
 open class TintImageView: UIImageView {
 	
+	open override var image: UIImage? {
+		get { return super.image }
+		set { super.image = newValue?.withRenderingMode(.alwaysTemplate) }
+	}
+	
 	private func makeImageTemplate() {
 		self.image = self.image?.withRenderingMode(.alwaysTemplate)
 	}

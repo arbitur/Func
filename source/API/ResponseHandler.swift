@@ -13,7 +13,7 @@ import Alamofire
 
 public class ResponseHandler <M> {
 	
-	private let request: Request
+	public let request: Request
 	
 	init(request: Request) {
 		self.request = request
