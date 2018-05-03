@@ -316,11 +316,14 @@ extension KeyboardControl: UITextFieldDelegate {
 	
 	
 	public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-		return delegate(for: textField)?.textFieldShouldBeginEditing?(textField) ?? true
+		let shouldBegin = delegate(for: textField)?.textFieldShouldBeginEditing?(textField) ?? true
+		if shouldBegin {
+			self.currentInput = textField
+		}
+		return shouldBegin
 	}
 	
 	public func textFieldDidBeginEditing(_ textField: UITextField) {
-		self.currentInput = textField
 		delegate(for: textField)?.textFieldDidBeginEditing?(textField)
 	}
 	
@@ -374,7 +377,11 @@ extension KeyboardControl: UISearchBarDelegate {
 	
 	
 	public func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-		return delegate(for: searchBar)?.searchBarShouldBeginEditing?(searchBar) ?? true
+		let shouldBegin = delegate(for: searchBar)?.searchBarShouldBeginEditing?(searchBar) ?? true
+		if shouldBegin {
+			self.currentInput = searchBar
+		}
+		return shouldBegin
 	}
 	
 	public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -431,7 +438,11 @@ extension KeyboardControl: UITextViewDelegate {
 	
 	
 	public func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-		return delegate(for: textView)?.textViewShouldBeginEditing?(textView) ?? true
+		let shouldBegin = delegate(for: textView)?.textViewShouldBeginEditing?(textView) ?? true
+		if shouldBegin {
+			self.currentInput = textView
+		}
+		return shouldBegin
 	}
 	
 	public func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
