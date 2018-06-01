@@ -24,7 +24,11 @@ public class KeyboardControl: NSObject {
 	
 	private let handler: EventHandler
 	
-	private var currentInput: KeyboardDisplayable?
+	private weak var currentInput: KeyboardDisplayable? {
+		didSet {
+			updateToolbar()
+		}
+	}
 	private var selectedIndex: Int? {
 		return inputs.index {
 			$0 === currentInput
@@ -40,15 +44,13 @@ public class KeyboardControl: NSObject {
 		if isOpening {
 			UIView.performWithoutAnimation {
 				toolbar?.frame.widt = data.frame.width
-//				updateArrows()
 			}
-			updateToolbar()
 		}
 		
 		UIView.animate(withDuration: data.duration, delay: 0, options: data.options,
 			animations: {
 				if let input = self.currentInput {
-					let projectedBottom = input.superview!.convert(input.frame, to: nil).bottom + 8
+					let projectedBottom = input.superview!.convert(input.frame, to: nil).bottom + 16
 					let top = data.frame.top
 					let distance = top - projectedBottom
 					

@@ -13,6 +13,7 @@ import UIKit
 
 
 open class AlertDialog: Dialog, DialogBuilder {
+	
 	open var customViews = [UIView]()
 	public var didAddCustomViewToSuperview: ((AlertDialog, UIView)->())?
 	
@@ -43,6 +44,7 @@ open class AlertDialog: Dialog, DialogBuilder {
 		
 		let button = UIButton(type: .system, target: self, action: #selector(actionPressed))
 		button.setTitleColor(color, for: .normal)
+		button.setTitleColor(color.alpha(0.4), for: .disabled)
 		button.setTitle(action.title, for: .normal)
 		
 		button.titleLabel!.font = font
