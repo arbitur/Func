@@ -18,6 +18,7 @@ public extension UIRefreshControl {
 	}
 	
 	
+	/// Calls target and if `animated` is `true` starts animating
 	func sendActions(animated: Bool) {
 		if animated {
 			self.beginRefreshing()

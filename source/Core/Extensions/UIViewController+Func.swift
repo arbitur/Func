@@ -27,7 +27,7 @@ public extension UIViewController {
 		return (filtered?.count ?? 0) > 0
 	}
 	
-	func performSegue(id: String, sender: AnyObject?) -> Bool {
+	func performSegue(id: String, sender: Any?) -> Bool {
 		if canPerformSegue(id: id) {
 			self.performSegue(withIdentifier: id, sender: sender)
 			return true

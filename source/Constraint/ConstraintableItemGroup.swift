@@ -134,6 +134,27 @@ public struct ConstraintViewItemGroup: ConstraintItemGroup {
 
 
 
+public struct ConstraintLayoutGuideItemGroup: ConstraintItemGroup {
+	public let item: UILayoutGuide
+	public var attributes: [NSLayoutAttribute]
+	public var superview: UIView? {
+		return item.owningView
+	}
+	
+	public init(item: UILayoutGuide, attributes: [NSLayoutAttribute]) {
+		self.item = item
+		self.attributes = attributes
+	}
+	
+	public func prepareItem() {
+		superview?.translatesAutoresizingMaskIntoConstraints = false
+	}
+}
+
+
+
+
+
 /// Type to restrict classes of second item for ConstraintItemGroup
 public protocol ConstraintItemGroupTarget {}
 

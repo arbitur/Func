@@ -77,9 +77,6 @@ public extension Dictionary where Key == String {
 
 
 
-public typealias Dict = [String: Any]
-
-
 
 public func + <T, U>(lhs: [T: U], rhs: [T: U]) -> [T: U] {
 	return lhs.merged(with: rhs)

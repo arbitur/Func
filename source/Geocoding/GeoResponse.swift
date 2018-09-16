@@ -30,7 +30,14 @@ public struct GeoResponse: Decodable, CustomStringConvertible {
 	
 	/// Filter results by type
 	public subscript(_ type: AddressType) -> [Result]? {
-		return results.filter { type ?== $0.types }
+		let results = self.results.filter({ type ?== $0.types })
+		
+		if results.isEmpty {
+			return nil
+		}
+		else {
+			return results
+		}
 	}
 	
 	

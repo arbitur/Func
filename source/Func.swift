@@ -12,7 +12,9 @@ import Foundation
 
 
 
+public typealias Dict = [String: Any]
 public typealias Closure = ()->()
+
 infix operator ?==
 
 
@@ -44,6 +46,20 @@ public func boundary <T> (_ value: T, max: T) -> T where T: Comparable {
 
 
 
+public final class Debug {
+	
+	public static func printDeinit <T> (_ obj: T) {
+		print("~\(type(of: obj))")
+	}
+	
+	
+	internal init() {}
+}
+
+
+
+
+
 public final class Observable<T> {
 	
 	public typealias Observer = (T) -> ()
@@ -69,7 +85,7 @@ public final class Observable<T> {
 	
 	/// Use [weak/unowned self] to prevent retain cycle
 	public func bind(_ observer: @escaping Observer) {
-		observers ++= observer
+		bindNext(observer)
 		observer(value)
 	}
 	
@@ -79,6 +95,18 @@ public final class Observable<T> {
 	
 	public func valueModifier(_ modifier: @escaping (T) -> T) {
 		getValueModifier = modifier
+	}
+	
+	
+	public func observe <U: AnyObject> (_ caller: U, with closure: @escaping (U, T) -> ()) {
+		observeNext(caller, with: closure)
+		closure(caller, value)
+	}
+	
+	public func observeNext <U: AnyObject> (_ caller: U, with closure: @escaping (U, T) -> ()) {
+		observers ++= { [weak caller] value in
+			caller.map { closure($0, value) }
+		}
 	}
 }
 
@@ -113,6 +141,29 @@ public final class Channel<T> {
 	
 	// Anti-Error: Channel<T> initializer is inacccessible due to 'internal' protection level
 	public init() {}
+}
+
+
+
+
+
+//public class Event {
+//	private var observers = [() -> Void]()
+//
+//	func addObserver<T: AnyObject>(_ observer: T, using closure: @escaping (T) -> Void) {
+//		observers.append { [weak observer] in
+//			observer.map(closure)
+//		}
+//	}
+//}
+
+
+
+
+
+public enum Result <T> {
+	case success(T)
+	case failure(String)
 }
 
 

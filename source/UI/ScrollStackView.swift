@@ -14,7 +14,7 @@ import UIKit
 
 open class ScrollStackView: UIScrollView {
 	
-	open let contentStack: UIStackView = UIStackView()
+	public let contentStack: UIStackView = UIStackView()
 	open var axis: UILayoutConstraintAxis {
 		get { return contentStack.axis }
 		set {

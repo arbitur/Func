@@ -22,10 +22,10 @@ open class LinearGradientView: UIView {
 	}
 	
 	
-	public var colorComponents: [(color: UIColor, location: Double)]? {
-		get { return gradientLayer.colorComponents }
+	public var gradientColorSpecifications: [(color: UIColor, location: Double)]? {
+		get { return gradientLayer.gradientColorSpecifications }
 		set {
-			gradientLayer.colorComponents = newValue
+			gradientLayer.gradientColorSpecifications = newValue
 		}
 	}
 	
@@ -40,16 +40,16 @@ open class LinearGradientView: UIView {
 	}
 	
 	open override func prepareForInterfaceBuilder() {
-		gradientLayer.colorComponents = [
+		gradientLayer.gradientColorSpecifications = [
 			(.white, 0),
 			(.black, 1)
 		]
 	}
 	
 	
-	public init(colorComponents: [(color: UIColor, location: Double)]) {
+	public init(gradientColorSpecifications: [(color: UIColor, location: Double)]) {
 		super.init(frame: .zero)
-		self.colorComponents = colorComponents
+		self.gradientColorSpecifications = gradientColorSpecifications
 	}
 	
 	public override init(frame: CGRect) {
@@ -66,7 +66,7 @@ open class LinearGradientView: UIView {
 
 open class LinearGradientLayer: CAGradientLayer {
 	
-	public var colorComponents: [(color: UIColor, location: Double)]? {
+	public var gradientColorSpecifications: [(color: UIColor, location: Double)]? {
 		get { return zip(self.colors ?? [], self.locations ?? []).map { (UIColor(cgColor: $0.0 as! CGColor), $0.1.doubleValue) } }
 		set {
 			self.colors = newValue?.map { $0.color.cgColor }

@@ -101,7 +101,7 @@ public struct ConstraintView: FullyConstraintable {
 public struct ConstraintLayoutGuide: FullyConstraintable {
 	public var item: UILayoutGuide
 	public typealias ConstraintItemType = ConstraintLayoutGuideItem
-	public typealias ConstraintItemGroupType = ConstraintViewItemGroup
+	public typealias ConstraintItemGroupType = ConstraintLayoutGuideItemGroup
 }
 
 

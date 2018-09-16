@@ -58,7 +58,6 @@ public extension UIImage {
 	}
 	
 	func resized(to newSize: CGSize, scalingMode: UIImage.ScalingMode) -> UIImage {
-		
 		let aspectRatio = scalingMode.aspectRatio(between: newSize, and: self.size)
 		
 		var scaledImageRect = CGRect.zero

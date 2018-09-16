@@ -14,9 +14,9 @@ import Foundation
 
 public extension Bool {
 	
-	mutating func toggle() {
-		self = !self
-	}
+//	mutating func toggle() {
+//		self = !self
+//	}
 	
 	
 //	func `else`(_ bool: Bool) -> Bool {

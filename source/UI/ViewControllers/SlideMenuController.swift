@@ -27,7 +27,18 @@ open class SlideMenuController: DebugViewController {
 
 
 	open override var childViewControllerForStatusBarStyle: UIViewController? {
-		return self.presentedViewController ?? rootViewController
+		let top = rootViewController?.childViewControllerForStatusBarStyle ?? rootViewController
+		if let presented = top?.presentedViewController {
+			if presented.isBeingDismissed {
+				return top
+			}
+			else {
+				return presented
+			}
+		}
+		else {
+			return top
+		}
 	}
 	open override var childViewControllerForStatusBarHidden: UIViewController? {
 		return self.childViewControllerForStatusBarStyle

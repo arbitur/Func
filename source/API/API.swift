@@ -34,7 +34,7 @@ public extension API {
 			return
 		}
 		
-		print("\n-->", httpMethod, url, "|", request.httpBody?.count ?? 0, "b |")
+		print("\n<--", httpMethod, url, "|", request.httpBody?.count ?? 0, "b |")
 		
 		if loggingMode ?== [.headers, .all], let headers = request.allHTTPHeaderFields {
 			headers.forEach { print($0 + ":", $1) }
@@ -59,7 +59,7 @@ public extension API {
 			return
 		}
 		
-		print("\n<-- \(statusCode) \(url) | \(Int(response.timeline.totalDuration * 1000)) ms |")
+		print("\n--> \(statusCode) \(url) | \(Int(response.timeline.totalDuration * 1000)) ms |")
 		
 		if loggingMode ?== [.headers, .all], let headers = response.response?.allHeaderFields as? [String: String] {
 			headers.forEach { print($0 + ":", $1) }
