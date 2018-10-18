@@ -16,7 +16,7 @@ import Accelerate
 public extension UIImage {
 	
 	var base64: String {
-		let data = UIImagePNGRepresentation(self)!
+		let data = self.pngData()!
 		return data.base64EncodedString(options: .lineLength64Characters)
 	}
 	
@@ -26,14 +26,6 @@ public extension UIImage {
 			return nil
 		}
 		self.init(data: data)
-	}
-	
-	func jpgData(quality: CGFloat) -> Data? {
-		return UIImageJPEGRepresentation(self, quality)
-	}
-	
-	func pngData() -> Data? {
-		return UIImagePNGRepresentation(self)
 	}
 	
 	
@@ -157,7 +149,7 @@ public extension UIImage {
 		}
 		
 		let hasBlur = radius > .ulpOfOne
-		let hasSaturation = fabs(saturation - 1.0) > .ulpOfOne
+		let hasSaturation = abs(saturation - 1.0) > .ulpOfOne
 		
 		let bitmapInfo = cgImage.bitmapInfo
 		let alphaInfo = CGImageAlphaInfo(rawValue: bitmapInfo.rawValue & CGBitmapInfo.alphaInfoMask.rawValue)
@@ -313,7 +305,7 @@ public extension UIImage {
 		}
 		
 		let hasBlur = blurRadius > .ulpOfOne
-		let hasSaturationChange = fabs(saturationDeltaFactor - 1) > .ulpOfOne
+		let hasSaturationChange = abs(saturationDeltaFactor - 1) > .ulpOfOne
 		
 		let inputCGImage = cgImage!
 		let inputImageScale = scale

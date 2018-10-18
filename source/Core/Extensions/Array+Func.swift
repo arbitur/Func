@@ -23,10 +23,11 @@ public extension Collection {
 
 public extension Collection where Index == Int {
 	
-	/// Returns random `Iterator.Element`
-	var random: Iterator.Element {
-		let index = Random.range(0..<self.count)
-		return self[index]
+	//* Returns random `Iterator.Element`
+	/* Returns nil if collection is empty
+	*/
+	var random: Iterator.Element? {
+		return self.randomElement()
 	}
 }
 

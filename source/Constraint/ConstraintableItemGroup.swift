@@ -15,8 +15,8 @@ import Foundation
 public protocol ConstraintItemGroup {
 	associatedtype Item
 	var item: Item { get }
-	var attributes: [NSLayoutAttribute] { get }
-	init(item: Item, attributes: [NSLayoutAttribute])
+	var attributes: [NSLayoutConstraint.Attribute] { get }
+	init(item: Item, attributes: [NSLayoutConstraint.Attribute])
 	
 	func prepareItem()
 	var superview: UIView? { get }
@@ -25,7 +25,7 @@ public protocol ConstraintItemGroup {
 
 internal extension ConstraintItemGroup {
 	
-	func constraintTo(_ constant: ConstraintConstant, relation: NSLayoutRelation, multiplier: CGFloat, priority: UILayoutPriority) -> [NSLayoutConstraint] {
+	func constraintTo(_ constant: ConstraintConstant, relation: NSLayoutConstraint.Relation, multiplier: CGFloat, priority: UILayoutPriority) -> [NSLayoutConstraint] {
 		prepareItem()
 		
 		return attributes.map { attribute in
@@ -37,7 +37,7 @@ internal extension ConstraintItemGroup {
 		}
 	}
 	
-	func constraintTo(_ item: ConstraintItemGroupTarget, constant: ConstraintConstant, relation: NSLayoutRelation, multiplier: CGFloat, priority: UILayoutPriority) -> [NSLayoutConstraint] {
+	func constraintTo(_ item: ConstraintItemGroupTarget, constant: ConstraintConstant, relation: NSLayoutConstraint.Relation, multiplier: CGFloat, priority: UILayoutPriority) -> [NSLayoutConstraint] {
 		prepareItem()
 		
 		return attributes.map { attribute in
@@ -49,7 +49,7 @@ internal extension ConstraintItemGroup {
 		}
 	}
 	
-	func constraintToSuperview(_ constant: ConstraintConstant, relation: NSLayoutRelation, multiplier: CGFloat, priority: UILayoutPriority) -> [NSLayoutConstraint] {
+	func constraintToSuperview(_ constant: ConstraintConstant, relation: NSLayoutConstraint.Relation, multiplier: CGFloat, priority: UILayoutPriority) -> [NSLayoutConstraint] {
 		guard let superview = superview else {
 			fatalError("\(self.item) needs to have a parent for this operation")
 		}
@@ -115,12 +115,12 @@ public extension ConstraintItemGroup {
 /// A Type as ConstraintItemGroup with Item UIView, can be first item
 public struct ConstraintViewItemGroup: ConstraintItemGroup {
 	public let item: UIView
-	public var attributes: [NSLayoutAttribute]
+	public var attributes: [NSLayoutConstraint.Attribute]
 	public var superview: UIView? {
 		return item.superview
 	}
 	
-	public init(item: UIView, attributes: [NSLayoutAttribute]) {
+	public init(item: UIView, attributes: [NSLayoutConstraint.Attribute]) {
 		self.item = item
 		self.attributes = attributes
 	}
@@ -136,12 +136,12 @@ public struct ConstraintViewItemGroup: ConstraintItemGroup {
 
 public struct ConstraintLayoutGuideItemGroup: ConstraintItemGroup {
 	public let item: UILayoutGuide
-	public var attributes: [NSLayoutAttribute]
+	public var attributes: [NSLayoutConstraint.Attribute]
 	public var superview: UIView? {
 		return item.owningView
 	}
 	
-	public init(item: UILayoutGuide, attributes: [NSLayoutAttribute]) {
+	public init(item: UILayoutGuide, attributes: [NSLayoutConstraint.Attribute]) {
 		self.item = item
 		self.attributes = attributes
 	}

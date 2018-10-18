@@ -43,7 +43,7 @@ public class KeyboardControl: NSObject {
 		
 		if isOpening {
 			UIView.performWithoutAnimation {
-				toolbar?.frame.widt = data.frame.width
+				toolbar?.frame.size.width = data.frame.width
 			}
 		}
 		
@@ -144,20 +144,20 @@ public class KeyboardControl: NSObject {
 		
 		currentInput?.resignFirstResponder()
 		
-		NotificationCenter.default.removeObserver(self, name: .UIKeyboardDidShow, object: nil)
-		NotificationCenter.default.removeObserver(self, name: .UIKeyboardDidHide, object: nil)
-		NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
-		NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidHideNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
 	}
 	
 	public func activate() {
 		print("KeyboardControl activated")
 		
 		NotificationCenter.default.removeObserver(self)
-		NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: .UIKeyboardDidShow, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide(_:)), name: .UIKeyboardDidHide, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide(_:)), name: UIResponder.keyboardDidHideNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 	}
 	
 	
@@ -179,7 +179,7 @@ public class KeyboardControl: NSObject {
 		if inputAccessoryView {
 			toolbar = UIToolbar()
 			toolbar!.isTranslucent = true
-			toolbar!.frame.heigt = 44
+			toolbar!.frame.size.height = 44
 			toolbar!.items = []
 			
 			if arrows && inputs.count > 1 {
@@ -232,16 +232,16 @@ private struct KeyboardNotificationData {
 	let curve: UInt
 	let duration: TimeInterval
 	let belongsToMe: Bool
-	var options: UIViewAnimationOptions {
-		return UIViewAnimationOptions(rawValue: curve)
+	var options: UIView.AnimationOptions {
+		return UIView.AnimationOptions(rawValue: curve)
 	}
 	
 	init(_ notification: Notification) {
 		let userInfo = notification.userInfo!
-		frame = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect
-		curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
-		duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! TimeInterval
-		belongsToMe = userInfo[UIKeyboardIsLocalUserInfoKey] as! Bool
+		frame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
+		curve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
+		duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
+		belongsToMe = userInfo[UIResponder.keyboardIsLocalUserInfoKey] as! Bool
 	}
 }
 
@@ -338,7 +338,7 @@ extension KeyboardControl: UITextFieldDelegate {
 	}
 	
 	@available(iOS 10.0, *)
-	public func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
+	public func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
 //		if currentInput === textField {
 //			self.currentInput = nil
 //		}

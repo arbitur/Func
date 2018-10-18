@@ -13,34 +13,34 @@ import Foundation
 
 /// Make sure the intended value gets returned for NSLayoutConstraint's constant
 public protocol ConstraintConstant {
-	func constant(for attribute: NSLayoutAttribute) -> CGFloat
+	func constant(for attribute: NSLayoutConstraint.Attribute) -> CGFloat
 }
 
 
 extension Int: ConstraintConstant {
 	
-	public func constant(for attribute: NSLayoutAttribute) -> CGFloat {
+	public func constant(for attribute: NSLayoutConstraint.Attribute) -> CGFloat {
 		return CGFloat(self)
 	}
 }
 
 extension Double: ConstraintConstant {
 	
-	public func constant(for attribute: NSLayoutAttribute) -> CGFloat {
+	public func constant(for attribute: NSLayoutConstraint.Attribute) -> CGFloat {
 		return CGFloat(self)
 	}
 }
 
 extension CGFloat: ConstraintConstant {
 	
-	public func constant(for attribute: NSLayoutAttribute) -> CGFloat {
+	public func constant(for attribute: NSLayoutConstraint.Attribute) -> CGFloat {
 		return self
 	}
 }
 
 extension CGSize: ConstraintConstant {
 	
-	public func constant(for attribute: NSLayoutAttribute) -> CGFloat {
+	public func constant(for attribute: NSLayoutConstraint.Attribute) -> CGFloat {
 		switch attribute {
 			case .width: return self.width
 			case .height: return self.height
@@ -51,7 +51,7 @@ extension CGSize: ConstraintConstant {
 
 extension CGPoint: ConstraintConstant {
 	
-	public func constant(for attribute: NSLayoutAttribute) -> CGFloat {
+	public func constant(for attribute: NSLayoutConstraint.Attribute) -> CGFloat {
 		switch attribute {
 			case .centerX: return self.x
 			case .centerY: return self.y
@@ -62,7 +62,7 @@ extension CGPoint: ConstraintConstant {
 
 extension UIEdgeInsets: ConstraintConstant {
 	
-	public func constant(for attribute: NSLayoutAttribute) -> CGFloat {
+	public func constant(for attribute: NSLayoutConstraint.Attribute) -> CGFloat {
 		switch attribute {
 			case .top: return self.top
 			case .bottom: return -self.bottom

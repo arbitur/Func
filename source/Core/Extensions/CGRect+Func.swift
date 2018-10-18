@@ -59,18 +59,6 @@ public extension CGRect {
 		set { self.origin.x = newValue.x - self.size.width/2; self.origin.y = newValue.y - self.size.height/2 }
 	}
 	
-	// Fuck you sincerely, Apple
-	var widt: CGFloat {
-		get { return self.size.width }
-		set { self.size.width = newValue }
-	}
-	
-	// Fuck you sincerely, Apple
-	var heigt: CGFloat {
-		get { return self.size.height }
-		set { self.size.height = newValue }
-	}
-	
 	
 	
 	func insetBy(_ insets: UIEdgeInsets) -> CGRect {

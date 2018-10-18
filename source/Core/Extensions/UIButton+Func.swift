@@ -25,7 +25,7 @@ public extension UIButton {
 	}
 	
 	
-	convenience init(type: UIButtonType = .system, target: Any?, action: Selector) {
+	convenience init(type: UIButton.ButtonType = .system, target: Any?, action: Selector) {
 		self.init(type: type)
 		self.addTarget(target, action: action, for: .touchUpInside)
 	}

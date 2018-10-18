@@ -15,7 +15,7 @@ import UIKit
 open class ScrollStackView: UIScrollView {
 	
 	public let contentStack: UIStackView = UIStackView()
-	open var axis: UILayoutConstraintAxis {
+	open var axis: NSLayoutConstraint.Axis {
 		get { return contentStack.axis }
 		set {
 			contentStack.axis = newValue
@@ -44,7 +44,7 @@ open class ScrollStackView: UIScrollView {
 		axis = contentStack.axis
 	}
 	
-	public init(axis: UILayoutConstraintAxis) {
+	public init(axis: NSLayoutConstraint.Axis) {
 		super.init(frame: .zero)
 		initz()
 		self.axis = axis

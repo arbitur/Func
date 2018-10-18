@@ -26,8 +26,8 @@ open class SlideMenuController: DebugViewController {
 	private let transitionManager = TransitionManager()
 
 
-	open override var childViewControllerForStatusBarStyle: UIViewController? {
-		let top = rootViewController?.childViewControllerForStatusBarStyle ?? rootViewController
+	open override var childForStatusBarStyle: UIViewController? {
+		let top = rootViewController?.childForStatusBarStyle ?? rootViewController
 		if let presented = top?.presentedViewController {
 			if presented.isBeingDismissed {
 				return top
@@ -40,14 +40,16 @@ open class SlideMenuController: DebugViewController {
 			return top
 		}
 	}
-	open override var childViewControllerForStatusBarHidden: UIViewController? {
-		return self.childViewControllerForStatusBarStyle
+	open override var childForStatusBarHidden: UIViewController? {
+		return self.childForStatusBarHidden
 	}
-	open override func childViewControllerForHomeIndicatorAutoHidden() -> UIViewController? {
-		return self.childViewControllerForStatusBarStyle
+	@available(iOS 11.0, *)
+	open override var childForHomeIndicatorAutoHidden: UIViewController? {
+		return self.childForHomeIndicatorAutoHidden
 	}
-	open override func childViewControllerForScreenEdgesDeferringSystemGestures() -> UIViewController? {
-		return self.childViewControllerForStatusBarStyle
+	@available(iOS 11.0, *)
+	open override var childForScreenEdgesDeferringSystemGestures: UIViewController? {
+		return self.childForScreenEdgesDeferringSystemGestures
 	}
 
 
@@ -93,11 +95,11 @@ open class SlideMenuController: DebugViewController {
 
 	private func updateRootViewController(old: UIViewController?, new: UIViewController) {
 		old?.view.removeFromSuperview()
-		old?.willMove(toParentViewController: nil)
-		old?.removeFromParentViewController()
+		old?.willMove(toParent: nil)
+		old?.removeFromParent()
 
-		self.addChildViewController(new)
-		new.didMove(toParentViewController: self)
+		self.addChild(new)
+		new.didMove(toParent: self)
 
 		self.loadViewIfNeeded()
 		new.loadViewIfNeeded()
@@ -324,7 +326,7 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
 
 		let duration = transitionDuration(using: transitionContext)
 //		let options: UIViewAnimationOptions = isInteractive ? .curveLinear : .curveEaseOut
-		let options: UIViewAnimationOptions = .curveEaseOut
+		let options: UIView.AnimationOptions = .curveEaseOut
 
 		UIView.animate(withDuration: duration, delay: 0, options: options,
 			animations: animations,
@@ -383,8 +385,8 @@ open class SlideMenuViewController: UIViewController {
 	open var rootViewController: UIViewController? {
 		willSet {
 			rootViewController?.view.removeFromSuperview()
-			rootViewController?.willMove(toParentViewController: nil)
-			rootViewController?.removeFromParentViewController()
+			rootViewController?.willMove(toParent: nil)
+			rootViewController?.removeFromParent()
 		}
 		didSet {
 			self.viewIfLoaded?.setNeedsLayout()
@@ -396,16 +398,16 @@ open class SlideMenuViewController: UIViewController {
 			if isMenuShowing {
 				fatalError("Can't change menu when menu is showing")
 			}
-			menuViewController?.willMove(toParentViewController: nil)
-			menuViewController?.removeFromParentViewController()
+			menuViewController?.willMove(toParent: nil)
+			menuViewController?.removeFromParent()
 		}
 		didSet {
 			guard let menu = menuViewController else {
 				return
 			}
 			
-			self.addChildViewController(menu)
-			menu.didMove(toParentViewController: self)
+			self.addChild(menu)
+			menu.didMove(toParent: self)
 		}
 	}
 	
@@ -426,7 +428,7 @@ open class SlideMenuViewController: UIViewController {
 		menu.beginAppearanceTransition(true, animated: true)
 		self.view.addSubview(menu.view)
 		menu.view.frame = self.view.bounds
-		menu.view.frame.widt *= 0.8
+		menu.view.frame.size.width *= 0.8
 		menu.view.frame.right = 0
 		
 		rootViewController?.view.isUserInteractionEnabled = false
@@ -499,7 +501,7 @@ open class SlideMenuViewController: UIViewController {
 			return
 		}
 		
-		self.addChildViewController(root)
+		self.addChild(root)
 		
 		self.loadViewIfNeeded()
 		root.loadViewIfNeeded()
@@ -516,7 +518,7 @@ open class SlideMenuViewController: UIViewController {
 		}
 		
 		root.endAppearanceTransition()
-		root.didMove(toParentViewController: self)
+		root.didMove(toParent: self)
 		
 		let panGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(edgePanLeft(_:)))
 		panGesture.edges = .left

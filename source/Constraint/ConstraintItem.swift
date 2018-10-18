@@ -15,8 +15,8 @@ import Foundation
 public protocol ConstraintItem {
 	associatedtype Item
 	var item: Item { get }
-	var attribute: NSLayoutAttribute { get }
-	init(item: Item, attribute: NSLayoutAttribute)
+	var attribute: NSLayoutConstraint.Attribute { get }
+	init(item: Item, attribute: NSLayoutConstraint.Attribute)
 }
 
 
@@ -29,7 +29,7 @@ public protocol ConstraintableConstraintItem: ConstraintItem {
 
 internal extension ConstraintableConstraintItem {
 	
-	func constraintTo(_ constant: ConstraintConstant, relation: NSLayoutRelation, multiplier: CGFloat, priority: UILayoutPriority) -> NSLayoutConstraint {
+	func constraintTo(_ constant: ConstraintConstant, relation: NSLayoutConstraint.Relation, multiplier: CGFloat, priority: UILayoutPriority) -> NSLayoutConstraint {
 		let constant: CGFloat = constant.constant(for: self.attribute)
 		let constraint = NSLayoutConstraint.init(item: self.item, attribute: self.attribute, relatedBy: relation, toItem: nil, attribute: .notAnAttribute, multiplier: multiplier, constant: constant)
 		constraint.priority = priority
@@ -38,7 +38,7 @@ internal extension ConstraintableConstraintItem {
 		return constraint
 	}
 	
-	func constraintTo <T: ConstraintItem> (_ item: T, constant: ConstraintConstant, relation: NSLayoutRelation, multiplier: CGFloat, priority: UILayoutPriority) -> NSLayoutConstraint {
+	func constraintTo <T: ConstraintItem> (_ item: T, constant: ConstraintConstant, relation: NSLayoutConstraint.Relation, multiplier: CGFloat, priority: UILayoutPriority) -> NSLayoutConstraint {
 		let constant: CGFloat = constant.constant(for: self.attribute)
 		let constraint = NSLayoutConstraint.init(item: self.item, attribute: self.attribute, relatedBy: relation, toItem: item.item, attribute: item.attribute, multiplier: multiplier, constant: constant)
 		constraint.priority = priority
@@ -47,7 +47,7 @@ internal extension ConstraintableConstraintItem {
 		return constraint
 	}
 	
-	func constraintToSuperview(_ constant: ConstraintConstant, relation: NSLayoutRelation, multiplier: CGFloat, priority: UILayoutPriority) -> NSLayoutConstraint {
+	func constraintToSuperview(_ constant: ConstraintConstant, relation: NSLayoutConstraint.Relation, multiplier: CGFloat, priority: UILayoutPriority) -> NSLayoutConstraint {
 		guard let superview = superview else {
 			fatalError("\(self.item) needs to have a parent for this operation")
 		}
@@ -114,12 +114,12 @@ public extension ConstraintableConstraintItem {
 /// A Type as ConstraintItem with Item UIView, can be first item
 public struct ConstraintViewItem: ConstraintableConstraintItem {
 	public let item: UIView
-	public var attribute: NSLayoutAttribute
+	public var attribute: NSLayoutConstraint.Attribute
 	public var superview: UIView? {
 		return item.superview
 	}
 	
-	public init(item: UIView, attribute: NSLayoutAttribute) {
+	public init(item: UIView, attribute: NSLayoutConstraint.Attribute) {
 		self.item = item
 		self.attribute = attribute
 	}
@@ -136,12 +136,12 @@ public struct ConstraintViewItem: ConstraintableConstraintItem {
 /// A Type as ConstraintItem with Item UILayoutGuide, can be first item
 public struct ConstraintLayoutGuideItem: ConstraintableConstraintItem {
 	public let item: UILayoutGuide
-	public var attribute: NSLayoutAttribute
+	public var attribute: NSLayoutConstraint.Attribute
 	public var superview: UIView? {
 		return item.owningView
 	}
 	
-	public init(item: UILayoutGuide, attribute: NSLayoutAttribute) {
+	public init(item: UILayoutGuide, attribute: NSLayoutConstraint.Attribute) {
 		self.item = item
 		self.attribute = attribute
 	}
@@ -157,9 +157,9 @@ public struct ConstraintLayoutGuideItem: ConstraintableConstraintItem {
 /// A Type as ConstraintItem with Item UILayoutSupport, cannot be first item
 public struct ConstraintLayoutSupportItem: ConstraintItem {
 	public let item: UILayoutSupport
-	public var attribute: NSLayoutAttribute
+	public var attribute: NSLayoutConstraint.Attribute
 	
-	public init(item: UILayoutSupport, attribute: NSLayoutAttribute) {
+	public init(item: UILayoutSupport, attribute: NSLayoutConstraint.Attribute) {
 		self.item = item
 		self.attribute = attribute
 	}

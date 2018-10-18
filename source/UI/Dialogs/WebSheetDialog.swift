@@ -22,7 +22,7 @@ public final class WebSheetDialog: SheetDialog {
 	
 	
 	public override func viewDidLoad() {
-		activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+		activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
 		activityIndicator!.color = .gray
 		activityIndicator!.hidesWhenStopped = false
 		activityIndicator!.startAnimating()

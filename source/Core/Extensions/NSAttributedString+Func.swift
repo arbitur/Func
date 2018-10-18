@@ -58,7 +58,7 @@ public enum TextAttributes {
 	case verticalGlyphForm(Int)
 	
 	
-	fileprivate var rawValue: (key: NSAttributedStringKey, value: Any) {
+	fileprivate var rawValue: (key: NSAttributedString.Key, value: Any) {
 		switch self {
 			case .font(let font)				: return (.font, font)
 			case .paragraphStyle(let style)		: return (.paragraphStyle, style)
@@ -92,8 +92,8 @@ public enum TextAttributes {
 
 public extension Sequence where Iterator.Element == TextAttributes {
 	
-	var attributedDictionary: [NSAttributedStringKey: Any] {
-		var dict = [NSAttributedStringKey: Any]()
+	var attributedDictionary: [NSAttributedString.Key: Any] {
+		var dict = [NSAttributedString.Key: Any]()
 		
 		for attr in self {
 			let component = attr.rawValue

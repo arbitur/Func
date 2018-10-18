@@ -30,7 +30,7 @@ public extension UIStackView {
 	
 	
 	
-	convenience init(axis: UILayoutConstraintAxis) {
+	convenience init(axis: NSLayoutConstraint.Axis) {
 		self.init(frame: CGRect.zero)
 		self.axis = axis
 	}

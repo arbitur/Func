@@ -25,7 +25,7 @@ public extension UIGestureRecognizer {
 
 public extension UISwipeGestureRecognizer {
 	
-	convenience init(target: Any?, action: Selector?, direction: UISwipeGestureRecognizerDirection) {
+	convenience init(target: Any?, action: Selector?, direction: UISwipeGestureRecognizer.Direction) {
 		self.init(target: target, action: action)
 		self.direction = direction
 	}

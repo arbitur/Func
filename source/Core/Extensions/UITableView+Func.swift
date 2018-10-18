@@ -23,7 +23,7 @@ public extension UITableView {
 		self.tableHeaderView = view
 		view.setNeedsLayout()
 		view.layoutIfNeeded()
-		view.frame.size = view.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+		view.frame.size = view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
 		self.tableHeaderView = view
 	}
 	
@@ -32,7 +32,7 @@ public extension UITableView {
 		self.tableFooterView = view
 		view.setNeedsLayout()
 		view.layoutIfNeeded()
-		view.frame.size = view.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+		view.frame.size = view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
 		self.tableFooterView = view
 	}
 	

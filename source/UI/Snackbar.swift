@@ -93,7 +93,7 @@ private class SnackbarHandler {
 	
 	lazy var snackbarContainer: UIView = {
 		let view = UIView()
-		view.frame.widt = self.window.bounds.width
+		view.frame.size.width = self.window.bounds.width
 		return view
 	}()
 	

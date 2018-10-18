@@ -19,16 +19,16 @@ open class SlideTabController: UIViewController {
 	public var selectedIndex: Int { return menu.index }
 	
 	public var selectedViewController: UIViewController? {
-		return self.childViewControllers[safe: menu.index]
+		return self.children[safe: menu.index]
 	}
-	open override var childViewControllerForStatusBarHidden: UIViewController? {
+	open override var childForStatusBarHidden: UIViewController? {
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: .UIApplicationDidChangeStatusBarFrame, object: nil)
+			NotificationCenter.default.post(name: UIApplication.didChangeStatusBarFrameNotification, object: nil)
 		}
 		
 		return self.selectedViewController
 	}
-	open override var childViewControllerForStatusBarStyle: UIViewController? {
+	open override var childForStatusBarStyle: UIViewController? {
 		return self.selectedViewController
 	}
 	
@@ -48,7 +48,7 @@ open class SlideTabController: UIViewController {
 			vc.view.frame.size = scrollView.bounds.size
 			vc.view.layoutIfNeeded()
 			
-			vc.didMove(toParentViewController: self)
+			vc.didMove(toParent: self)
 		}
 	}
 	
@@ -58,7 +58,7 @@ open class SlideTabController: UIViewController {
 			self.loadViewIfNeeded()
 			
 			for vc in viewControllers {
-				self.addChildViewController(vc)
+				self.addChild(vc)
 				scrollView.stackView.addArrangedSubview(vc.view)
 				menu.addTab(title: vc.title ?? "Title")
 				
@@ -67,7 +67,7 @@ open class SlideTabController: UIViewController {
 			
 //			selectViewController(index: 0)
 			menu.index = 0
-			showViewController(self.childViewControllers.first!)
+			showViewController(self.children.first!)
 		}
 	}
 	
@@ -146,7 +146,7 @@ extension SlideTabController: UIScrollViewDelegate {
 //		print("Left: \(leftPosition / fullWidth)%", "Right: \(rightPosition / fullWidth)%")
 		
 		menu.indicator.frame.left = menu.contentSize.width * (leftPosition / fullWidth)
-		menu.indicator.frame.widt = menu.contentSize.width * ((rightPosition - leftPosition) / fullWidth)
+		menu.indicator.frame.size.width = menu.contentSize.width * ((rightPosition - leftPosition) / fullWidth)
 		
 		//TODO: Right edge not flush
 		if scrollView.contentSize.width > scrollView.bounds.width {
@@ -374,7 +374,7 @@ private class Menu: UIScrollView {
 			$0.height.equalTo(44)
 		}
 		
-		NotificationCenter.default.addObserver(self, selector: #selector(didChangeStatusBar(_:)), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(didChangeStatusBar(_:)), name: UIApplication.didChangeStatusBarFrameNotification, object: nil)
 	}
 	deinit {
 		NotificationCenter.default.removeObserver(self)
@@ -390,13 +390,13 @@ private class Menu: UIScrollView {
 			indicator.frame.bottom = self.bounds.height
 			
 			if let btn = self.arrangedSubviews[safe: 0] {
-				indicator.frame.widt = btn.bounds.width
+				indicator.frame.size.width = btn.bounds.width
 			}
 		}
 		convenience init() {
 			self.init(frame: CGRect.zero)
 			
-			indicator.frame.heigt = SlideTabAppearance.indicatorHeight
+			indicator.frame.size.height = SlideTabAppearance.indicatorHeight
 			
 			self.addSubview(indicator)
 		}

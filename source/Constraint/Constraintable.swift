@@ -55,7 +55,7 @@ public extension FullyConstraintable where Self.Item == ConstraintItemType.Item,
 	
 	
 	/// Return a new ConstraintItemGroup
-	public subscript (_ attributes: NSLayoutAttribute...) -> ConstraintItemGroupType {
+	public subscript (_ attributes: NSLayoutConstraint.Attribute...) -> ConstraintItemGroupType {
 		return ConstraintItemGroupType(item: item, attributes: attributes)
 	}
 	public var horizontalEdges: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.right, .left]) }
