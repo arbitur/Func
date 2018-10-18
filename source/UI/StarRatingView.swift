@@ -25,7 +25,7 @@ open class StarRatingView: UIControl {
 	@IBInspectable open var value: Float = 0 {
 		didSet {
 			if stepValue != 0 {
-				value = boundary(Math.round(value, base: stepValue), min: minimumValue, max: maximumValue)
+				value = clamp(Math.round(value, base: stepValue), min: minimumValue, max: maximumValue)
 			}
 			self.setNeedsLayout()
 		}
@@ -125,7 +125,7 @@ open class StarRatingView: UIControl {
 	
 	private func gestureIsOutside(point: CGPoint) -> Bool {
 		let frame = self.bounds
-		let edgePoint = CGPoint(boundary(point.x, min: 0, max: frame.width), boundary(point.y, min: 0, max: frame.height))
+		let edgePoint = CGPoint(clamp(point.x, min: 0, max: frame.width), clamp(point.y, min: 0, max: frame.height))
 		if point == edgePoint {
 			return false
 		}

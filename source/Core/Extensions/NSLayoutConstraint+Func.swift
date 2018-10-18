@@ -55,10 +55,10 @@ extension UILayoutPriority: ExpressibleByFloatLiteral {
 	}
 	
 	public static func + (lhs: UILayoutPriority, rhs: Float) -> UILayoutPriority {
-		return UILayoutPriority(rawValue: boundary(lhs.rawValue + rhs, min: 0, max: 1000))
+		return UILayoutPriority(rawValue: clamp(lhs.rawValue + rhs, min: 0, max: 1000))
 	}
 	
 	public static func - (lhs: UILayoutPriority, rhs: Float) -> UILayoutPriority {
-		return UILayoutPriority(rawValue: boundary(lhs.rawValue - rhs, min: 0, max: 1000))
+		return UILayoutPriority(rawValue: clamp(lhs.rawValue - rhs, min: 0, max: 1000))
 	}
 }

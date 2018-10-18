@@ -22,6 +22,22 @@ public extension UIView {
 		}
 	}
 	
+//	var borderColor: UIColor {
+//		get { return self.layer.borderColor.map({ UIColor(cgColor: $0) }) ?? .clear }
+//		set {
+//			self.layer.borderColor = newValue.cgColor
+//		}
+//	}
+//
+//	var borderWidth: CGFloat {
+//		get { return self.layer.borderWidth }
+//		set {
+//			self.layer.borderWidth = newValue
+//		}
+//	}
+	
+	
+	
 	func roundCorners() {
 		self.cornerRadius = min(self.bounds.width, self.bounds.height) / 2
 	}
@@ -42,7 +58,7 @@ public extension UIView {
 	
 	
 	
-	func layout() {
+	func postLayout() {
 		self.setNeedsLayout()
 		self.layoutIfNeeded()
 	}
@@ -190,10 +206,10 @@ public extension UIView {
 		return objects.compactMap { $0 as? T }.first!
 	}
 	
-	static func nib <T: UIView> (name: String, owner: Any?) -> T! {
-		let objects = Bundle.main.loadNibNamed(name, owner: owner, options: nil)!
-		return objects.compactMap { $0 as? T }.first!
-	}
+//	static func nib <T: UIView> (name: String, owner: Any?) -> T! {
+//		let objects = Bundle.main.loadNibNamed(name, owner: owner, options: nil)!
+//		return objects.compactMap { $0 as? T }.first!
+//	}
 	
 	
 	convenience init(frame: CGRect = .zero, backgroundColor: UIColor?) {

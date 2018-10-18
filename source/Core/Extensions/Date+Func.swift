@@ -43,6 +43,12 @@ public extension Date {
 	}
 	
 	
+	/// Reversed order of Date.timeIntervalSince(_:)
+	func timeIntervalUntil(_ date: Date) -> TimeInterval {
+		return date.timeIntervalSince(self)
+	}
+	
+	
 	
 	init?(_ string: String, format: DateFormat = .dateTime) {
 		guard let date = DateFormatter(format: format.rawValue).date(from: string) else {

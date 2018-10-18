@@ -450,7 +450,7 @@ open class SlideMenuViewController: UIViewController {
 	
 	private var lastPercent: CFTimeInterval = 0
 	private func updateInteractive(_ percent: CFTimeInterval) {
-		let percent = boundary(percent, min: 0.0, max: 1.0)
+		let percent = clamp(percent, min: 0.0, max: 1.0)
 		lastPercent = percent
 		let offset = percent * animationDuration
 //		print(percent, offset)

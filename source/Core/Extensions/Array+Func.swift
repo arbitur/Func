@@ -73,7 +73,7 @@ public extension RangeReplaceableCollection where Index == Int {
 		let arrays = Int(ceil(Float(self.count) / Float(count)))
 		return (0..<arrays).map { i in
 			let start = count * i
-			let end = boundary(start + count, max: self.count)
+			let end = clamp(start + count, max: self.count)
 			return self[start..<end]
 		}
 	}
@@ -187,6 +187,21 @@ public extension Sequence where Iterator.Element == String {
 	
 	func joined(by separator: Iterator.Element) -> Iterator.Element {
 		return self.joined(separator: separator)
+	}
+	
+	
+	func grouped <T: Hashable> (by keyClosure: (Element) -> (T)) -> [T: [Element]] {
+		var grouper = [T: [Element]]()
+		for element in self {
+			let key = keyClosure(element)
+			if grouper.keys.contains(key) {
+				grouper[key]?.append(element)
+			}
+			else {
+				grouper[key] = [element]
+			}
+		}
+		return grouper
 	}
 }
 

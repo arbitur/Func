@@ -27,20 +27,26 @@ internal let funcDirectory = "se.arbitur.Func"
 
 
 
-public func boundary <T> (_ value: T, min: T, max: T) -> T where T: Comparable {
-	switch true {
-		case value < min: return min
-		case value > max: return max
-		default			: return value
-	}
+public func clamp <T: Comparable> (_ value: T, min: T, max: T) -> T {
+	return Swift.min(Swift.max(value, min), max)
 }
 
-public func boundary <T> (_ value: T, max: T) -> T where T: Comparable {
-	switch true {
-		case value > max: return max
-		default			: return value
-	}
+public func clamp <T: Comparable> (_ value: T, max: T) -> T {
+	return min(value, max)
 }
+
+public func clamp <T: Comparable> (_ value: T, min: T) -> T {
+	return max(value, min)
+}
+
+// Renamings of min and max functions
+//public func lowest <T: Comparable> (_ lhs: T, _ rhs: T) -> T {
+//	return min(lhs, rhs)
+//}
+//
+//public func highest <T: Comparable> (_ lhs: T, _ rhs: T) -> T {
+//	return min(lhs, rhs)
+//}
 
 
 
