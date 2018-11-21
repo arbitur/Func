@@ -37,6 +37,12 @@ public extension UIView {
 //	}
 	
 	
+	var isVisible: Bool {
+		get { return !self.isHidden }
+		set { self.isHidden = !newValue }
+	}
+	
+	
 	
 	func roundCorners() {
 		self.cornerRadius = min(self.bounds.width, self.bounds.height) / 2

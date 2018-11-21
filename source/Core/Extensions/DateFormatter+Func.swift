@@ -14,14 +14,15 @@ import Foundation
 
 public extension DateFormatter {
 	
-	static func reformat(dateString: String, format old: String, newFormat new: String) -> String? {
-		return Date(dateString, format: DateFormat(old))?.format(DateFormat(new))
+	static func reformat(dateString: String, format old: DateFormat, newFormat new: DateFormat) -> String? {
+		return Date(dateString, format: old)?.format(new)
 	}
 	
 	
 	
-	convenience init(format: String) {
+	convenience init(format: String, locale: Locale) {
 		self.init()
+		self.locale = locale
 		self.dateFormat = format
 	}
 	

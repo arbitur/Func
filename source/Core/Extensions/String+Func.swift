@@ -66,6 +66,13 @@ public extension String {
 	
 	
 	
+	func matches(regex pattern: String) -> Bool {
+		let regex = try! NSRegularExpression(pattern: pattern, options: [])
+		return regex.firstMatch(in: self, options: [], range: NSRange(location: self.startIndex.encodedOffset, length: self.endIndex.encodedOffset)) != nil
+	}
+	
+	
+	
 	/**
 		Substrings from lowerBound up to upperBound
 	
@@ -75,13 +82,13 @@ public extension String {
 			^^   ^^
 			0    5
 	*/
-	subscript (range: CountableClosedRange<Int>) -> String {
+	subscript (range: ClosedRange<Int>) -> String {
 		let start = self.index(self.startIndex, offsetBy: range.lowerBound)
 		let end = self.index(self.startIndex, offsetBy: range.upperBound)
 		return String(self[start..<end])
 	}
 	
-	subscript (range: CountablePartialRangeFrom<Int>) -> String {
+	subscript (range: PartialRangeFrom<Int>) -> String {
 		let start = self.index(self.startIndex, offsetBy: range.lowerBound)
 		return String(self[start...])
 	}
@@ -100,6 +107,7 @@ public extension String {
 	}
 	
 	
+	/// Trims off leading and trailing white space
 	func trimmed() -> String {
 		return self.trimmingCharacters(in: .whitespacesAndNewlines)
 	}

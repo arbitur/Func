@@ -14,6 +14,12 @@ import Foundation
 
 public extension CALayer {
 	
+	@objc var borderUIColor: UIColor {
+		get { return self.borderColor.map({ UIColor(cgColor: $0) }) ?? .clear }
+		set { self.borderColor = newValue.cgColor }
+	}
+	
+	
 	var currentTime: CFTimeInterval {
 		return self.convertTime(CACurrentMediaTime(), from: nil)
 	}

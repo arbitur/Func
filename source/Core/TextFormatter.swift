@@ -15,8 +15,6 @@ import Foundation
 public class TextFormatter {
 	
 	public static func percent(_ percent: Double, decimals: Int = 1) -> String {
-//		return String(format: "%g %%", percent.shorten(decimals: 2))
-		
 		let f = NumberFormatter()
 		f.numberStyle = .percent
 		f.maximumFractionDigits = decimals
@@ -35,6 +33,21 @@ public class TextFormatter {
 	
 	
 	
+	
+	public static func timeComponents(_ time: Number, maximumComponents: Int = 1) -> String {
+		let f = DateComponentsFormatter()
+		f.allowedUnits = [.year, .month, .day, .hour, .minute, .second]
+		f.maximumUnitCount = maximumComponents
+		f.allowsFractionalUnits = false
+		f.collapsesLargestUnit = false
+		f.unitsStyle = .full
+		f.zeroFormattingBehavior = .dropAll
+		return f.string(from: time.toDouble()) ?? "NaN"
+	}
+	
+	
+	
+	@available(iOS, deprecated: 1.0, message: "This only works for very specific situations")
 	public static func phoneNumber(_ phoneNumber: String) -> String {
 		let p = phoneNumber.extracted(characters: CharacterSet.decimalDigits)
 		

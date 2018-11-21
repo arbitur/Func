@@ -41,15 +41,15 @@ open class SlideMenuController: DebugViewController {
 		}
 	}
 	open override var childForStatusBarHidden: UIViewController? {
-		return self.childForStatusBarHidden
+		return self.childForStatusBarStyle
 	}
 	@available(iOS 11.0, *)
 	open override var childForHomeIndicatorAutoHidden: UIViewController? {
-		return self.childForHomeIndicatorAutoHidden
+		return self.childForStatusBarStyle
 	}
 	@available(iOS 11.0, *)
 	open override var childForScreenEdgesDeferringSystemGestures: UIViewController? {
-		return self.childForScreenEdgesDeferringSystemGestures
+		return self.childForStatusBarStyle
 	}
 
 

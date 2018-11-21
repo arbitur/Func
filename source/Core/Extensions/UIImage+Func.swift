@@ -28,6 +28,16 @@ public extension UIImage {
 		self.init(data: data)
 	}
 	
+	#if swift(>=4.2)
+	#else
+	func jpgData(quality: CGFloat) -> Data? {
+		return UIImageJPEGRepresentation(self, quality)
+	}
+	
+	func pngData() -> Data? {
+		return UIImagePNGRepresentation(self)
+	}
+	#endif
 	
 	
 	enum ScalingMode {

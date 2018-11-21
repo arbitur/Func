@@ -189,20 +189,35 @@ public extension Sequence where Iterator.Element == String {
 	func joined(by separator: Iterator.Element) -> Iterator.Element {
 		return self.joined(separator: separator)
 	}
+}
+
+
+
+public extension Sequence {
 	
-	
-	func grouped <T: Hashable> (by keyClosure: (Element) -> (T)) -> [T: [Element]] {
-		var grouper = [T: [Element]]()
+	func grouped <T: Hashable> (by keyClosure: (Element) -> (T)) -> [[Element]] {
+		var grouper = [[Element]]()
 		for element in self {
 			let key = keyClosure(element)
-			if grouper.keys.contains(key) {
-				grouper[key]?.append(element)
+			if let index = grouper.firstIndex(where: { keyClosure($0.first!) == key }) {
+				grouper[index].append(element)
 			}
 			else {
-				grouper[key] = [element]
+				grouper.append([element])
 			}
 		}
 		return grouper
+//		var grouper = [T: [Element]]()
+//		for element in self {
+//			let key = keyClosure(element)
+//			if grouper.keys.contains(key) {
+//				grouper[key]?.append(element)
+//			}
+//			else {
+//				grouper[key] = [element]
+//			}
+//		}
+//		return grouper
 	}
 }
 

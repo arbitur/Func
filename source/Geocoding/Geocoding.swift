@@ -17,7 +17,7 @@ public struct GeocodingAPI: API {
 	public static var key: String = ""
 	public static var language: String = ""
 	
-//	public static var loggingMode: LoggingMode = .body
+	public static var loggingMode: LoggingMode = .body
 	
 	public static let baseUrl: String = "https://maps.googleapis.com/maps/api/geocode"
 	public static let baseHeaders: HTTPHeaders? = nil

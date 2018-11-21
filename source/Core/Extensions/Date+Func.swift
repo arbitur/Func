@@ -30,15 +30,15 @@ public extension Date {
 	
 	
 	
-	func format(_ format: DateFormat = .dateTime) -> String {
-		return DateFormatter.init(format: format.rawValue).string(from: self)
+	func format(_ format: DateFormat = .dateTime, locale: Locale = Locale(identifier: "en_US_POSIX")) -> String {
+		return DateFormatter.init(format: format.rawValue, locale: locale).string(from: self)
 	}
 	
-	func format(_ style: DateFormatter.Style) -> String {
+	func format(style: DateFormatter.Style) -> String {
 		return DateFormatter.init(style: style).string(from: self)
 	}
 	
-	func format(_ dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String {
+	func format(date dateStyle: DateFormatter.Style, time timeStyle: DateFormatter.Style) -> String {
 		return DateFormatter.init(dateStyle: dateStyle, timeStyle: timeStyle).string(from: self)
 	}
 	
@@ -50,20 +50,20 @@ public extension Date {
 	
 	
 	
-	init?(_ string: String, format: DateFormat = .dateTime) {
-		guard let date = DateFormatter(format: format.rawValue).date(from: string) else {
+	init?(_ string: String, format: DateFormat = .dateTime, locale: Locale = Locale(identifier: "en_US_POSIX")) {
+		guard let date = DateFormatter(format: format.rawValue, locale: locale).date(from: string) else {
 			return nil
 		}
 		self.init(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate)
 	}
 	
 	
-	init?(_ string: String, style: DateFormatter.Style) {
-		guard let date = DateFormatter(style: style).date(from: string) else {
-			return nil
-		}
-		self.init(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate)
-	}
+//	init?(_ string: String, style: DateFormatter.Style) {
+//		guard let date = DateFormatter(style: style).date(from: string) else {
+//			return nil
+//		}
+//		self.init(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate)
+//	}
 	
 	
 	init?(year: Int? = nil, month: Int? = nil, day: Int? = nil, hour: Int? = nil, minute: Int = 0, second: Int = 0) {
