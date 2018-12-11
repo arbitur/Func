@@ -17,6 +17,12 @@ public extension UIGestureRecognizer {
 	var point: CGPoint {
 		return self.location(in: self.view)
 	}
+	
+	
+	convenience init(target: Any?, action: Selector?, delegate: UIGestureRecognizerDelegate) {
+		self.init(target: target, action: action)
+		self.delegate = delegate
+	}
 }
 
 

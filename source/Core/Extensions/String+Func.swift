@@ -18,6 +18,10 @@ public extension String {
 		return String(self.reversed())
 	}
 	
+	var capitalizedFirst: String {
+		return self.prefix(1).uppercased() + self.lowercased().dropFirst()
+	}
+	
 	
 	
 	func ifEmpty(_ str: String) -> String {

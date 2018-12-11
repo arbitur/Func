@@ -176,6 +176,16 @@ public extension Date {
 		}
 	}
 	
+	
+	
+	var weekDay: Int {
+		get { return Calendar.current.component(.weekday, from: self) }
+		set {
+			var c = self.components
+			c.weekday = newValue
+			self = Calendar.current.date(from: c)!
+		}
+	}
 }
 
 

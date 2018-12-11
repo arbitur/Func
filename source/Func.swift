@@ -13,6 +13,7 @@ import Foundation
 
 
 public typealias Dict = [String: Any]
+public typealias Arr = [Any]
 public typealias Closure = ()->()
 
 infix operator ?==
@@ -113,6 +114,21 @@ public final class Observable<T> {
 		observers ++= { [weak caller] value in
 			caller.map { closure($0, value) }
 		}
+	}
+}
+
+extension Observable: Equatable where T: Equatable {
+	
+	public static func == (lhs: Observable, rhs: Observable) -> Bool {
+		return lhs.value == rhs.value
+	}
+	
+	public static func == (lhs: T, rhs: Observable) -> Bool {
+		return lhs == rhs.value
+	}
+	
+	public static func == (lhs: Observable, rhs: T) -> Bool {
+		return rhs == lhs.value
 	}
 }
 

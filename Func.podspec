@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
 	s.name 		= 'Func'
-	s.version 	= '1.3.0'
+	s.version 	= '1.4.0'
 	s.author 	= { 'Arbitur' => 'arbiturr@gmail.com' }
 	s.license 	= { :type => 'MIT', :file => 'LICENSE' }
 	s.homepage 	= 'https://github.com/arbitur/Func'
@@ -24,7 +24,6 @@ Pod::Spec.new do |s|
 		vs.resources = 'source/Assets/UI/*'
 		vs.dependency 'Func/Core'
 		vs.dependency 'Func/Constraint'
-		#vs.dependency 'SnapKit', '~> 4.0'
 	end
 	
 	s.subspec 'Constraint' do |cs|

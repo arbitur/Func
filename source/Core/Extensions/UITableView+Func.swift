@@ -12,10 +12,24 @@ import UIKit
 
 
 
+public protocol TableViewCellLoadable: class {
+	
+	static var reuseIdentifier: String { get }
+}
+
+
+
+
+
 public extension UITableView {
 	
 	func cell <T: UITableViewCell> (for id: String) -> T? {
 		return self.dequeueReusableCell(withIdentifier: id) as? T
+	}
+	
+	
+	func cell <T: UITableViewCell & TableViewCellLoadable> (ofType type: T.Type) -> T {
+		return self.dequeueReusableCell(withIdentifier: type.reuseIdentifier) as! T
 	}
 	
 	

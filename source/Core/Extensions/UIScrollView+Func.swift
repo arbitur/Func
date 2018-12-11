@@ -15,33 +15,28 @@ import UIKit
 public extension UIScrollView {
 	
 	var maximumContentOffset: CGPoint {
-		let x: CGFloat
-		let y: CGFloat
-		
-		if self.contentSize.width > self.bounds.size.width {
-			x = self.contentSize.width - self.bounds.size.width
-		}
-		else {
-			x = 0
-		}
-		
-		if self.contentSize.height > self.bounds.height {
-			y = self.contentSize.height - self.bounds.height
-		}
-		else {
-			y = 0
-		}
-		
+		let x: CGFloat = max(0, (self.contentSize.width + self.contentInset.left + self.contentInset.right) - self.bounds.size.width)
+		let y: CGFloat = max(0, (self.contentSize.height + self.contentInset.top + self.contentInset.bottom) - self.bounds.height)
 		return CGPoint(x, y)
 	}
 	
 	
 	
-	var contentFrame: CGRect {
+	var contentBounds: CGRect {
 		get { return CGRect(origin: self.contentOffset, size: self.contentSize) }
 		set {
 			self.contentOffset = newValue.origin
 			self.contentSize = newValue.size
 		}
 	}
+	
+	
+	//TODO: Take into account for contentInset
+//	var contentFrame: CGRect {
+//		get { return CGRect(origin: self.contentOffset, size: self.contentSize) }
+//		set {
+//			self.contentOffset = newValue.origin
+//			self.contentSize = newValue.size
+//		}
+//	}
 }

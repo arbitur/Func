@@ -152,22 +152,9 @@ public extension UIView {
 	
 	
 	
-	/// `point`: The point in `self` coordinate space. `view` the view to project the `point` onto
-	func projectedPoint(_ point: CGPoint, to view: UIView) -> CGPoint {
-		guard let superview = self.superview else {
-			fatalError()
-		}
-		
-		return superview.convert(point, to: view)
-	}
-	
 	/// `rect`: The rectangle in `self` coordinate space. `view` the view to project the `rect` onto
-	func projectedRect(_ rect: CGRect, to view: UIView) -> CGRect {
-		guard let superview = self.superview else {
-			fatalError()
-		}
-		
-		return superview.convert(rect, to: view)
+	func projectedFrame(to view: UIView) -> CGRect? {
+		return self.superview?.convert(self.frame, to: view)
 	}
 }
 

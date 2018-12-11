@@ -14,8 +14,8 @@ import Foundation
 
 public extension Data {
 	
-	init?(_ string: String) {
-		guard let data = string.data(using: .utf8, allowLossyConversion: false) else {
+	init?(_ string: String, encoding: String.Encoding = .utf8, allowLossyConversion: Bool = false) {
+		guard let data = string.data(using: encoding, allowLossyConversion: allowLossyConversion) else {
 			return nil
 		}
 		self.init(data)
