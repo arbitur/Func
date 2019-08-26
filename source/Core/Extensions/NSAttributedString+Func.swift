@@ -23,122 +23,175 @@ public extension NSAttributedString {
 		
 		self.init(attributedString: string)
 	}
-	
-	
-	convenience init(text: String, attributes: [TextAttributes]) {
-		self.init(string: text, attributes: attributes.attributedDictionary)
-	}
 }
 
 
 
 
 
-public enum TextAttributes {
-	case font(UIFont)
-	case paragraphStyle(NSParagraphStyle)
-	case foreground(UIColor)
-	case background(UIColor)
-	case ligature(Int)
-	case kern(Float)
-	case strikethroughStyle(NSUnderlineStyle)
-	case strikethrough(UIColor)
-	case underlineStyle(NSUnderlineStyle)
-	case underlineColor(UIColor)
-	case strokeColor(UIColor)
-	case strokeWidth(Float)
-	case shadow(NSShadow)
-	case textEffect(String)
-	case attachment(NSTextAttachment)
-	case link(URL)
-	case baselineOffset(Float)
-	case obliqueness(Float)
-	case expansion(Float)
-	case writingDirection([Int])
-	case verticalGlyphForm(Int)
+public extension NSAttributedString {
 	
+	typealias Attributes = [NSAttributedString.Key: Any]
 	
-	fileprivate var rawValue: (key: NSAttributedString.Key, value: Any) {
-		switch self {
-			case .font(let font)				: return (.font, font)
-			case .paragraphStyle(let style)		: return (.paragraphStyle, style)
-			case .foreground(let color)			: return (.foregroundColor, color)
-			case .background(let color)			: return (.backgroundColor, color)
-			case .ligature(let ligature)		: return (.ligature, ligature)
-			case .kern(let kern)				: return (.kern, kern)
-			case .strikethroughStyle(let style)	: return (.strikethroughStyle, style.rawValue)
-			case .strikethrough(let color)		: return (.strikethroughColor, color)
-			case .underlineStyle(let style)		: return (.underlineStyle, style.rawValue)
-			case .underlineColor(let color)		: return (.underlineColor, color)
-			case .strokeColor(let color)		: return (.strokeColor, color)
-			case .strokeWidth(let width)		: return (.strokeWidth, width)
-			case .shadow(let shadow)			: return (.shadow, shadow)
-			case .textEffect(let effect)		: return (.textEffect, effect)
-			case .attachment(let attatchment)	: return (.attachment, attatchment)
-			case .link(let link)				: return (.link, link)
-			case .baselineOffset(let offset)	: return (.baselineOffset, offset)
-			case .obliqueness(let obliqueness)	: return (.obliqueness, obliqueness)
-			case .expansion(let expansion)		: return (.expansion, expansion)
-			case .writingDirection(let value)	: return (.writingDirection, value)
-			case .verticalGlyphForm(let form)	: return (.verticalGlyphForm, form)
+	class AttributesBuilder {
+		
+		public var font: UIFont?
+		public var foregroundColor: UIColor? // UIColor, default blackColor
+		public var backgroundColor: UIColor? // UIColor, default nil: no background
+		public var ligature: Bool? // NSNumber containing integer, default 1: default ligatures, 0: no ligatures
+		public var kern: Float? // NSNumber containing floating point value, in points; amount to modify default kerning. 0 means kerning is disabled.
+		public var strikethroughStyle: Int? // NSNumber containing integer, default 0: no strikethrough
+		public var underlineStyle: Int? // NSNumber containing integer, default 0: no underline
+		public var strokeColor: UIColor? // UIColor, default nil: same as foreground color
+		public var strokeWidth: Float? // NSNumber containing floating point value, in percent of font point size, default 0: no stroke; positive for stroke alone, negative for stroke and fill (a typical value for outlined text would be 3.0)
+		public var shadow: NSShadow? // NSShadow, default nil: no shadow
+		public var textEffect: String? // NSString, default nil: no text effect
+		
+		public var attachment: NSTextAttachment? // NSTextAttachment, default nil
+		public var link: URL? // NSURL (preferred) or NSString
+		public var baselineOffset: Float? // NSNumber containing floating point value, in points; offset from baseline, default 0
+		public var underlineColor: UIColor? // UIColor, default nil: same as foreground color
+		public var strikethroughColor: UIColor? // UIColor, default nil: same as foreground color
+		public var obliqueness: Float? // NSNumber containing floating point value; skew to be applied to glyphs, default 0: no skew
+		public var expansion: Float? // NSNumber containing floating point value; log of expansion factor to be applied to glyphs, default 0: no expansion
+		public var writingDirection: [Int]? // NSArray of NSNumbers representing the nested levels of writing direction overrides as defined by Unicode LRE, RLE, LRO, and RLO characters.  The control characters can be obtained by masking NSWritingDirection and NSWritingDirectionFormatType values.  LRE: NSWritingDirectionLeftToRight|NSWritingDirectionEmbedding, RLE: NSWritingDirectionRightToLeft|NSWritingDirectionEmbedding, LRO: NSWritingDirectionLeftToRight|NSWritingDirectionOverride, RLO: NSWritingDirectionRightToLeft|NSWritingDirectionOverride,
+		public var verticalGlyphForm: Bool? // An NSNumber containing an integer value.  0 means horizontal text.  1 indicates vertical text.  If not specified, it could follow higher-level vertical orientation settings.  Currently on iOS, it's always horizontal.  The behavior for any other value is undefined.
+		
+		
+		public var attributes: Attributes {
+			var attributes = Attributes()
+			font.map { attributes[.font] = $0 }
+			foregroundColor.map { attributes[.foregroundColor] = $0 }
+			backgroundColor.map { attributes[.backgroundColor] = $0 }
+			ligature.map { attributes[.ligature] = NSNumber(value: $0) }
+			kern.map { attributes[.kern] = NSNumber(value: $0) }
+			strikethroughStyle.map { attributes[.strikethroughStyle] = NSNumber(value: $0) }
+			underlineStyle.map { attributes[.underlineStyle] = NSNumber(value: $0) }
+			strokeColor.map { attributes[.strokeColor] = $0 }
+			strokeWidth.map { attributes[.strokeWidth] = $0 }
+			shadow.map { attributes[.shadow] = $0 }
+			textEffect.map { attributes[.textEffect] = NSString(string: $0) }
+			
+			attachment.map { attributes[.attachment] = $0 }
+			link.map { attributes[.link] = $0 as NSURL }
+			baselineOffset.map { attributes[.baselineOffset] = NSNumber(value: $0) }
+			underlineColor.map { attributes[.underlineColor] = $0 }
+			strikethroughColor.map { attributes[.strikethroughColor] = $0 }
+			obliqueness.map { attributes[.obliqueness] = NSNumber(value: $0) }
+			expansion.map { attributes[.expansion] = NSNumber(value: $0) }
+			writingDirection.map { attributes[.writingDirection] = NSArray(array: $0.map(NSNumber.init)) }
+			verticalGlyphForm.map { attributes[.verticalGlyphForm] = NSNumber(value: $0) }
+			return attributes
 		}
 	}
-}
-
-
-
-
-
-
-public extension Sequence where Iterator.Element == TextAttributes {
 	
-	var attributedDictionary: [NSAttributedString.Key: Any] {
-		var dict = [NSAttributedString.Key: Any]()
+	
+	
+	class Builder: AttributesBuilder {
 		
-		for attr in self {
-			let component = attr.rawValue
-			dict[component.key] = component.value
+		public var paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+		
+		public override var attributes: Attributes {
+			var attributes = super.attributes
+			attributes[.paragraphStyle] = paragraphStyle
+			return attributes
 		}
 		
-		return dict
-	}
-}
-
-
-
-
-
-public protocol TextAttributable: class {
-	var text: String? { get set }
-	var attributedText: NSAttributedString? { get set }
-}
-
-
-public extension TextAttributable {
-	
-	var textAttributes: [TextAttributes] {
-		get { return [] }
-		set {
-			self.attributedText = NSAttributedString(string: self.text ?? "", attributes: newValue.attributedDictionary)
+		public var string: String = ""
+		private var attributedStrings = [(string: String, attributes: Attributes)]()
+		
+		
+		
+		public func append(_ string: String, closure: (AttributesBuilder) -> () = {_ in}) {
+			let attributesBuilder = AttributesBuilder()
+			closure(attributesBuilder)
+			attributedStrings.append((string, attributesBuilder.attributes))
+		}
+		
+		
+		internal func build() -> NSAttributedString {
+			let completeString = string + attributedStrings.map({ $0.string }).joined()
+			
+			guard completeString.isNotEmpty else {
+				fatalError("Builder should not build an empty string")
+			}
+			
+			let mutableAttributedString = NSMutableAttributedString(string: completeString, attributes: attributes)
+			
+			for attributedString in attributedStrings {
+				let range = completeString.range(of: attributedString.string)!
+				let nsRange = NSRange.init(range, in: completeString)
+				mutableAttributedString.addAttributes(attributedString.attributes, range: nsRange)
+			}
+			
+			return mutableAttributedString
 		}
 	}
 	
-	// Add attributes to substring
-	func addAttributes(_ attributes: [TextAttributes], to part: String) {
-		if let attr = self.attributedText, let text = self.text, let range = text.range(of: part) {
-			let mattr = NSMutableAttributedString(attributedString: attr)
-			
-			let start = text.distance(from: text.startIndex, to: range.lowerBound)
-			let length = text.distance(from: text.startIndex, to: range.upperBound) - start
-			let range = NSMakeRange(start, length)
-			
-			mattr.addAttributes(attributes.attributedDictionary, range: range)
-			
-			self.attributedText = mattr
-		}
+	
+	static func build(with closure: (Builder) -> ()) -> NSAttributedString {
+		let builder = Builder()
+		closure(builder)
+		return builder.build()
+	}
+	
+	
+	func modifiedAttributes(for string: String, closure: (AttributesBuilder) -> ()) -> NSAttributedString {
+		let builder = AttributesBuilder()
+		closure(builder)
+		let range = self.string.range(of: string)!
+		let nsRange = NSRange.init(range, in: self.string)
+		let mutableString = self.mutableCopy() as! NSMutableAttributedString
+		mutableString.addAttributes(builder.attributes, range: nsRange)
+		return mutableString
 	}
 }
 
 
-extension UILabel: TextAttributable {}
-extension UITextField: TextAttributable {}
+public extension NSParagraphStyle {
+	
+	class Builder {
+		
+		public var lineSpacing: CGFloat?
+		public var paragraphSpacing: CGFloat?
+		public var alignment: NSTextAlignment?
+		public var firstLineHeadIndent: CGFloat?
+		public var headIndent: CGFloat?
+		public var tailIndent: CGFloat?
+		public var lineBreakMode: NSLineBreakMode?
+		public var minimumLineHeight: CGFloat?
+		public var maximumLineHeight: CGFloat?
+		public var baseWritingDirection: NSWritingDirection?
+		public var lineHeightMultiple: CGFloat?
+		public var paragraphSpacingBefore: CGFloat?
+		public var hyphenationFactor: Float?
+		public var tabStops: [NSTextTab]?
+		public var defaultTabInterval: CGFloat?
+		public var allowsDefaultTighteningForTruncation: Bool?
+		
+		//		open var isConfigured: Bool {
+		//			return lineSpacing != nil || alignment != nil
+		//		}
+		
+		internal func build() -> NSParagraphStyle {
+			let p = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+			lineSpacing.map { p.lineSpacing = $0 }
+			paragraphSpacing.map { p.paragraphSpacing = $0 }
+			alignment.map { p.alignment = $0 }
+			firstLineHeadIndent.map { p.firstLineHeadIndent = $0 }
+			headIndent.map { p.headIndent = $0 }
+			tailIndent.map { p.tailIndent = $0 }
+			lineBreakMode.map { p.lineBreakMode = $0 }
+			minimumLineHeight.map { p.minimumLineHeight = $0 }
+			maximumLineHeight.map { p.maximumLineHeight = $0 }
+			baseWritingDirection.map { p.baseWritingDirection = $0 }
+			lineHeightMultiple.map { p.lineHeightMultiple = $0 }
+			paragraphSpacingBefore.map { p.paragraphSpacingBefore = $0 }
+			hyphenationFactor.map { p.hyphenationFactor = $0 }
+			tabStops.map { p.tabStops = $0 }
+			defaultTabInterval.map { p.defaultTabInterval = $0 }
+			allowsDefaultTighteningForTruncation.map { p.allowsDefaultTighteningForTruncation = $0 }
+			return p
+		}
+	}
+}

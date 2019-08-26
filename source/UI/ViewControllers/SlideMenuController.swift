@@ -16,14 +16,14 @@ open class SlideMenuController: DebugViewController {
 	open var rootViewController: UIViewController! { didSet {
 		updateRootViewController(old: oldValue, new: rootViewController)
 	}}
+	
 	open var menuViewController: UIViewController! { didSet {
 		updateMenuViewController(old: oldValue, new: menuViewController)
 	}}
+	
 	open var isMenuShowing: Bool {
-		return !(menuViewController?.presentingViewController).isNil
+		return menuViewController?.presentingViewController != nil
 	}
-
-	private let transitionManager = TransitionManager()
 
 
 	open override var childForStatusBarStyle: UIViewController? {
@@ -40,17 +40,35 @@ open class SlideMenuController: DebugViewController {
 			return top
 		}
 	}
+	
 	open override var childForStatusBarHidden: UIViewController? {
 		return self.childForStatusBarStyle
 	}
+	
 	@available(iOS 11.0, *)
 	open override var childForHomeIndicatorAutoHidden: UIViewController? {
 		return self.childForStatusBarStyle
 	}
+	
 	@available(iOS 11.0, *)
 	open override var childForScreenEdgesDeferringSystemGestures: UIViewController? {
 		return self.childForStatusBarStyle
 	}
+	
+	private let transitionManager = TransitionManager()
+	
+	open lazy var edgePanGesture: UIGestureRecognizer = {
+		let edgePanGesture = UIScreenEdgePanGestureRecognizer(target: transitionManager, action: #selector(TransitionManager.gestureOpen(_:)))
+		edgePanGesture.edges = .left
+		return edgePanGesture
+	}()
+	
+	open lazy var hamburgerButton: UIBarButtonItem = {
+		let bundle = Bundle(for: SlideMenuController.self)
+		let image = UIImage(named: "hamburger-icon.png", in: bundle, compatibleWith: nil)!
+		let menuButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(SlideMenuController.openMenu))
+		return menuButton
+	}()
 
 
 
@@ -64,34 +82,30 @@ open class SlideMenuController: DebugViewController {
 
 
 	
-	open func configureViewControllerAsRoot(_ viewController: UIViewController) {
-		if let containerViewController = viewController as? RootContainerViewControllable {
-			containerViewController.wasAddedToSlideMenuController(self)
-		}
-		
-		if let nc = viewController as? UINavigationController, let viewController = nc.rootViewController {
-			let edgePanGesture = UIScreenEdgePanGestureRecognizer(target: transitionManager, action: #selector(TransitionManager.gestureOpen(_:)))
-			edgePanGesture.edges = .left
-			
-			if let rootViewControllable = viewController as? RootViewControllable {
-				rootViewControllable.viewForEdgePanGestureRecognizer.addGestureRecognizer(edgePanGesture)
-			}
-			else {
-				viewController.view.addGestureRecognizer(edgePanGesture)
-			}
-		}
-		else {
-			let edgePanGesture = UIScreenEdgePanGestureRecognizer(target: transitionManager, action: #selector(TransitionManager.gestureOpen(_:)))
-			edgePanGesture.edges = .left
-			
-			if let rootViewControllable = viewController as? RootViewControllable {
-				rootViewControllable.viewForEdgePanGestureRecognizer.addGestureRecognizer(edgePanGesture)
-			}
-			else {
-				viewController.view.addGestureRecognizer(edgePanGesture)
-			}
-		}
-	}
+//	open func configureViewControllerAsRoot(_ viewController: UIViewController) {
+//		if let containerViewController = viewController as? RootContainerViewControllable {
+//			containerViewController.wasAddedToSlideMenuController(self)
+//		}
+//
+//
+//
+////		if let nc = viewController as? UINavigationController, let viewController = nc.rootViewController {
+////			if let rootViewControllable = viewController as? RootViewControllable {
+////				rootViewControllable.viewForEdgePanGestureRecognizer.addGestureRecognizer(edgePanGesture)
+////			}
+////			else {
+////				viewController.view.addGestureRecognizer(edgePanGesture)
+////			}
+////		}
+////		else {
+////			if let rootViewControllable = viewController as? RootViewControllable {
+////				rootViewControllable.viewForEdgePanGestureRecognizer.addGestureRecognizer(edgePanGesture)
+////			}
+////			else {
+////				viewController.view.addGestureRecognizer(edgePanGesture)
+////			}
+////		}
+//	}
 
 	private func updateRootViewController(old: UIViewController?, new: UIViewController) {
 		old?.view.removeFromSuperview()
@@ -110,7 +124,7 @@ open class SlideMenuController: DebugViewController {
 			$0.bottom.equalToSuperview()
 		}
 
-		configureViewControllerAsRoot(new)
+//		configureViewControllerAsRoot(new)
 	}
 
 	private func updateMenuViewController(old: UIViewController?, new: UIViewController) {
@@ -143,76 +157,6 @@ open class SlideMenuController: DebugViewController {
 		super.viewWillDisappear(animated)
 
 		closeMenu(animated: false)
-	}
-}
-
-
-
-
-
-public protocol RootContainerViewControllable {
-
-	func wasAddedToSlideMenuController(_ controller: SlideMenuController)
-}
-
-extension UINavigationController: RootContainerViewControllable {
-
-	public func wasAddedToSlideMenuController(_ controller: SlideMenuController) {
-		guard let rootViewController = self.rootViewController else {
-			return
-		}
-
-		enableOpenMenuForViewController(rootViewController)
-		
-//		let bundle = Bundle(for: SlideMenuController.self)
-//		let image = UIImage(named: "hamburger-icon.png", in: bundle, compatibleWith: nil)!
-//		let menuButton = UIBarButtonItem(image: image, style: .plain, target: controller, action: #selector(SlideMenuController.openMenu))
-//		rootViewController.navigationItem.leftBarButtonItem = menuButton
-	}
-	
-	public func enableOpenMenuForViewController(_ viewController: UIViewController) {
-		guard let controller = self.slideMenuController else {
-			return
-		}
-
-		let bundle = Bundle(for: SlideMenuController.self)
-		let image = UIImage(named: "hamburger-icon.png", in: bundle, compatibleWith: nil)!
-		let menuButton = UIBarButtonItem(image: image, style: .plain, target: controller, action: #selector(SlideMenuController.openMenu))
-		viewController.navigationItem.leftBarButtonItem = menuButton
-	}
-}
-
-
-public protocol RootViewControllable: class {
-	
-	var viewForEdgePanGestureRecognizer: UIView { get }
-}
-
-extension UINavigationController: RootViewControllable {
-	
-	public var viewForEdgePanGestureRecognizer: UIView {
-		guard let rootViewController = self.rootViewController else {
-			self.loadViewIfNeeded()
-			return self.view
-		}
-		
-		rootViewController.loadViewIfNeeded()
-		return rootViewController.view
-	}
-}
-
-//extension UIViewController: RootViewControllable {
-//
-//	public func viewForEdgePanGestureRecognizer() -> UIView {
-//		self.loadViewIfNeeded()
-//		return self.view
-//	}
-//}
-
-public extension UIViewController {
-	
-	var slideMenuController: SlideMenuController? {
-		return (self.parent ?? self.presentingViewController) as? SlideMenuController
 	}
 }
 
@@ -340,13 +284,6 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
 	}
 }
 
-extension TransitionManager: UIGestureRecognizerDelegate {
-
-	public func gestureRecognizerShouldBegin(_ gesture: UIGestureRecognizer) -> Bool {
-		return gesture.point.x > slideMenuController!.menuViewController.view.bounds.width - 44
-	}
-}
-
 
 extension TransitionManager: UIViewControllerTransitioningDelegate {
 
@@ -371,201 +308,24 @@ extension TransitionManager: UIViewControllerTransitioningDelegate {
 	}
 }
 
-
-
-
-
-
-
-
-
-@available(iOS, obsoleted: 1.0)
-open class SlideMenuViewController: UIViewController {
+extension TransitionManager: UIGestureRecognizerDelegate {
 	
-	open var rootViewController: UIViewController? {
-		willSet {
-			rootViewController?.view.removeFromSuperview()
-			rootViewController?.willMove(toParent: nil)
-			rootViewController?.removeFromParent()
-		}
-		didSet {
-			self.viewIfLoaded?.setNeedsLayout()
-		}
-	}
-	
-	open var menuViewController: UIViewController? {
-		willSet {
-			if isMenuShowing {
-				fatalError("Can't change menu when menu is showing")
-			}
-			menuViewController?.willMove(toParent: nil)
-			menuViewController?.removeFromParent()
-		}
-		didSet {
-			guard let menu = menuViewController else {
-				return
-			}
-			
-			self.addChild(menu)
-			menu.didMove(toParent: self)
-		}
-	}
-	
-	private var isMenuShowing: Bool {
-		return menuViewController?.view.superview != nil
-	}
-	
-	
-	
-	
-	private let animationDuration: TimeInterval = 0.25
-	private func animateShowMenu() {
-		guard let menu = menuViewController else {
-			return
-		}
-		
-		menu.loadViewIfNeeded()
-		menu.beginAppearanceTransition(true, animated: true)
-		self.view.addSubview(menu.view)
-		menu.view.frame = self.view.bounds
-		menu.view.frame.size.width *= 0.8
-		menu.view.frame.right = 0
-		
-		rootViewController?.view.isUserInteractionEnabled = false
-		
-		UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseInOut,
-			animations: {
-				menu.view.frame.left = 0
-			},
-			completion: { _ in
-				self.rootViewController?.view.isUserInteractionEnabled = true
-				menu.endAppearanceTransition()
-				menu.view.removeFromSuperview()
-			})
-	}
-	
-	
-	private func startInteractive() {
-		self.view.layer.speed = 0.0
-		animateShowMenu()
-	}
-	
-	private var lastPercent: CFTimeInterval = 0
-	private func updateInteractive(_ percent: CFTimeInterval) {
-		let percent = clamp(percent, min: 0.0, max: 1.0)
-		lastPercent = percent
-		let offset = percent * animationDuration
-//		print(percent, offset)
-		self.view.layer.timeOffset = offset
-	}
-	
-	private func endInteractive() {
-//		let speed = Float((1 - lastPercent) * animationDuration)
-//		self.view.layer.speed = speed
-//		print(speed)
-
-		self.view.layer.speed = 1
-//		let pausedTime = self.view.layer.timeOffset
-//		self.view.layer.timeOffset = 0
-//		self.view.layer.beginTime = CACurrentMediaTime() -  pausedTime
-////		self.view.layer.beginTime = self.view.layer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
-//		print(self.view.layer.beginTime)
-		
-		
-//		self.view.layer.timeOffset = 0
-//		self.view.layer.beginTime = 0
-//		let speed = Float((1 - lastPercent) * animationDuration)
-//		self.view.layer.speed = speed
-	}
-	
-	
-	@objc private func edgePanLeft(_ gesture: UIScreenEdgePanGestureRecognizer) {
-		switch gesture.state {
-		case .began:
-			startInteractive()
-		
-		case .changed:
-			let panDistance = gesture.translation(in: self.view).x
-			let percent = Double( panDistance / menuViewController!.view.frame.width )
-			updateInteractive(percent)
-		
-		default:
-			endInteractive()
-		}
-	}
-	
-	
-	
-	private func addRootViewController() {
-		guard let root = rootViewController, root.parent != self else {
-			return
-		}
-		
-		self.addChild(root)
-		
-		self.loadViewIfNeeded()
-		root.loadViewIfNeeded()
-		
-		root.view.frame = self.view.bounds
-		root.beginAppearanceTransition(true, animated: false)
-		self.view.insertSubview(root.view, at: 0)
-		
-		root.view.lac.make {
-			$0.top.equalToSuperview()
-			$0.left.equalToSuperview()
-			$0.right.equalToSuperview()
-			$0.bottom.equalToSuperview()
-		}
-		
-		root.endAppearanceTransition()
-		root.didMove(toParent: self)
-		
-		let panGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(edgePanLeft(_:)))
-		panGesture.edges = .left
-		
-		switch root {
-			case let r as RootViewControllable: r.viewForEdgePanGestureRecognizer.addGestureRecognizer(panGesture)
-			default: root.view.addGestureRecognizer(panGesture)
-		}
-	}
-	
-	
-	open override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-		
-		addRootViewController()
-	}
-	
-	
-	open override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
-		addRootViewController()
+	public func gestureRecognizerShouldBegin(_ gesture: UIGestureRecognizer) -> Bool {
+		return gesture.point.x > slideMenuController!.menuViewController.view.bounds.width - 44
 	}
 }
 
 
-//public extension UIViewController {
-//	
-//	var slideMenuViewController: SlideMenuViewController? {
-//		return self.parent as? SlideMenuViewController
-//	}
-//}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+public extension UIViewController {
+	
+	var slideMenuController: SlideMenuController? {
+		let viewControllers: [UIViewController?] = [
+			self.parent, self.presentingViewController,
+			self.parent?.slideMenuController, self.presentingViewController?.presentingViewController
+		]
+		return viewControllers.compactMap({ $0 as? SlideMenuController}).first
+	}
+}

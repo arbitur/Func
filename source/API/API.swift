@@ -42,7 +42,7 @@ public extension API {
 		
 		if loggingMode ?== [.body, .all], let data = request.httpBody {
 			if let str = String(data) {
-				print(str)
+				print(str.removed(characters: CharacterSet.newlines))
 			}
 			else {
 				print(data)
@@ -66,7 +66,7 @@ public extension API {
 		}
 		
 		if loggingMode ?== [.body, .all], let data = response.data, let str = String(data) {
-			print(str)
+			print(str.removed(characters: CharacterSet.newlines))
 		}
 	}
 	

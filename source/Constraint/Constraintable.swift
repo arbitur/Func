@@ -30,14 +30,14 @@ public protocol FullyConstraintable: Constraintable {
 
 public extension FullyConstraintable where Self.Item == ConstraintItemType.Item, Self.Item == ConstraintItemGroupType.Item {
 	
-	public var left: ConstraintItemType { return ConstraintItemType(item: item, attribute: .left) }
-	public var right: ConstraintItemType { return ConstraintItemType(item: item, attribute: .right) }
-	public var top: ConstraintItemType { return ConstraintItemType(item: item, attribute: .top) }
-	public var bottom: ConstraintItemType { return ConstraintItemType(item: item, attribute: .bottom) }
-	public var width: ConstraintItemType { return ConstraintItemType(item: item, attribute: .width) }
-	public var height: ConstraintItemType { return ConstraintItemType(item: item, attribute: .height) }
-	public var centerX: ConstraintItemType { return ConstraintItemType(item: item, attribute: .centerX) }
-	public var centerY: ConstraintItemType { return ConstraintItemType(item: item, attribute: .centerY) }
+	var left: ConstraintItemType { return ConstraintItemType(item: item, attribute: .left) }
+	var right: ConstraintItemType { return ConstraintItemType(item: item, attribute: .right) }
+	var top: ConstraintItemType { return ConstraintItemType(item: item, attribute: .top) }
+	var bottom: ConstraintItemType { return ConstraintItemType(item: item, attribute: .bottom) }
+	var width: ConstraintItemType { return ConstraintItemType(item: item, attribute: .width) }
+	var height: ConstraintItemType { return ConstraintItemType(item: item, attribute: .height) }
+	var centerX: ConstraintItemType { return ConstraintItemType(item: item, attribute: .centerX) }
+	var centerY: ConstraintItemType { return ConstraintItemType(item: item, attribute: .centerY) }
 	
 	// Im not really using these anyways
 //	public var leading: ConstraintItemType { return ConstraintItemType(item: item, attribute: .leading) }
@@ -55,14 +55,15 @@ public extension FullyConstraintable where Self.Item == ConstraintItemType.Item,
 	
 	
 	/// Return a new ConstraintItemGroup
-	public subscript (_ attributes: NSLayoutConstraint.Attribute...) -> ConstraintItemGroupType {
+	subscript (_ attributes: NSLayoutConstraint.Attribute...) -> ConstraintItemGroupType {
 		return ConstraintItemGroupType(item: item, attributes: attributes)
 	}
-	public var horizontalEdges: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.right, .left]) }
-	public var verticalEdges: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.top, .bottom]) }
-	public var edges: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.top, .left, .bottom, .right]) }
-	public var center: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.centerX, .centerY]) }
-	public var size: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.width, .height]) }
+	var horizontalEdges: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.right, .left]) }
+	var verticalEdges: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.top, .bottom]) }
+	var edges: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.top, .left, .bottom, .right]) }
+	var edgesMargin: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.topMargin, .leftMargin, .bottomMargin, .rightMargin]) }
+	var center: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.centerX, .centerY]) }
+	var size: ConstraintItemGroupType { return ConstraintItemGroupType(item: item, attributes: [.width, .height]) }
 	
 	
 	/// Closure for multiple constraints on same first item

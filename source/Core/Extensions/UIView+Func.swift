@@ -64,7 +64,7 @@ public extension UIView {
 	
 	
 	
-	func postLayout() {
+	func forceLayout() {
 		self.setNeedsLayout()
 		self.layoutIfNeeded()
 	}
@@ -97,7 +97,7 @@ public extension UIView {
 
 public extension UIView {
 	
-	/// Go down the hiarchy
+	/// Go down the hiarchy. First element is self
 	var descendants: [UIView] {
 		return [self] + self.subviews.flatMap { $0.descendants }
 	}
@@ -210,33 +210,3 @@ public extension UIView {
 		self.backgroundColor = backgroundColor
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

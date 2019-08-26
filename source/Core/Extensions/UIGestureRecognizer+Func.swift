@@ -36,3 +36,14 @@ public extension UISwipeGestureRecognizer {
 		self.direction = direction
 	}
 }
+
+
+
+
+public extension UILongPressGestureRecognizer {
+	
+	convenience init(target: Any?, action: Selector?, minimumPressDuration: TimeInterval) {
+		self.init(target: target, action: action)
+		self.minimumPressDuration = minimumPressDuration
+	}
+}

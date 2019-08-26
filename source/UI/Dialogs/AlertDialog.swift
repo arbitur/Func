@@ -43,12 +43,14 @@ open class AlertDialog: Dialog, DialogBuilder {
 		}
 		
 		let button = UIButton(type: .system, target: self, action: #selector(actionPressed))
+		button.contentEdgeInsets = UIEdgeInsets(horizontal: 8, vertical: 0)
 		button.setTitleColor(color, for: .normal)
 		button.setTitleColor(color.alpha(0.4), for: .disabled)
 		button.setTitle(action.title, for: .normal)
 		
 		button.titleLabel!.font = font
 		button.titleLabel!.textAlignment = .center
+		button.titleLabel!.adjustsFontSizeToFitWidth = true
 		
 		button.lac.height.equalTo(44)
 		

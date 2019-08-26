@@ -23,13 +23,16 @@ public extension UISegmentedControl {
 		}
 	}
 	
-	
-	
 	func setItems(_ items: [String], animated: Bool) {
 		self.removeAllSegments()
 		
 		for (i, item) in items.enumerated() {
 			self.insertSegment(withTitle: item, at: i, animated: animated)
 		}
+	}
+	
+	
+	func deselectSelectedSegmentIndex() {
+		self.selectedSegmentIndex = UISegmentedControl.noSegment
 	}
 }

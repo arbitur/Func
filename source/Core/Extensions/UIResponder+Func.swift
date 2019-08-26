@@ -16,7 +16,7 @@ public extension UIResponder {
 	
 	private static weak var currentFirstResponder: UIResponder?
 	
-	public static var first: UIResponder? {
+	static var first: UIResponder? {
 		currentFirstResponder = nil
 		UIApplication.shared.sendAction(#selector(UIResponder.findFirstResponder(sender:)), to: nil, from: nil, for: nil)
 		return currentFirstResponder

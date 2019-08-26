@@ -180,7 +180,7 @@ public enum StarViewShapeSource {
 	
 	private func imageFrom(character: Character, fontSize: CGFloat) -> UIImage? {
 		let stringCharacter = NSString(string: String(character))
-		let stringAttributes = [TextAttributes.font(UIFont.systemFont(ofSize: fontSize))].attributedDictionary
+		let stringAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
 		let size = stringCharacter.size(withAttributes: stringAttributes)
 		
 		UIGraphicsBeginImageContextWithOptions(size, false, 0)

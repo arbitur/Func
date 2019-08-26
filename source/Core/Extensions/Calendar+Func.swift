@@ -13,7 +13,7 @@ import Foundation
 
 public extension Calendar {
 	
-	public static var gregorian: Calendar {
+	static var gregorian: Calendar {
 		return Calendar(identifier: Calendar.Identifier.gregorian)
 	}
 }

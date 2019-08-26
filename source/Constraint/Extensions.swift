@@ -54,4 +54,14 @@ public extension UIStackView {
 		self.insertArrangedSubview(arrangedView, at: index)
 		arrangedView.lac.make(instructions)
 	}
+	
+	func insert(arrangedView: UIView, before beforeView: UIView, instructions: (ConstraintView) -> ()) {
+		self.insertSubview(arrangedView, aboveSubview: beforeView)
+		arrangedView.lac.make(instructions)
+	}
+	
+	func insert(arrangedView: UIView, after afterView: UIView, instructions: (ConstraintView) -> ()) {
+		self.insertSubview(arrangedView, belowSubview: afterView)
+		arrangedView.lac.make(instructions)
+	}
 }

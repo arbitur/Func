@@ -39,16 +39,9 @@ open class LinearGradientView: UIView {
 		set { gradientLayer.endPoint = newValue }
 	}
 	
-	open override func prepareForInterfaceBuilder() {
-		gradientLayer.gradientColorSpecifications = [
-			(.white, 0),
-			(.black, 1)
-		]
-	}
 	
-	
-	public init(gradientColorSpecifications: [(color: UIColor, location: Double)]) {
-		super.init(frame: .zero)
+	public convenience init(gradientColorSpecifications: [(color: UIColor, location: Double)]) {
+		self.init(frame: .zero)
 		self.gradientColorSpecifications = gradientColorSpecifications
 	}
 	
@@ -58,6 +51,44 @@ open class LinearGradientView: UIView {
 	
 	public required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
+	}
+}
+
+
+
+@IBDesignable
+open class SimpleLinearGradientView: LinearGradientView {
+	
+	@IBInspectable var gradientDirection: NSLayoutConstraint.Axis = .vertical {
+		didSet {
+			switch gradientDirection {
+			case .vertical:
+				self.startPoint = CGPoint(0.5, 0.0)
+				self.endPoint = CGPoint(0.5, 1.0)
+				
+			case .horizontal:
+				self.startPoint = CGPoint(0.0, 0.5)
+				self.endPoint = CGPoint(1.0, 0.5)
+			}
+		}
+	}
+	
+	@IBInspectable var firstColor: UIColor = .clear {
+		didSet {
+			self.updateColors()
+		}
+	}
+	
+	@IBInspectable var secondColor: UIColor = .clear {
+		didSet {
+			self.updateColors()
+		}
+	}
+	
+	
+	private func updateColors() {
+		self.gradientColorSpecifications = [(firstColor, 0.0), (secondColor, 1.0)]
+		self.setNeedsDisplay()
 	}
 }
 

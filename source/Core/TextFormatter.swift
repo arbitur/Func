@@ -25,8 +25,9 @@ public class TextFormatter {
 	
 	public static func currency(_ amount: Double, currencyCode: CurrencyCode) -> String {
 		let f = NumberFormatter()
-		f.numberStyle = .currency
 		f.locale = Locale.current
+		f.numberStyle = .currency
+		f.maximumFractionDigits = (amount.remainder(dividingBy: 1) == 0) ? 0 : 2
 		f.currencyCode = currencyCode.rawValue
 		return f.string(from: NSNumber(value: amount))!
 	}

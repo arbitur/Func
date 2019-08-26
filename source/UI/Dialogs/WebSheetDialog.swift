@@ -100,8 +100,7 @@ extension WebSheetDialog: WKNavigationDelegate {
 			else {
 				$0.centerY.equalToSuperview()
 			}
-			$0.horizontalEdges.equalTo(UIEdgeInsets(inset: 16))
-			$0.centerX.equalToSuperview()
+			$0.horizontalEdges.equalToSuperview(UIEdgeInsets(inset: 16))
 		}
 	}
 }

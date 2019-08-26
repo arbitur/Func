@@ -62,48 +62,48 @@ internal extension ConstraintItemGroup {
 public extension ConstraintItemGroup {
 	
 	@discardableResult
-	public func equalTo(_ constant: ConstraintConstant, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
+	func equalTo(_ constant: ConstraintConstant, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
 		return self.constraintTo(constant, relation: .equal, multiplier: multiplier, priority: priority)
 	}
 	@discardableResult
-	public func equalTo <T: ConstraintItemGroupTarget> (_ item: T, constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
+	func equalTo <T: ConstraintItemGroupTarget> (_ item: T, constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
 		return self.constraintTo(item, constant: constant, relation: .equal, multiplier: multiplier, priority: priority)
 	}
 	
 	
 	@discardableResult
-	public func lessThan(_ constant: ConstraintConstant, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
+	func lessThan(_ constant: ConstraintConstant, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
 		return self.constraintTo(constant, relation: .lessThanOrEqual, multiplier: multiplier, priority: priority)
 	}
 	@discardableResult
-	public func lessThan <T: ConstraintItemGroupTarget> (_ item: T, constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
+	func lessThan <T: ConstraintItemGroupTarget> (_ item: T, constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
 		return self.constraintTo(item, constant: constant, relation: .lessThanOrEqual, multiplier: multiplier, priority: priority)
 	}
 	
 	
 	@discardableResult
-	public func greaterThan(_ constant: ConstraintConstant, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
+	func greaterThan(_ constant: ConstraintConstant, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
 		return self.constraintTo(constant, relation: .greaterThanOrEqual, multiplier: multiplier, priority: priority)
 	}
 	@discardableResult
-	public func greaterThan <T: ConstraintItemGroupTarget> (_ item: T, constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
+	func greaterThan <T: ConstraintItemGroupTarget> (_ item: T, constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
 		return self.constraintTo(item, constant: constant, relation: .greaterThanOrEqual, multiplier: multiplier, priority: priority)
 	}
 	
 	
 	
 	@discardableResult
-	public func equalToSuperview(_ constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
+	func equalToSuperview(_ constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
 		return self.constraintToSuperview(constant, relation: .equal, multiplier: multiplier, priority: priority)
 	}
 	
 	@discardableResult
-	public func lessThanSuperview(_ constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
+	func lessThanSuperview(_ constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
 		return self.constraintToSuperview(constant, relation: .lessThanOrEqual, multiplier: multiplier, priority: priority)
 	}
 	
 	@discardableResult
-	public func greaterThanSuperview(_ constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
+	func greaterThanSuperview(_ constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
 		return self.constraintToSuperview(constant, relation: .greaterThanOrEqual, multiplier: multiplier, priority: priority)
 	}
 }

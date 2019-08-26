@@ -16,7 +16,7 @@ public typealias Dict = [String: Any]
 public typealias Arr = [Any]
 public typealias Closure = ()->()
 
-infix operator ?==
+infix operator ?== : ComparisonPrecedence
 
 
 
@@ -50,6 +50,13 @@ public func clamp <T: Comparable> (_ value: T, min: T) -> T {
 //}
 
 
+public extension NSObject {
+	
+	func `as` <T: NSObject> (_ class: T.Type) -> T? {
+		return self as? T
+	}
+}
+
 
 
 
@@ -67,14 +74,18 @@ public final class Debug {
 
 
 
-public final class Observable<T> {
+open class Observable<T> {
 	
-	public typealias Observer = (T) -> ()
+	public typealias Bond = (T) -> ()
+	private var bonds = [Bond]()
+	
+	public typealias Observer = (_ old: T, _ new: T) -> ()
 	private var observers = [Observer]()
 	
-	public var value: T {
+	open var value: T {
 		didSet {
 			notify()
+			observers.forEach { $0(getValueModifier?(oldValue) ?? oldValue, getValueModifier?(value) ?? value) }
 		}
 	}
 	
@@ -82,8 +93,8 @@ public final class Observable<T> {
 	
 	
 	
-	public func notify() {
-		observers.forEach { $0(getValueModifier?(value) ?? value) }
+	open func notify() {
+		bonds.forEach { $0(getValueModifier?(value) ?? value) }
 	}
 	
 	public init(_ value: T) {
@@ -91,29 +102,21 @@ public final class Observable<T> {
 	}
 	
 	/// Use [weak/unowned self] to prevent retain cycle
-	public func bind(_ observer: @escaping Observer) {
-		bindNext(observer)
-		observer(value)
+	open func bind(_ bond: @escaping Bond) {
+		bindNext(bond)
+		bond(value)
 	}
 	
-	public func bindNext(_ observer: @escaping Observer) {
+	open func bindNext(_ bond: @escaping Bond) {
+		bonds ++= bond
+	}
+	
+	open func observe(_ observer: @escaping Observer) {
 		observers ++= observer
 	}
 	
-	public func valueModifier(_ modifier: @escaping (T) -> T) {
+	open func valueModifier(_ modifier: @escaping (T) -> T) {
 		getValueModifier = modifier
-	}
-	
-	
-	public func observe <U: AnyObject> (_ caller: U, with closure: @escaping (U, T) -> ()) {
-		observeNext(caller, with: closure)
-		closure(caller, value)
-	}
-	
-	public func observeNext <U: AnyObject> (_ caller: U, with closure: @escaping (U, T) -> ()) {
-		observers ++= { [weak caller] value in
-			caller.map { closure($0, value) }
-		}
 	}
 }
 
@@ -129,6 +132,25 @@ extension Observable: Equatable where T: Equatable {
 	
 	public static func == (lhs: Observable, rhs: T) -> Bool {
 		return rhs == lhs.value
+	}
+}
+
+
+
+open class FormObservable<T>: Observable<T> {
+	
+	open var isValid: Bool
+	private final let validation: (T) -> Bool
+	
+	open override func notify() {
+		isValid = validation(value)
+		super.notify()
+	}
+	
+	public init(_ value: T, validation: @escaping (T) -> Bool) {
+		self.validation = validation
+		self.isValid = validation(value)
+		super.init(value)
 	}
 }
 
@@ -203,4 +225,25 @@ public enum Result <T> {
 
 
 
-
+public class Queue {
+	
+	private(set) var isRunning: Bool = false
+	
+	typealias Observer = Closure
+	private var observers = [Observer]()
+	
+	func wait(callback: @escaping Observer) {
+		observers ++= callback
+	}
+	
+	func begin() {
+		guard !isRunning else { return }
+		isRunning = true
+	}
+	
+	func end() {
+		guard isRunning else { return }
+		isRunning = false
+		observers.forEach { $0() }
+	}
+}

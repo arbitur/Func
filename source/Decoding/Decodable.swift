@@ -23,8 +23,7 @@ public protocol Encodable {
 }
 
 
-public protocol Codable: Decodable, Encodable {
-}
+public typealias Codable = Decodable & Encodable
 
 
 //public enum DecodableError: Error {
@@ -115,7 +114,7 @@ private func decode(_ json: Dict, _ key: String) throws -> [URL] {
 
 private func decode(_ json: Dict, _ key: String, format: DateFormat = .dateTime) throws -> Date {
 	let str: String = try getParse(json, key: key)
-	guard let date = Date(str, format: format) else {
+	guard let date = Date.init(str, format: format) else {
 		throw DecodingError.dateFormat(key: key, value: str, format: format.rawValue)
 	}
 	return date
@@ -131,7 +130,7 @@ private func decode(_ json: Dict, _ key: String, format: DateFormat = .dateTime)
 
 public extension Dictionary where Key == String {
 	
-	public func decode <T> (_ key: String) throws -> T {
+	func decode <T> (_ key: String) throws -> T {
 		return try Func.decode(self, key)
 	}
 	
@@ -141,37 +140,37 @@ public extension Dictionary where Key == String {
 	
 	
 	
-	public func decode <T> (_ key: String) throws -> T where T: Decodable {
+	func decode <T> (_ key: String) throws -> T where T: Decodable {
 		return try Func.decode(self, key)
 	}
 	
-	public func decode <T> (_ key: String) throws -> T where T: RangeReplaceableCollection, T.Element: Decodable {
-		return try Func.decode(self, key)
-	}
-	
-	
-	
-	public func decode <T> (_ key: String) throws -> T where T: RawRepresentable {
-		return try Func.decode(self, key)
-	}
-	
-	public func decode <T> (_ key: String) throws -> T where T: RangeReplaceableCollection, T.Element: RawRepresentable {
+	func decode <T> (_ key: String) throws -> T where T: RangeReplaceableCollection, T.Element: Decodable {
 		return try Func.decode(self, key)
 	}
 	
 	
 	
-	public func decode (_ key: String) throws -> URL {
+	func decode <T> (_ key: String) throws -> T where T: RawRepresentable {
 		return try Func.decode(self, key)
 	}
 	
-	public func decode (_ key: String) throws -> [URL] {
+	func decode <T> (_ key: String) throws -> T where T: RangeReplaceableCollection, T.Element: RawRepresentable {
 		return try Func.decode(self, key)
 	}
 	
 	
 	
-	public func decode (_ key: String, format: DateFormat = .dateTime) throws -> Date {
+	func decode (_ key: String) throws -> URL {
+		return try Func.decode(self, key)
+	}
+	
+	func decode (_ key: String) throws -> [URL] {
+		return try Func.decode(self, key)
+	}
+	
+	
+	
+	func decode (_ key: String, format: DateFormat = .dateTime) throws -> Date {
 		return try Func.decode(self, key, format: format)
 	}
 	
@@ -195,17 +194,3 @@ public enum DecodingError: LocalizedError {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

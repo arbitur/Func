@@ -108,7 +108,10 @@ open class SheetDialog: Dialog, DialogBuilder {
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissSheet)))
+		// Dont dismiss when tapping background if there is no cancel option
+		if let _ = actions.first(where: { $0.type == .cancel }) {
+			self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissSheet)))
+		}
 		
 		self.modalPresentationStyle = .custom
 		self.transitioningDelegate = self

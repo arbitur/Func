@@ -26,15 +26,17 @@ public extension DateFormatter {
 		self.dateFormat = format
 	}
 	
-	convenience init(style: Style) {
+	convenience init(style: Style, locale: Locale? = nil) {
 		self.init()
 		self.timeStyle = style
 		self.dateStyle = style
+		self.locale = locale ?? self.locale
 	}
 	
-	convenience init(dateStyle: Style, timeStyle: Style) {
+	convenience init(dateStyle: Style, timeStyle: Style, locale: Locale? = nil) {
 		self.init()
 		self.dateStyle = dateStyle
 		self.timeStyle = timeStyle
+		self.locale = locale ?? self.locale
 	}
 }

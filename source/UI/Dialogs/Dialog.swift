@@ -121,34 +121,34 @@ public protocol DialogBuilder: class {
 
 public extension DialogBuilder {
 	
-	public func addAction(_ action: DialogAction) {
+	func addAction(_ action: DialogAction) {
 		actions.append(action)
 	}
 	
-	public func addNormal(title: String, action: Closure? = nil) {
+	func addNormal(title: String, action: Closure? = nil) {
 		addAction(DialogAction(title: title, type: .normal, action: action))
 	}
 	
-	public func addDelete(title: String, action: @escaping Closure) {
+	func addDelete(title: String, action: @escaping Closure) {
 		addAction(DialogAction(title: title, type: .delete, action: action))
 	}
 	
-	public func addCancel(title: String, action: Closure? = nil) {
+	func addCancel(title: String, action: Closure? = nil) {
 		addAction(DialogAction(title: title, type: .cancel, action: action))
 	}
 	
-	public func addCustomView(_ view: UIView, at index: Int? = nil) {
+	func addCustomView(_ view: UIView, at index: Int? = nil) {
 		switch index {
 			case .some(let i)	: customViews.insert(view, at: i)
 			case .none			: customViews.append(view)
 		}
 	}
 	
-	public func setDidDismiss(_ action: Closure?) {
+	func setDidDismiss(_ action: Closure?) {
 		self.didDismiss = action
 	}
 	
-	public func didAddCustomView(_ action: @escaping (T, UIView)->()) {
+	func didAddCustomView(_ action: @escaping (T, UIView)->()) {
 		self.didAddCustomViewToSuperview = action
 	}
 }

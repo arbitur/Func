@@ -24,7 +24,7 @@ public extension Date {
 //		return Calendar.current.dateComponents(units, from: self)
 //	}
 	
-	public static var now: Date {
+	static var now: Date {
 		return Date()
 	}
 	
@@ -34,12 +34,12 @@ public extension Date {
 		return DateFormatter.init(format: format.rawValue, locale: locale).string(from: self)
 	}
 	
-	func format(style: DateFormatter.Style) -> String {
-		return DateFormatter.init(style: style).string(from: self)
+	func format(style: DateFormatter.Style, locale: Locale? = nil) -> String {
+		return DateFormatter.init(style: style, locale: locale).string(from: self)
 	}
 	
-	func format(date dateStyle: DateFormatter.Style, time timeStyle: DateFormatter.Style) -> String {
-		return DateFormatter.init(dateStyle: dateStyle, timeStyle: timeStyle).string(from: self)
+	func format(date dateStyle: DateFormatter.Style, time timeStyle: DateFormatter.Style, locale: Locale? = nil) -> String {
+		return DateFormatter.init(dateStyle: dateStyle, timeStyle: timeStyle, locale: locale).string(from: self)
 	}
 	
 	
@@ -107,84 +107,50 @@ public struct DateFormat: ExpressibleByStringLiteral {
 
 public extension Date {
 	
-	private var components: DateComponents {
-		return Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second, .nanosecond], from: self)
+	subscript (component: Calendar.Component) -> Int {
+		get { return Calendar.current.component(component, from: self) }
+		set {
+			let diff = newValue - self[component]
+			self = Calendar.current.date(byAdding: component, value: diff, to: self)!
+		}
 	}
-
 	
+	
+	// Conveniences
 	
 	var year: Int {
-		get { return Calendar.current.component(.year, from: self) }
-		set {
-			var c = self.components
-			c.year = newValue
-			self = Calendar.current.date(from: c)!
-		}
+		get { return self[.year] }
+		set { self[.year] = newValue }
 	}
 	
 	var month: Int {
-		get { return Calendar.current.component(.month, from: self) }
-		set {
-			var c = self.components
-			c.month = newValue
-			self = Calendar.current.date(from: c)!
-		}
+		get { return self[.month] }
+		set { self[.month] = newValue }
 	}
 	
 	var week: Int {
-		get { return Calendar.current.component(.weekOfYear, from: self) }
-		set {
-			var c = self.components
-			c.weekOfYear = newValue
-			self = Calendar.current.date(from: c)!
-		}
+		get { return self[.weekOfYear] }
+		set { self[.weekOfYear] = newValue }
 	}
 	
 	var day: Int {
-		get { return Calendar.current.component(.day, from: self) }
-		set {
-			var c = self.components
-			c.day = newValue
-			self = Calendar.current.date(from: c)!
-		}
+		get { return self[.day] }
+		set { self[.day] = newValue }
 	}
 	
 	var hour: Int {
-		get { return Calendar.current.component(.hour, from: self) }
-		set {
-			var c = self.components
-			c.hour = newValue
-			self = Calendar.current.date(from: c)!
-		}
+		get { return self[.hour] }
+		set { self[.hour] = newValue }
 	}
 	
 	var minute: Int {
-		get { return Calendar.current.component(.minute, from: self) }
-		set {
-			var c = self.components
-			c.minute = newValue
-			self = Calendar.current.date(from: c)!
-		}
+		get { return self[.minute] }
+		set { self[.minute] = newValue }
 	}
 	
 	var second: Int {
-		get { return Calendar.current.component(.second, from: self) }
-		set {
-			var c = self.components
-			c.second = newValue
-			self = Calendar.current.date(from: c)!
-		}
-	}
-	
-	
-	
-	var weekDay: Int {
-		get { return Calendar.current.component(.weekday, from: self) }
-		set {
-			var c = self.components
-			c.weekday = newValue
-			self = Calendar.current.date(from: c)!
-		}
+		get { return self[.second] }
+		set { self[.second] = newValue }
 	}
 }
 
@@ -194,7 +160,7 @@ public extension Date {
 
 public extension Date {
 	
-	public enum Component {
+	enum Component {
 		case years(Int)
 		case months(Int)
 		case weeks(Int)

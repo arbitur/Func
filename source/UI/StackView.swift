@@ -15,19 +15,21 @@ import UIKit
 @available(iOS 9.0, *)
 open class StackView: UIStackView {
 	
-	private var _backgroundColor: UIColor?
-	open override var backgroundColor: UIColor? {
-		get { return _backgroundColor }
-		set {
-			_backgroundColor = newValue
-			backgroundLayer.fillColor = newValue?.cgColor
-		}
+	open override class var layerClass: AnyClass {
+		return CALayer.self
 	}
 	
-	private let backgroundLayer = CAShapeLayer()
-	open override var layer: CALayer {
-		return backgroundLayer
+	open override var backgroundColor: UIColor? {
+		get { return backgroundLayer.backgroundColor.map { UIColor(cgColor: $0) } }
+		set { backgroundLayer.backgroundColor = newValue?.cgColor }
 	}
+	
+	private var backgroundLayer: CALayer {
+		return super.layer
+	}
+//	open override var layer: CALayer {
+//		return backgroundLayer
+//	}
 	
 	open override var layoutMargins: UIEdgeInsets {
 		get { return super.layoutMargins }
@@ -41,21 +43,21 @@ open class StackView: UIStackView {
 	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
-		backgroundLayer.path = UIBezierPath(rect: self.bounds).cgPath
-		backgroundLayer.frame = self.bounds
-		backgroundLayer.removeAllAnimations()
+//		backgroundLayer.path = UIBezierPath(rect: self.bounds).cgPath
+//		backgroundLayer.frame = self.bounds
+//		backgroundLayer.removeAllAnimations()
 	}
 	
 	public override init(frame: CGRect) {
 		super.init(frame: frame)
 		self.backgroundColor = nil
-		super.layer.insertSublayer(backgroundLayer, at: 0)
+//		super.layer.insertSublayer(backgroundLayer, at: 0)
 	}
 	
 	public required init(coder: NSCoder) {
 		super.init(coder: coder)
 		self.backgroundColor = nil
-		super.layer.insertSublayer(backgroundLayer, at: 0)
+//		super.layer.insertSublayer(backgroundLayer, at: 0)
 	}
 	
 	

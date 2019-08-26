@@ -17,6 +17,13 @@ public extension Collection {
 	var isNotEmpty: Bool {
 		return !self.isEmpty
 	}
+	
+	
+	@inlinable func forEachIndexed(_ body: (Self.Index, Self.Element) throws -> Void) rethrows {
+		for i in self.indices {
+			try body(i, self[i])
+		}
+	}
 }
 
 
@@ -29,11 +36,7 @@ public extension Collection where Index == Int {
 	var random: Iterator.Element? {
 		return self.randomElement()
 	}
-}
-
-
-
-public extension RangeReplaceableCollection where Index == Int {
+	
 	
 	/// Splits `Self` in half
 	func split() -> (first: SubSequence, last: SubSequence) {
@@ -78,7 +81,11 @@ public extension RangeReplaceableCollection where Index == Int {
 			return self[start..<end]
 		}
 	}
-	
+}
+
+
+
+public extension RangeReplaceableCollection where Index == Int {
 	
 	/** 
 		Removes all elements to index `index`
@@ -138,7 +145,7 @@ public extension Collection where Iterator.Element: FloatingNumber {
 
 
 
-public extension Array where Element: UIView {
+public extension RangeReplaceableCollection where Element: UIView {
 	
 	/// Removes from superview and array
 	mutating func removeFromSuperview() {

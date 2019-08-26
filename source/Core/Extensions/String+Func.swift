@@ -14,6 +14,10 @@ import Foundation
 
 public extension String {
 	
+	var nsRange: NSRange {
+		return NSRange(location: self.startIndex.utf16Offset(in: self), length: self.endIndex.utf16Offset(in: self))
+	}
+	
 	var reversed: String {
 		return String(self.reversed())
 	}
@@ -40,10 +44,12 @@ public extension String {
 		return String(self[i...])
 	}
 	
+	/// Remove all characters except characters in `characters`
 	func extracted(characters: CharacterSet) -> String {
 		return removed(characters: characters.inverted)
 	}
 	
+	/// Remove characters in `characters`
 	func removed(characters: CharacterSet) -> String {
 		return self.components(separatedBy: characters).joined(separator: "")
 	}
@@ -52,11 +58,30 @@ public extension String {
 		return self.replacingOccurrences(of: str, with: rep, options: [], range: nil)
 	}
 	
+	func replaced(regex pattern: String, with rep: String) -> String {
+		var str = self
+		str.replace(regex: pattern, with: rep)
+		return str
+	}
+	
 	@discardableResult
 	mutating func replace(_ str: String, with rep: String) -> Bool {
 		let temp = self
 		self = self.replaced(str, with: rep)
 		return temp != self
+	}
+	
+	@discardableResult
+	mutating func replace(regex pattern: String, with rep: String) -> Bool {
+		guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+			return false
+		}
+		
+		let mutableString = NSMutableString(string: self)
+		defer {
+			self = mutableString as String
+		}
+		return regex.replaceMatches(in: mutableString, options: [], range: self.nsRange, withTemplate: rep) > 0
 	}
 	
 	
@@ -72,7 +97,7 @@ public extension String {
 	
 	func matches(regex pattern: String) -> Bool {
 		let regex = try! NSRegularExpression(pattern: pattern, options: [])
-		return regex.firstMatch(in: self, options: [], range: NSRange(location: self.startIndex.encodedOffset, length: self.endIndex.encodedOffset)) != nil
+		return regex.firstMatch(in: self, options: [], range: self.nsRange) != nil
 	}
 	
 	
@@ -118,15 +143,15 @@ public extension String {
 	
 	
 	
-	func grouped(separator: String, size: Int) -> String {
+	func grouped(size: Int) -> [String] {
 		var holder = [String]()
 		for (i, char) in self.enumerated() {
 			let index = (i) / size
 			if i % size == 0 { holder ++= String() }
-			holder[index] += String(char)
+			holder[index].append(char)
 		}
 		
-		return holder.joined(separator: separator)
+		return holder
 	}
 	
 	
@@ -179,6 +204,21 @@ public extension String {
 
 
 
+
+public extension String {
+	
+	func replacingCharacters(in nsRange: NSRange, with replacement: String) -> String? {
+		guard let range = Range.init(nsRange, in: self) else {
+			return nil
+		}
+		return self.replacingCharacters(in: range, with: replacement)
+	}
+}
+
+
+
+
+
 /// Left exists inside right
 public func ?== (lhs: String, rhs: String) -> Bool {
 	return rhs.contains(lhs)
@@ -197,6 +237,13 @@ public func + (lhs: String, rhs: String?) -> String {
 
 
 
+public func % (lhs: String, rhs: CVarArg) -> String {
+	return String.init(format: lhs, rhs)
+}
+
+public func % (lhs: String, rhs: [CVarArg]) -> String {
+	return String.init(format: lhs, arguments: rhs)
+}
 
 
 

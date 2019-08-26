@@ -14,17 +14,19 @@ import UIKit
 
 public class KeyboardControl: NSObject {
 	public typealias EventHandler = (_ event: KeyboardEvent)->()
+	public typealias KeyboardDisplayableClass = KeyboardDisplayable
 	
 	private var toolbar: UIToolbar?
 	private var leftArrow: UIBarButtonItem?
 	private var rightArrow: UIBarButtonItem?
 	
-	private let inputs: [KeyboardDisplayable]
+	private let containerView: UIView?
+	private let inputs: [KeyboardDisplayableClass]
 	private var individualDelegates = [Weak<NSObjectProtocol>]()
 	
 	private let handler: EventHandler
 	
-	private weak var currentInput: KeyboardDisplayable? {
+	private weak var currentInput: KeyboardDisplayableClass? {
 		didSet {
 			updateToolbar()
 		}
@@ -50,7 +52,7 @@ public class KeyboardControl: NSObject {
 		UIView.animate(withDuration: data.duration, delay: 0, options: data.options,
 			animations: {
 				if let input = self.currentInput {
-					let projectedBottom = input.superview!.convert(input.frame, to: nil).bottom + 16
+					let projectedBottom = input.superview!.convert(input.frame, to: self.containerView).bottom + 16
 					let top = data.frame.top
 					let distance = top - projectedBottom
 					
@@ -163,7 +165,8 @@ public class KeyboardControl: NSObject {
 	
 	
 	/// Remember, `handler` with `self` WILL cause retain-cycle, add [unowned/weak self] in closure
-	public init(inputs: [KeyboardDisplayable], inputAccessoryView: Bool = true, arrows: Bool = true, handler: @escaping EventHandler) {
+	public init(containerView: UIView? = nil, inputs: [KeyboardDisplayableClass], inputAccessoryView: Bool = true, arrows: Bool = true, handler: @escaping EventHandler) {
+		self.containerView = containerView
 		self.handler = handler
 		self.inputs = inputs
 		
@@ -204,7 +207,7 @@ public class KeyboardControl: NSObject {
 	public convenience init(superview: UIView, inputAccessoryView: Bool = true, handler: @escaping EventHandler) {
 		let inputs = superview.descendants.compactMap { $0 as? KeyboardDisplayable }
 		
-		self.init(inputs: inputs, inputAccessoryView: inputAccessoryView, handler: handler)
+		self.init(containerView: superview, inputs: inputs, inputAccessoryView: inputAccessoryView, handler: handler)
 	}
 	
 	deinit {
@@ -221,7 +224,8 @@ public struct KeyboardEvent {
 	public let isOpening: Bool
 	public let keyboardFrame: CGRect
 	
-	public let input: KeyboardDisplayable!
+	public let input: KeyboardControl.KeyboardDisplayableClass!
+	/// Negative distance means input is covered by keyboard
 	public let distance: CGFloat!
 }
 
@@ -249,17 +253,17 @@ private struct KeyboardNotificationData {
 
 
 
-public protocol KeyboardDisplayable: class, UITextInputTraits {
-	var superview: UIView? {get}
+public protocol KeyboardDisplayable: UIView, UITextInputTraits {
+//	var superview: UIView? {get}
 	var inputAccessoryView: UIView? {get set}
-	var frame: CGRect {get set}
+//	var frame: CGRect {get set}
 	var isFirstResponder: Bool {get}
 	var _delegate: NSObjectProtocol? {get set}
 	
-	@discardableResult
-	func becomeFirstResponder() -> Bool
-	@discardableResult
-	func resignFirstResponder() -> Bool
+//	@discardableResult
+//	func becomeFirstResponder() -> Bool
+//	@discardableResult
+//	func resignFirstResponder() -> Bool
 }
 
 
@@ -330,7 +334,11 @@ extension KeyboardControl: UITextFieldDelegate {
 	}
 	
 	public func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-		return delegate(for: textField)?.textFieldShouldEndEditing?(textField) ?? true
+		let shouldEnd = delegate(for: textField)?.textFieldShouldEndEditing?(textField) ?? true
+		if shouldEnd && currentInput === textField {
+			self.currentInput = nil
+		}
+		return shouldEnd
 	}
 	
 	public func textFieldDidEndEditing(_ textField: UITextField) {
@@ -339,9 +347,6 @@ extension KeyboardControl: UITextFieldDelegate {
 	
 	@available(iOS 10.0, *)
 	public func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
-//		if currentInput === textField {
-//			self.currentInput = nil
-//		}
 		let d = delegate(for: textField)
 		if d?.textFieldDidEndEditing?(textField) == nil {
 			d?.textFieldDidEndEditing?(textField, reason: reason)
