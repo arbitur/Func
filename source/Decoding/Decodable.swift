@@ -184,13 +184,14 @@ public enum DecodingError: LocalizedError {
 	case missingKey(key: String)
 	case parseFailed(key: String, value: Any, valueType: Any.Type)
 	case dateFormat(key: String, value: String, format: String)
-	
+	case any(String)
 	
 	public var errorDescription: String? {
 		switch self {
-			case .missingKey(let key): return "\"\(key)\" does not exist"
-			case .parseFailed(let key, let value, let type): return "Expected \"\(key)\" to be of type: \(type) but was \(Swift.type(of: value))"
-			case .dateFormat(let key, let value, let format): return "Expected \"\(key)\" \(value) to be of format \(format)"
+		case .missingKey(let key): return "\"\(key)\" does not exist"
+		case .parseFailed(let key, let value, let type): return "Expected \"\(key)\" to be of type: \(type) but was \(Swift.type(of: value))"
+		case .dateFormat(let key, let value, let format): return "Expected \"\(key)\" \(value) to be of format \(format)"
+		case .any(let description): return description
 		}
 	}
 }

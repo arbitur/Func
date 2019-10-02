@@ -15,6 +15,7 @@ import UIKit
 public extension UIStackView {
 	
 	/// This method should be used to hide views inside a UIStackView due to a bug in UIStackView when setting isHidden = false more than once it takes an equal amount of isHidden = true to make it visible again...
+	@available(*, deprecated, message: "Use UIView.safeHidden instead")
 	static func setHidden(_ hidden: Bool, for view: UIView) {
 		if view.isHidden != hidden {
 			view.isHidden = hidden

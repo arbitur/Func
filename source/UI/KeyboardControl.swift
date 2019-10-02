@@ -13,7 +13,7 @@ import UIKit
 
 
 public class KeyboardControl: NSObject {
-	public typealias EventHandler = (_ event: KeyboardEvent)->()
+	public typealias EventHandler = (_ event: KeyboardEvent) -> ()
 	public typealias KeyboardDisplayableClass = KeyboardDisplayable
 	
 	private var toolbar: UIToolbar?
@@ -37,6 +37,7 @@ public class KeyboardControl: NSObject {
 		}
 	}
 	
+	private var _isMoving: Bool = false
 	
 	
 	
@@ -51,15 +52,18 @@ public class KeyboardControl: NSObject {
 		
 		UIView.animate(withDuration: data.duration, delay: 0, options: data.options,
 			animations: {
-				if let input = self.currentInput {
-					let projectedBottom = input.superview!.convert(input.frame, to: self.containerView).bottom + 16
-					let top = data.frame.top
+				if isOpening {
+					guard let projectedBottom = self.currentInput?.projectedFrame(to: self.containerView)?.bottom else {
+						print("*******************************************", self.currentInput as Any)
+						return// self.handler(KeyboardEvent(isOpening: true, keyboardFrame: data.frame, input: nil, distance: nil))
+					}
+					let top = data.frame.top - 16
 					let distance = top - projectedBottom
 					
-					self.handler(KeyboardEvent(isOpening: isOpening, keyboardFrame: data.frame, input: input, distance: distance))
+					self.handler(KeyboardEvent(isOpening: true, keyboardFrame: data.frame, input: self.currentInput!, distance: distance))
 				}
-				else {
-					self.handler(KeyboardEvent(isOpening: isOpening, keyboardFrame: data.frame, input: nil, distance: nil)) 
+				else if !self._isMoving {
+					self.handler(KeyboardEvent(isOpening: false, keyboardFrame: data.frame, input: nil, distance: nil))
 				}
 			},
 			completion: nil)
@@ -75,33 +79,38 @@ public class KeyboardControl: NSObject {
 		handleNotification(notification, isOpening: false)
 	}
 	
-	
 	@objc private func keyboardDidShow(_ notification: Notification) {
-		
+		_isMoving = false
 	}
 	
 	@objc private func keyboardDidHide(_ notification: Notification) {
 	}
 	
 	
+	private func moveToInput(_ input: KeyboardDisplayableClass) {
+		guard input !== currentInput else { return }
+		switch input {
+			case let textField as UITextField: _isMoving = textField.isEnabled
+			default: _isMoving = true
+		}
+		currentInput?.resignFirstResponder()
+		input.becomeFirstResponder()
+	}
 	
 	@objc private func back() {
-		let index = max(0, selectedIndex! - 1)
-		let input = inputs[safe: index]
-		currentInput?.resignFirstResponder()
-		input?.becomeFirstResponder()
+		if let input = inputs[safe: selectedIndex! - 1] {
+			moveToInput(input)
+		}
 	}
 	
 	@objc private func forward() {
-		let index = min(inputs.count - 1, selectedIndex! + 1)
-		let input = inputs[safe: index]
-		currentInput?.resignFirstResponder()
-		input?.becomeFirstResponder()
+		if let input = inputs[safe: selectedIndex! + 1] {
+			moveToInput(input)
+		}
 	}
 	
 	@objc private func done() {
-		let input = inputs[selectedIndex!]
-		input.resignFirstResponder()
+		currentInput?.resignFirstResponder()
 	}
 	
 	
@@ -146,20 +155,20 @@ public class KeyboardControl: NSObject {
 		
 		currentInput?.resignFirstResponder()
 		
-		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
-		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidHideNotification, object: nil)
 		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
 		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidHideNotification, object: nil)
 	}
 	
 	public func activate() {
 		print("KeyboardControl activated")
 		
 		NotificationCenter.default.removeObserver(self)
-		NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide(_:)), name: UIResponder.keyboardDidHideNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide(_:)), name: UIResponder.keyboardDidHideNotification, object: nil)
 	}
 	
 	
@@ -250,20 +259,15 @@ private struct KeyboardNotificationData {
 }
 
 
-
+private struct Weak<T: AnyObject> {
+	weak var data: T?
+}
 
 
 public protocol KeyboardDisplayable: UIView, UITextInputTraits {
-//	var superview: UIView? {get}
-	var inputAccessoryView: UIView? {get set}
-//	var frame: CGRect {get set}
-	var isFirstResponder: Bool {get}
-	var _delegate: NSObjectProtocol? {get set}
-	
-//	@discardableResult
-//	func becomeFirstResponder() -> Bool
-//	@discardableResult
-//	func resignFirstResponder() -> Bool
+	var inputAccessoryView: UIView? { get set }
+	var isFirstResponder: Bool { get }
+	var _delegate: NSObjectProtocol? { get set }
 }
 
 
@@ -293,23 +297,6 @@ extension UISearchBar: KeyboardDisplayable {
 
 
 
-
-
-private struct Weak<T: AnyObject> {
-	weak var data: T?
-}
-
-
-
-
-
-
-
-
-
-
-
-
 extension KeyboardControl: UITextFieldDelegate {
 	
 	private func delegate(for textField: UITextField) -> UITextFieldDelegate? {
@@ -322,34 +309,37 @@ extension KeyboardControl: UITextFieldDelegate {
 	
 	
 	public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-		let shouldBegin = delegate(for: textField)?.textFieldShouldBeginEditing?(textField) ?? true
-		if shouldBegin {
+		let shouldBeginEditing = delegate(for: textField)?.textFieldShouldBeginEditing?(textField) ?? true
+		if shouldBeginEditing {
 			self.currentInput = textField
 		}
-		return shouldBegin
+		return shouldBeginEditing
 	}
 	
 	public func textFieldDidBeginEditing(_ textField: UITextField) {
 		delegate(for: textField)?.textFieldDidBeginEditing?(textField)
+		self.currentInput = textField
 	}
 	
 	public func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-		let shouldEnd = delegate(for: textField)?.textFieldShouldEndEditing?(textField) ?? true
-		if shouldEnd && currentInput === textField {
-			self.currentInput = nil
-		}
-		return shouldEnd
+		return delegate(for: textField)?.textFieldShouldEndEditing?(textField) ?? true
 	}
 	
 	public func textFieldDidEndEditing(_ textField: UITextField) {
 		delegate(for: textField)?.textFieldDidEndEditing?(textField)
+		if textField === currentInput {
+			self.currentInput = nil
+		}
 	}
 	
 	@available(iOS 10.0, *)
 	public func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
 		let d = delegate(for: textField)
-		if d?.textFieldDidEndEditing?(textField) == nil {
-			d?.textFieldDidEndEditing?(textField, reason: reason)
+		if d?.textFieldDidEndEditing?(textField, reason: reason) == nil {
+			d?.textFieldDidEndEditing?(textField)
+		}
+		if textField === currentInput {
+			self.currentInput = nil
 		}
 	}
 	
@@ -393,6 +383,7 @@ extension KeyboardControl: UISearchBarDelegate {
 	
 	public func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
 		delegate(for: searchBar)?.searchBarTextDidBeginEditing?(searchBar)
+		currentInput = searchBar
 	}
 	
 	public func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
@@ -401,6 +392,9 @@ extension KeyboardControl: UISearchBarDelegate {
 	
 	public func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
 		delegate(for: searchBar)?.searchBarTextDidEndEditing?(searchBar)
+		if searchBar === currentInput {
+			self.currentInput = nil
+		}
 	}
 	
 	public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -445,11 +439,11 @@ extension KeyboardControl: UITextViewDelegate {
 	
 	
 	public func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-		let shouldBegin = delegate(for: textView)?.textViewShouldBeginEditing?(textView) ?? true
-		if shouldBegin {
+		let shouldBeginEditing = delegate(for: textView)?.textViewShouldBeginEditing?(textView) ?? true
+		if shouldBeginEditing {
 			self.currentInput = textView
 		}
-		return shouldBegin
+		return shouldBeginEditing
 	}
 	
 	public func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
@@ -458,10 +452,14 @@ extension KeyboardControl: UITextViewDelegate {
 	
 	public func textViewDidBeginEditing(_ textView: UITextView) {
 		delegate(for: textView)?.textViewDidBeginEditing?(textView)
+		self.currentInput = textView
 	}
 	
 	public func textViewDidEndEditing(_ textView: UITextView) {
 		delegate(for: textView)?.textViewDidEndEditing?(textView)
+		if textView === currentInput {
+			self.currentInput = nil
+		}
 	}
 	
 	public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

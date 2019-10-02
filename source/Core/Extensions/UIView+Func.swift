@@ -42,6 +42,22 @@ public extension UIView {
 		set { self.isHidden = !newValue }
 	}
 	
+	/// If inside a stack view. Stackview bug with isHidden, it counts everytime you set isHidden even if set to the same value.
+	var safeHidden: Bool {
+		get { return self.isHidden }
+		set {
+			if self.superview is UIStackView {
+				if self.isHidden != newValue {
+					self.isHidden = newValue
+				}
+				self.alpha = newValue ? 0.0 : 1.0
+			}
+			else {
+				self.isHidden = newValue
+			}
+		}
+	}
+	
 	
 	
 	func roundCorners() {
@@ -153,7 +169,7 @@ public extension UIView {
 	
 	
 	/// `rect`: The rectangle in `self` coordinate space. `view` the view to project the `rect` onto
-	func projectedFrame(to view: UIView) -> CGRect? {
+	func projectedFrame(to view: UIView?) -> CGRect? {
 		return self.superview?.convert(self.frame, to: view)
 	}
 }

@@ -162,7 +162,7 @@ public extension UIImage {
 		let hasSaturation = abs(saturation - 1.0) > .ulpOfOne
 		
 		let bitmapInfo = cgImage.bitmapInfo
-		let alphaInfo = CGImageAlphaInfo(rawValue: bitmapInfo.rawValue & CGBitmapInfo.alphaInfoMask.rawValue)
+		let alphaInfo = CGImageAlphaInfo(rawValue: bitmapInfo.rawValue & CGBitmapInfo.alphaInfoMask.rawValue)!
 		
 		let scale = self.scale
 		let outputSize = self.size
@@ -214,7 +214,8 @@ public extension UIImage {
 					inputRadius = 2.0
 				}
 				
-				let _a = (inputRadius * 3.0 * sqrt(2.0 * .pi) / 4.0 + 0.5)
+				let __a = sqrt(2.0 * CGFloat.pi) / 4.0
+				let _a = (inputRadius * 3.0 * __a + 0.5)
 				var realRadius = UInt32(floor(_a / 2))
 				realRadius |= 1
 				
@@ -320,7 +321,7 @@ public extension UIImage {
 		let inputCGImage = cgImage!
 		let inputImageScale = scale
 		let inputImageBitmapInfo = inputCGImage.bitmapInfo
-		let inputImageAlphaInfo = CGImageAlphaInfo(rawValue: inputImageBitmapInfo.rawValue & CGBitmapInfo.alphaInfoMask.rawValue)
+		let inputImageAlphaInfo = CGImageAlphaInfo(rawValue: inputImageBitmapInfo.rawValue & CGBitmapInfo.alphaInfoMask.rawValue)!
 		
 		let outputImageSizeInPoints = size
 		let outputImageRectInPoints = CGRect(origin: CGPoint.zero, size: outputImageSizeInPoints)
