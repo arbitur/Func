@@ -11,6 +11,9 @@ import Foundation
 
 
 
+// MARK: - Protocols
+
+public typealias Codable = Decodable & Encodable
 
 public protocol Decodable {
 	
@@ -23,14 +26,9 @@ public protocol Encodable {
 }
 
 
-public typealias Codable = Decodable & Encodable
 
 
-//public enum DecodableError: Error {
-//	case wrong
-//}
-
-
+// MARK: - Parse functions
 
 private func getParse <T> (_ json: Dict, key: String) throws -> T {
 	guard let value: Any = json.valueFor(path: key) else {
@@ -47,6 +45,7 @@ private func getParse <T> (_ json: Dict, key: String) throws -> T {
 
 
 
+// MARK: - Private decode function
 
 private func decode <T> (_ json: Dict, _ key: String) throws -> T {
 	return try getParse(json, key: key)
@@ -126,54 +125,79 @@ private func decode(_ json: Dict, _ key: String, format: DateFormat = .dateTime)
 
 
 
-
+// MARK: - Public decode functions
 
 public extension Dictionary where Key == String {
+	
+	// Any
 	
 	func decode <T> (_ key: String) throws -> T {
 		return try Func.decode(self, key)
 	}
-	
-//	public func decode <T> (json: Dict, key: String) throws -> [T] {
-//		return try Func.decode(self, key)
+//	func decode <T> (_ key: String) throws -> T? {
+//		return try? self.decode(key)
 //	}
 	
 	
+	// Decodable
 	
 	func decode <T> (_ key: String) throws -> T where T: Decodable {
 		return try Func.decode(self, key)
+	}
+	func decode <T> (_ key: String) throws -> T? where T: Decodable {
+		return try? self.decode(key)  as T
 	}
 	
 	func decode <T> (_ key: String) throws -> T where T: RangeReplaceableCollection, T.Element: Decodable {
 		return try Func.decode(self, key)
 	}
+	func decode <T> (_ key: String) throws -> T? where T: RangeReplaceableCollection, T.Element: Decodable {
+		return try? self.decode(key)  as T
+	}
 	
 	
+	// RawRepresentable
 	
 	func decode <T> (_ key: String) throws -> T where T: RawRepresentable {
 		return try Func.decode(self, key)
+	}
+	func decode <T> (_ key: String) throws -> T? where T: RawRepresentable {
+		return try? self.decode(key) as T
 	}
 	
 	func decode <T> (_ key: String) throws -> T where T: RangeReplaceableCollection, T.Element: RawRepresentable {
 		return try Func.decode(self, key)
 	}
+	func decode <T> (_ key: String) throws -> T? where T: RangeReplaceableCollection, T.Element: RawRepresentable {
+		return try? self.decode(key) as T
+	}
 	
 	
+	// URL
 	
 	func decode (_ key: String) throws -> URL {
 		return try Func.decode(self, key)
+	}
+	func decode (_ key: String) throws -> URL? {
+		return try? self.decode(key) as URL
 	}
 	
 	func decode (_ key: String) throws -> [URL] {
 		return try Func.decode(self, key)
 	}
+	func decode (_ key: String) throws -> [URL]? {
+		return try? self.decode(key) as [URL]
+	}
 	
 	
+	// Date
 	
 	func decode (_ key: String, format: DateFormat = .dateTime) throws -> Date {
 		return try Func.decode(self, key, format: format)
 	}
-	
+	func decode (_ key: String, format: DateFormat = .dateTime) throws -> Date? {
+		return try? self.decode(key, format: format) as Date
+	}
 }
 
 

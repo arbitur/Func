@@ -186,9 +186,6 @@ public extension UIImage {
 			var effectInBuffer = vImage_Buffer()
 			var scratchBuffer1 = vImage_Buffer()
 			
-			var inputBuffer: UnsafeMutablePointer<vImage_Buffer>
-			var outputBuffer: UnsafeMutablePointer<vImage_Buffer>
-			
 			var format = vImage_CGImageFormat(
 				bitsPerComponent: 8,
 				bitsPerPixel: 32,
@@ -204,62 +201,65 @@ public extension UIImage {
 			}
 			
 			vImageBuffer_Init(&scratchBuffer1, effectInBuffer.height, effectInBuffer.width, format.bitsPerPixel, UInt32(kvImageNoFlags))
-			inputBuffer = UnsafeMutablePointer(&effectInBuffer)
-			outputBuffer = UnsafeMutablePointer(&scratchBuffer1)
-			
-			
-			if hasBlur {
-				var inputRadius = radius * scale
-				if inputRadius - 2.0 < .ulpOfOne {
-					inputRadius = 2.0
+			let effectCGImage = withUnsafeMutablePointer(to: &effectInBuffer) { inputBuffer -> Unmanaged<CGImage>? in
+				var inputBuffer = UnsafeMutablePointer(inputBuffer)
+				return withUnsafeMutablePointer(to: &scratchBuffer1) { outputBuffer -> Unmanaged<CGImage>? in
+					var outputBuffer = UnsafeMutablePointer(outputBuffer)
+					if hasBlur {
+						var inputRadius = radius * scale
+						if inputRadius - 2.0 < .ulpOfOne {
+							inputRadius = 2.0
+						}
+						
+						let __a = sqrt(2.0 * CGFloat.pi) / 4.0
+						let _a = (inputRadius * 3.0 * __a + 0.5)
+						var realRadius = UInt32(floor(_a / 2))
+						realRadius |= 1
+						
+						let _b = kvImageGetTempBufferSize | kvImageEdgeExtend
+						let tempBufferSize = vImageBoxConvolve_ARGB8888(inputBuffer, outputBuffer, nil, 0, 0, realRadius, realRadius, nil, UInt32(_b))
+						let tempBuffer = malloc(tempBufferSize)
+						
+						vImageBoxConvolve_ARGB8888(inputBuffer, outputBuffer, tempBuffer, 0, 0, realRadius, realRadius, nil, UInt32(kvImageEdgeExtend))
+						vImageBoxConvolve_ARGB8888(outputBuffer, inputBuffer, tempBuffer, 0, 0, realRadius, realRadius, nil, UInt32(kvImageEdgeExtend))
+						vImageBoxConvolve_ARGB8888(inputBuffer, outputBuffer, tempBuffer, 0, 0, realRadius, realRadius, nil, UInt32(kvImageEdgeExtend))
+						
+						free(tempBuffer)
+						
+						let _temp = inputBuffer
+						inputBuffer = outputBuffer
+						outputBuffer = _temp
+					}
+					
+					if hasSaturation {
+						let s = saturation
+						let floatingPointSaturationMatrix: [CGFloat] = [
+							0.0722 + 0.9278 * s,  0.0722 - 0.0722 * s,  0.0722 - 0.0722 * s,  0,
+							0.7152 - 0.7152 * s,  0.7152 + 0.2848 * s,  0.7152 - 0.7152 * s,  0,
+							0.2126 - 0.2126 * s,  0.2126 - 0.2126 * s,  0.2126 + 0.7873 * s,  0,
+							0,                    0,                    0,                    1
+						]
+						
+						let divisor: Int32 = 256
+						let matrixSize = floatingPointSaturationMatrix.count
+						var saturationMatrix = Array(repeating: Int16(), count: matrixSize)
+						for i in 0..<matrixSize {
+							saturationMatrix[i] = Int16(round(floatingPointSaturationMatrix[i] * CGFloat(divisor)))
+						}
+						vImageMatrixMultiply_ARGB8888(inputBuffer, outputBuffer, saturationMatrix, divisor, nil, nil, UInt32(kvImageNoFlags))
+						
+						let _temp = inputBuffer
+						inputBuffer = outputBuffer
+						outputBuffer = _temp
+					}
+					
+					var effectCGImage = vImageCreateCGImageFromBuffer(inputBuffer, &format, { userData, bufData in free(bufData) }, nil, UInt32(kvImageNoAllocate), nil)
+					if effectCGImage == nil {
+						effectCGImage = vImageCreateCGImageFromBuffer(inputBuffer, &format, nil, nil, UInt32(kvImageNoFlags), nil)
+//						free(inputBuffer.pointee.data)
+					}
+					return effectCGImage
 				}
-				
-				let __a = sqrt(2.0 * CGFloat.pi) / 4.0
-				let _a = (inputRadius * 3.0 * __a + 0.5)
-				var realRadius = UInt32(floor(_a / 2))
-				realRadius |= 1
-				
-				let _b = kvImageGetTempBufferSize | kvImageEdgeExtend
-				let tempBufferSize = vImageBoxConvolve_ARGB8888(inputBuffer, outputBuffer, nil, 0, 0, realRadius, realRadius, nil, UInt32(_b))
-				let tempBuffer = malloc(tempBufferSize)
-				
-				vImageBoxConvolve_ARGB8888(inputBuffer, outputBuffer, tempBuffer, 0, 0, realRadius, realRadius, nil, UInt32(kvImageEdgeExtend))
-				vImageBoxConvolve_ARGB8888(outputBuffer, inputBuffer, tempBuffer, 0, 0, realRadius, realRadius, nil, UInt32(kvImageEdgeExtend))
-				vImageBoxConvolve_ARGB8888(inputBuffer, outputBuffer, tempBuffer, 0, 0, realRadius, realRadius, nil, UInt32(kvImageEdgeExtend))
-				
-				free(tempBuffer)
-				
-				let _temp = inputBuffer
-				inputBuffer = outputBuffer
-				outputBuffer = _temp
-			}
-			
-			if hasSaturation {
-				let s = saturation
-				let floatingPointSaturationMatrix: [CGFloat] = [
-					0.0722 + 0.9278 * s,  0.0722 - 0.0722 * s,  0.0722 - 0.0722 * s,  0,
-					0.7152 - 0.7152 * s,  0.7152 + 0.2848 * s,  0.7152 - 0.7152 * s,  0,
-					0.2126 - 0.2126 * s,  0.2126 - 0.2126 * s,  0.2126 + 0.7873 * s,  0,
-					0,                    0,                    0,                    1
-				]
-				
-				let divisor: Int32 = 256
-				let matrixSize = floatingPointSaturationMatrix.count
-				var saturationMatrix = Array(repeating: Int16(), count: matrixSize)
-				for i in 0..<matrixSize {
-					saturationMatrix[i] = Int16(round(floatingPointSaturationMatrix[i] * CGFloat(divisor)))
-				}
-				vImageMatrixMultiply_ARGB8888(inputBuffer, outputBuffer, saturationMatrix, divisor, nil, nil, UInt32(kvImageNoFlags))
-				
-				let _temp = inputBuffer
-				inputBuffer = outputBuffer
-				outputBuffer = _temp
-			}
-			
-			var effectCGImage = vImageCreateCGImageFromBuffer(inputBuffer, &format, { userData, bufData in free(bufData) }, nil, UInt32(kvImageNoAllocate), nil)
-			if effectCGImage == nil {
-				effectCGImage = vImageCreateCGImageFromBuffer(inputBuffer, &format, nil, nil, UInt32(kvImageNoFlags), nil)
-				free(inputBuffer.pointee.data)
 			}
 			
 			if maskImage != nil {
@@ -274,7 +274,7 @@ public extension UIImage {
 			ctx.draw(effectCGImage!.takeRetainedValue(), in: outputRect)
 			ctx.restoreGState()
 			
-			free(outputBuffer.pointee.data)
+//			free(outputBuffer.pointee.data)
 		}
 		else {
 			ctx.draw(cgImage, in: outputRect)

@@ -32,7 +32,7 @@ public class KeyboardControl: NSObject {
 		}
 	}
 	private var selectedIndex: Int? {
-		return inputs.index {
+		return inputs.firstIndex {
 			$0 === currentInput
 		}
 	}
@@ -300,7 +300,7 @@ extension UISearchBar: KeyboardDisplayable {
 extension KeyboardControl: UITextFieldDelegate {
 	
 	private func delegate(for textField: UITextField) -> UITextFieldDelegate? {
-		if let index = self.inputs.index(where: { textField === $0 }) {
+		if let index = self.inputs.firstIndex(where: { textField === $0 }) {
 			return self.individualDelegates[index].data as? UITextFieldDelegate
 		}
 		return nil
@@ -365,7 +365,7 @@ extension KeyboardControl: UITextFieldDelegate {
 extension KeyboardControl: UISearchBarDelegate {
 	
 	private func delegate(for searchBar: UISearchBar) -> UISearchBarDelegate? {
-		if let index = self.inputs.index(where: { searchBar === $0 }) {
+		if let index = self.inputs.firstIndex(where: { searchBar === $0 }) {
 			return self.individualDelegates[index].data as? UISearchBarDelegate
 		}
 		return nil
@@ -430,7 +430,7 @@ extension KeyboardControl: UISearchBarDelegate {
 extension KeyboardControl: UITextViewDelegate {
 	
 	private func delegate(for textView: UITextView) -> UITextViewDelegate? {
-		if let index = self.inputs.index(where: { textView === $0 }) {
+		if let index = self.inputs.firstIndex(where: { textView === $0 }) {
 			return self.individualDelegates[index].data as? UITextViewDelegate
 		}
 		return nil

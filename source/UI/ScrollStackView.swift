@@ -22,6 +22,7 @@ open class ScrollStackView: UIScrollView {
 			switch newValue {
 				case .horizontal: widthConstraint.deactivate() ; heightConstraint.activate()
 				case .vertical: widthConstraint.activate() ; heightConstraint.deactivate()
+				@unknown default: assertionFailure()
 			}
 		}
 	}

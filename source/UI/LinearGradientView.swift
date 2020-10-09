@@ -69,6 +69,8 @@ open class SimpleLinearGradientView: LinearGradientView {
 			case .horizontal:
 				self.startPoint = CGPoint(0.0, 0.5)
 				self.endPoint = CGPoint(1.0, 0.5)
+				
+			@unknown default: assertionFailure()
 			}
 		}
 	}

@@ -161,14 +161,14 @@ public extension RangeReplaceableCollection where Element: UIView {
 public extension MutableCollection where Iterator.Element: Equatable, Index == Int {
 	
 	func element(before element: Iterator.Element) -> Iterator.Element? {
-		guard let index = self.index(of: element) else {
+		guard let index = self.firstIndex(of: element) else {
 			return nil
 		}
 		return self[safe: index - 1]
 	}
 
 	func element(after element: Iterator.Element) -> Iterator.Element? {
-		guard let index = self.index(of: element) else {
+		guard let index = self.firstIndex(of: element) else {
 			return nil
 		}
 		return self[safe: index + 1]
@@ -182,7 +182,7 @@ public extension RangeReplaceableCollection where Iterator.Element: Equatable {
 	
 	@discardableResult
 	mutating func remove(element: Iterator.Element) -> Iterator.Element? {
-		guard let index = self.index(of: element) else {
+		guard let index = self.firstIndex(of: element) else {
 			return nil
 		}
 		return self.remove(at: index)

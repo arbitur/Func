@@ -57,6 +57,6 @@ public extension UINavigationController {
 	
 	
 	func index(of viewController: UIViewController) -> Int? {
-		return self.viewControllers.index(of: viewController)
+		return self.viewControllers.firstIndex(of: viewController)
 	}
 }
