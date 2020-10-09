@@ -33,7 +33,7 @@ public extension UINavigationController {
 		CATransaction.commit()
 	}
 	
-	func popToViewController(viewController: UIViewController, animated: Bool, completion: @escaping (UINavigationController)->()) {
+	func popToViewController(_ viewController: UIViewController, animated: Bool, completion: @escaping (UINavigationController)->()) {
 		CATransaction.setCompletionBlock({ completion(self) })
 		CATransaction.begin()
 		self.popToViewController(viewController, animated: animated)
@@ -47,7 +47,7 @@ public extension UINavigationController {
 		CATransaction.commit()
 	}
 	
-	func pushViewController(viewController: UIViewController, animated: Bool, completion: @escaping (UINavigationController)->()) {
+	func pushViewController(_ viewController: UIViewController, animated: Bool, completion: @escaping (UINavigationController)->()) {
 		CATransaction.setCompletionBlock({ completion(self) })
 		CATransaction.begin()
 		self.pushViewController(viewController, animated: animated)

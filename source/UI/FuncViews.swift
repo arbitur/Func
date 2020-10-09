@@ -208,10 +208,10 @@ open class RoundTextField: UITextField, BorderDrawable {
 open class AdjustableButton: UIButton {
 	
 	public var modifyImageRect: ((inout CGRect) -> ())? {
-		didSet { self.imageView?.frame = self.imageRect(forContentRect: contentRect(forBounds: self.bounds)) ; self.layoutIfNeeded() }
+		didSet { self.layoutIfNeeded() }
 	}
 	public var modifyTitleRect: ((inout CGRect) -> ())? {
-		didSet { self.titleLabel?.frame = self.titleRect(forContentRect: contentRect(forBounds: self.bounds)) ; self.layoutIfNeeded() }
+		didSet { self.layoutIfNeeded() }
 	}
 	
 	open override func imageRect(forContentRect contentRect: CGRect) -> CGRect {

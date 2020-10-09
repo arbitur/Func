@@ -24,6 +24,15 @@ public extension Collection {
 			try body(i, self[i])
 		}
 	}
+	
+	
+	/// Returns `nil` if `Element` doesn't exist at `index`
+	subscript (safe index: Index) -> Element? {
+		guard self.indices.contains(index) else {
+			return nil
+		}
+		return self[index]
+	}
 }
 
 
@@ -85,6 +94,18 @@ public extension Collection where Index == Int {
 
 
 
+public extension Collection where Element: Collection, Index == Int, Element.Index == Self.Index {
+	
+	subscript(indexPath: IndexPath) -> Element.Element? {
+		guard let s = self[safe: indexPath.section], let element = s[safe: indexPath.row] else {
+			return nil
+		}
+		return element
+	}
+}
+
+
+
 public extension RangeReplaceableCollection where Index == Int {
 	
 	/** 
@@ -105,19 +126,6 @@ public extension RangeReplaceableCollection where Index == Int {
 	*/
 	mutating func remove(from index: Int) {
 		self.removeSubrange(index..<self.count)
-	}
-}
-
-
-
-public extension MutableCollection {
-	
-	/// Returns `nil` if `Element` doesn't exist at `index`
-	subscript (safe index: Index) -> Iterator.Element? {
-		guard self.indices.contains(index) else {
-			return nil
-		}
-		return self[index]
 	}
 }
 
