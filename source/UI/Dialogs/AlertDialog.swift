@@ -8,66 +8,48 @@
 
 import UIKit
 
+public typealias AlertDialog = AlertDialogController // For backwards compatibility
 
-
-
-
-open class AlertDialog: Dialog, DialogBuilder {
+open class AlertDialogController: ActionDialogController {
 	
-	open var customViews = [UIView]()
-	public var didAddCustomViewToSuperview: ((AlertDialog, UIView)->())?
-	
-	
-	
-	override open func generateTitleLabel() -> UILabel	{
+	override open class func makeTitleLabel() -> UILabel {
 		return UILabel(font: UIFont.boldSystemFont(ofSize: 17), alignment: .center, lines: 0)
 	}
 	
-	override open func generateSubtitleLabel() -> UILabel	{
+	override open class func makeSubtitleLabel() -> UILabel	{
 		return UILabel(font: UIFont.systemFont(ofSize: 13), alignment: .center, lines: 0)
 	}
 	
-	private func generateActionButton(_ action: DialogAction) -> UIButton {
+	open override class func makeActionButton(for type: DialogActionType) -> UIButton {
 		let color: UIColor
-		switch action.type {
-			case .normal: color = UIColor(red: 0.0, green: 0.48, blue: 1.00, alpha: 1.0)
-			case .delete: color = UIColor(red: 1.0, green: 0.23, blue: 0.19, alpha: 1.0)
-			case .cancel: color = UIColor(red: 0.0, green: 0.48, blue: 1.00, alpha: 1.0)
-		}
-		
 		let font: UIFont
-		switch action.type {
-			case .normal: font = UIFont.systemFont(ofSize: 17)
-			case .delete: font = UIFont.systemFont(ofSize: 17)
-			case .cancel: font = UIFont.boldSystemFont(ofSize: 17)
+		switch type {
+		case .normal: color = UIColor(red: 0.0, green: 0.48, blue: 1.00, alpha: 1.0) ; font = UIFont.systemFont(ofSize: 17)
+		case .delete: color = UIColor(red: 1.0, green: 0.23, blue: 0.19, alpha: 1.0) ; font = UIFont.systemFont(ofSize: 17)
+		case .cancel: color = UIColor(red: 0.0, green: 0.48, blue: 1.00, alpha: 1.0) ; font = UIFont.boldSystemFont(ofSize: 17)
 		}
 		
-		let button = UIButton(type: .system, target: self, action: #selector(actionPressed))
+		let button = UIButton(type: .system)
 		button.contentEdgeInsets = UIEdgeInsets(horizontal: 8, vertical: 0)
 		button.setTitleColor(color, for: .normal)
 		button.setTitleColor(color.alpha(0.4), for: .disabled)
-		button.setTitle(action.title, for: .normal)
 		
 		button.titleLabel!.font = font
 		button.titleLabel!.textAlignment = .center
 		button.titleLabel!.adjustsFontSizeToFitWidth = true
 		
-		button.lac.height.equalTo(44)
+		button.heightAnchor.constraint(equalToConstant: 44).isActive = true
 		
 		return button
 	}
 	
-	private func generateBorder() -> UIView {
-		return UIView(backgroundColor: UIColor.lightGray.alpha(0.4))
+	private func makeBorder() -> UIView {
+		UIView(backgroundColor: UIColor.lightGray.alpha(0.4))
 	}
 	
 	
-	
-	open override func viewDidLoad() {
-		super.viewDidLoad()
-		
-		self.modalPresentationStyle = .custom
-		self.transitioningDelegate = self
+	open override func loadView() {
+		super.loadView()
 		
 		contentView.cornerRadius = 13.5
 		contentView.lac.make {
@@ -81,46 +63,46 @@ open class AlertDialog: Dialog, DialogBuilder {
 		promptContentView?.layoutMargins = UIEdgeInsets(horizontal: 16, vertical: 20)
 		promptContentView?.spacing = 3
 		
-		for view in customViews {
-			mainContentStack.add(arrangedView: view)
-			didAddCustomViewToSuperview?(self, view)
-		}
-		
-		if actions.isNotEmpty {
-			let buttonContentView = UIStackView(axis: (actions.count == 2) ? .horizontal : .vertical)
+		if actionButtons.isNotEmpty {
+			let buttonContentView = UIStackView(axis: (actionButtons.count == 2) ? .horizontal : .vertical)
 			buttonContentView.setContentCompressionResistancePriority(.required, for: .vertical)
 			
-			if let _ = promptContentView {
-				mainContentStack.add(arrangedView: generateBorder()) {
+			if mainContentStack.arrangedSubviews.isNotEmpty {
+				mainContentStack.add(arrangedView: makeBorder()) {
 					$0.height.equalTo(points(pixels: 1))
 				}
 			}
 			
-			mainContentStack.add(arrangedView: buttonContentView)
-			
-			var lastButton: UIButton?
-			for (i, action) in actions.enumerated() {
-				let button = generateActionButton(action)
-				button.tag = i
-				
-				if let _ = lastButton {
-					buttonContentView.add(arrangedView: generateBorder()) {
+			var previousButton: UIButton?
+			for button in actionButtons {
+				if previousButton != nil {
+					buttonContentView.add(arrangedView: makeBorder()) {
 						switch buttonContentView.axis {
 							case .horizontal: $0.width.equalTo(points(pixels: 1))
 							case .vertical	: $0.height.equalTo(points(pixels: 1))
+							@unknown default: assertionFailure()
 						}
 					}
 				}
 				
 				buttonContentView.add(arrangedView: button)
 				
-				if buttonContentView.axis == .horizontal, let last = lastButton {
-					button.lac.width.equalTo(last.lac.width)
+				if let previousButton = previousButton, buttonContentView.axis == .horizontal {
+					button.lac.width.equalTo(previousButton.lac.width)
 				}
 				
-				lastButton = button
+				previousButton = button
 			}
+			
+			mainContentStack.addArrangedSubview(buttonContentView)
 		}
+	}
+	
+	open override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		self.modalPresentationStyle = .custom
+		self.transitioningDelegate = self
 	}
 }
 
@@ -137,7 +119,7 @@ extension AlertDialog: UIViewControllerTransitioningDelegate {
 
 
 
-
+// MARK: - Animator
 
 private class AlertAnimator: DialogAnimator<AlertDialog> {
 	

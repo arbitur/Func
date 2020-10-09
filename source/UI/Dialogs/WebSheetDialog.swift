@@ -9,35 +9,21 @@
 import UIKit
 import WebKit
 
-
-
-
+public typealias WebSheetDialog = WebSheetDialogController // For backwards compatibility
 
 /// If no actions will add a generic cancel action
-public final class WebSheetDialog: SheetDialog {
+public final class WebSheetDialogController: SheetDialogController {
 	
 	public let webView = WKWebView()
 	var activityIndicator: UIActivityIndicatorView?
 	
 	
-	
-	public override func viewDidLoad() {
-		activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-		activityIndicator!.color = .gray
-		activityIndicator!.hidesWhenStopped = false
-		activityIndicator!.startAnimating()
-		webView.add(view: activityIndicator!) {
-			$0.centerX.equalToSuperview()
-			$0.centerY.equalToSuperview()
-		}
-		
-		webView.navigationDelegate = self
-		
+	public override func loadView() {
 		if actions.isEmpty {
 			self.addCancel(title: "Stäng")
 		}
 		
-		super.viewDidLoad()
+		super.loadView()
 		
 		webView.lac.height.equalTo(self.view.lac.height, priority: 500.0)
 	}
@@ -55,7 +41,19 @@ public final class WebSheetDialog: SheetDialog {
 	
 	public required init(title: String?, subtitle: String?) {
 		super.init(title: title, subtitle: subtitle)
-		customViews.append(webView)
+		
+		activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+		activityIndicator!.color = .gray
+		activityIndicator!.hidesWhenStopped = false
+		activityIndicator!.startAnimating()
+		webView.add(view: activityIndicator!) {
+			$0.centerX.equalToSuperview()
+			$0.centerY.equalToSuperview()
+		}
+		
+		webView.navigationDelegate = self
+		
+		addCustomView(webView)
 	}
 	
 	public override init(nibName: String?, bundle: Bundle?) { fatalError() }
@@ -104,13 +102,3 @@ extension WebSheetDialog: WKNavigationDelegate {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-

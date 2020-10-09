@@ -8,16 +8,17 @@
 
 import UIKit
 
+public typealias DateSheetDialog = DateSheetDialogController // For backwards compatibility
 
-
-
-
-open class DateSheetDialog: SheetDialog {
+open class DateSheetDialogController: SheetDialogController {
+	
 	public let datePicker = UIDatePicker()
 	
 	
-	open override func viewDidLoad() {
-		self.customViews.append(datePicker)
-		super.viewDidLoad()
+	public required init(title: String?, subtitle: String?) {
+		super.init(title: title, subtitle: subtitle)
+		addCustomView(datePicker)
 	}
+	public override init(nibName: String?, bundle: Bundle?) { fatalError() }
+	public required init?(coder aDecoder: NSCoder) { fatalError() }
 }

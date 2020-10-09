@@ -9,37 +9,45 @@
 import UIKit
 
 
+// MARK: - Dialog
 
-
-
-open class Dialog: UIViewController {
+open class DialogController: UIViewController {
 	
-	public final let contentBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
-	public final let mainContentStack = UIStackView(axis: .vertical)
+	/// Box background blur view
+	public let contentBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
+	/// StackView separating title container, custom views and action container.
+	public let mainContentStack = UIStackView(axis: .vertical)
+	/// The view to cut a hole from?
 	open var contentView: UIView { return contentBlurView }
 	
-	public final let promptTitle: String?
-	public final let promptSubtitle: String?
-	public final var promptContentView: UIStackView?
+	/// The title of the dialog
+	public let promptTitle: String?
+	/// The subtitle of the dialog
+	public let promptSubtitle: String?
+//	/// The view containing title and subtitle labels
+	public var promptContentView: UIStackView?
 	
-	public final var actions = [DialogAction]()
-	public final var didDismiss: Closure?
+	/// Custom views
+	public var customViews: [UIView] = []
 	
 	
+	open class func makeTitleLabel() -> UILabel { fatalError() }
+	open class func makeSubtitleLabel() -> UILabel { fatalError() }
 	
-	@objc public final func actionPressed(_ view: UIView) {
-		self.dismiss(animated: true, completion: didDismiss)
-		actions[view.tag].action?()
+	
+	open func addCustomView(_ view: UIView, at index: Int? = nil) {
+		if let index = index {
+			customViews.insert(view, at: index)
+		}
+		else {
+			customViews.append(view)
+		}
 	}
+	
 	
 	open func drawBackgroundHole(bezier: UIBezierPath) {
 		bezier.append(UIBezierPath(roundedRect: contentView.frame, cornerRadius: contentView.cornerRadius))
 	}
-	
-	
-	open func generateTitleLabel() -> UILabel { fatalError() }
-	open func generateSubtitleLabel() -> UILabel { fatalError() }
-	
 	
 	
 	open override func viewDidLayoutSubviews() {
@@ -54,41 +62,37 @@ open class Dialog: UIViewController {
 		self.view = view
 		self.view.add(view: contentView)
 		
-		if let title = promptTitle {
-			promptContentView = UIStackView(axis: .vertical)
-			promptContentView!.isLayoutMarginsRelativeArrangement = true
-			promptContentView!.setContentCompressionResistancePriority(.required, for: .vertical)
-			
-			let titleLabel = generateTitleLabel()
-			titleLabel.text = title
-			titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-			promptContentView!.add(arrangedView: titleLabel)
-			
-			if let subtitle = promptSubtitle {
-				let subtitleLabel = generateSubtitleLabel()
-				subtitleLabel.text = subtitle
-				subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-				promptContentView!.add(arrangedView: subtitleLabel)
-			}
-		}
-		
 		contentBlurView.contentView.add(view: mainContentStack) {
-			$0.top.equalToSuperview()
-			$0.left.equalToSuperview()
-			$0.right.equalToSuperview()
-			$0.bottom.equalToSuperview()
+			$0.edges.equalToSuperview()
 		}
 		
-		mainContentStack.add(arrangedView: promptContentView)
-	}
-	
-	open override func viewDidDisappear(_ animated: Bool) {
-		super.viewDidDisappear(animated)
+		// Titles
+		if promptTitle != nil || promptSubtitle != nil {
+			let promptContentView = UIStackView(axis: .vertical)
+			promptContentView.isLayoutMarginsRelativeArrangement = true
+			promptContentView.setContentCompressionResistancePriority(.required, for: .vertical)
+			
+			if let title = promptTitle, title.isNotEmpty {
+				let label = Self.makeTitleLabel()
+				label.text = title
+				label.setContentCompressionResistancePriority(.required, for: .vertical)
+				promptContentView.add(arrangedView: label)
+			}
+			
+			if let subtitle = promptSubtitle, subtitle.isNotEmpty {
+				let label = Self.makeSubtitleLabel()
+				label.text = subtitle
+				label.setContentCompressionResistancePriority(.required, for: .vertical)
+				promptContentView.add(arrangedView: label)
+			}
+			
+			self.promptContentView = promptContentView
+			mainContentStack.add(arrangedView: promptContentView)
+		}
 		
-		actions = []
+		// Custom views
+		customViews.forEach(mainContentStack.addArrangedSubview(_:))
 	}
-	
-	
 	
 	public required init(title: String?, subtitle: String?) {
 		promptTitle = title
@@ -100,65 +104,89 @@ open class Dialog: UIViewController {
 		self.modalTransitionStyle = .crossDissolve
 	}
 	
-	// Have to override >:(
 	public override init(nibName: String?, bundle: Bundle?) { fatalError() }
-	public required init?(coder aDecoder: NSCoder)			{ fatalError() }
+	public required init?(coder aDecoder: NSCoder) { fatalError() }
 }
 
 
+// MARK: - Action dialog
 
-
-
-public protocol DialogBuilder: class {
-	associatedtype T: UIViewController
+open class ActionDialogController: DialogController {
 	
-	var actions: [DialogAction] { get set }
-	var customViews: [UIView] { get set }
-	var didDismiss: Closure? { get set }
-	var didAddCustomViewToSuperview: ((T, UIView)->())? { get set }
-}
-
-
-public extension DialogBuilder {
+	public var actions: [DialogAction] = []
+	public var actionButtons: [UIButton] = []
 	
-	func addAction(_ action: DialogAction) {
+	
+	open class func makeActionButton(for type: DialogActionType) -> UIButton { fatalError("Abstract") }
+	
+	@objc private func handleActionButtonPressed(_ button: UIButton) {
+		guard let index = actionButtons.firstIndex(of: button) else {
+			return assertionFailure()
+		}
+		self.dismiss(animated: true, completion: nil)
+		actions[index].action?()
+	}
+	
+	open func addAction(_ action: DialogAction) {
 		actions.append(action)
 	}
 	
-	func addNormal(title: String, action: Closure? = nil) {
-		addAction(DialogAction(title: title, type: .normal, action: action))
+	@discardableResult
+	open func addNormal(title: String, action: Closure? = nil) -> DialogAction {
+		let action = DialogAction(title: title, type: .normal, action: action)
+		addAction(action)
+		return action
 	}
 	
-	func addDelete(title: String, action: @escaping Closure) {
-		addAction(DialogAction(title: title, type: .delete, action: action))
+	@discardableResult
+	open func addDelete(title: String, action: @escaping Closure) -> DialogAction {
+		let action = DialogAction(title: title, type: .delete, action: action)
+		addAction(action)
+		return action
 	}
 	
-	func addCancel(title: String, action: Closure? = nil) {
-		addAction(DialogAction(title: title, type: .cancel, action: action))
+	@discardableResult
+	open func addCancel(title: String, action: Closure? = nil) -> DialogAction {
+		let action = DialogAction(title: title, type: .cancel, action: action)
+		addAction(action)
+		return action
 	}
 	
-	func addCustomView(_ view: UIView, at index: Int? = nil) {
-		switch index {
-			case .some(let i)	: customViews.insert(view, at: i)
-			case .none			: customViews.append(view)
+	
+	open override func loadView() {
+		super.loadView()
+		
+		for action in actions {
+			let button = Self.makeActionButton(for: action.type)
+			button.setTitle(action.title, for: .normal)
+			button.isEnabled = action.isEnabled
+			button.addTarget(self, action: #selector(handleActionButtonPressed(_:)))
+			actionButtons.append(button)
+			action.button = button
 		}
-	}
-	
-	func setDidDismiss(_ action: Closure?) {
-		self.didDismiss = action
-	}
-	
-	func didAddCustomView(_ action: @escaping (T, UIView)->()) {
-		self.didAddCustomViewToSuperview = action
 	}
 }
 
 
+// MARK: - Action model
+
+public enum DialogActionType: UInt {
+	case normal
+	case delete
+	case cancel
+}
 
 public class DialogAction {
+	
 	let title: String
 	let type: DialogActionType
 	let action: Closure?
+	public var isEnabled: Bool = true {
+		didSet {
+			button?.isEnabled = isEnabled
+		}
+	}
+	internal weak var button: UIButton?
 	
 	public init(title: String, type: DialogActionType, action: Closure? = nil) {
 		self.title = title
@@ -174,17 +202,13 @@ extension DialogAction: CustomStringConvertible {
 	}
 }
 
-public enum DialogActionType: UInt {
-	case normal, delete, cancel
-}
 
 
-
-
+// MARK: - Background hole view
 
 private class MaskBackgroundView: UIView {
-	weak var viewController: Dialog?
 	
+	weak var viewController: DialogController?
 	
 	override func draw(_ rect: CGRect) {
 		let bezier = UIBezierPath(rect: rect)
@@ -197,14 +221,10 @@ private class MaskBackgroundView: UIView {
 
 
 
+// MARK: - Animator
 
-
-
-
-
-
-
-public class DialogAnimator<T: Dialog>: NSObject, UIViewControllerAnimatedTransitioning {
+public class DialogAnimator<T: DialogController>: NSObject, UIViewControllerAnimatedTransitioning {
+	
 	public final let dismissing: Bool
 	public final let duration: TimeInterval
 	public final let controlPoints: (CGPoint, CGPoint)
@@ -260,21 +280,3 @@ public class DialogAnimator<T: Dialog>: NSObject, UIViewControllerAnimatedTransi
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

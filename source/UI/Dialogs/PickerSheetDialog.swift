@@ -8,11 +8,9 @@
 
 import UIKit
 
+public typealias PickerSheetDialog = PickerSheetDialogController // For backwards compatibility
 
-
-
-
-open class PickerSheetDialog <T: Equatable> : SheetDialog {
+open class PickerSheetDialogController <T: Equatable> : SheetDialogController {
 	
 	public let pickerView = UIPickerView()
 	internal var data = [[T]]()
@@ -56,7 +54,7 @@ open class PickerSheetDialog <T: Equatable> : SheetDialog {
 	
 	@discardableResult
 	public func selectValue(_ value: T, inColumn column: Int, animated: Bool) -> Bool {
-		guard let row = data[column].index(of: value) else {
+		guard let row = data[column].firstIndex(of: value) else {
 			return false
 		}
 		selectRow(row, inColumn: column, animated: animated)
@@ -64,14 +62,10 @@ open class PickerSheetDialog <T: Equatable> : SheetDialog {
 	}
 	
 	
-	
-	open override func viewDidLoad() {
-		self.customViews.append(pickerView)
-		super.viewDidLoad()
-	}
-	
 	public required init(title: String?, subtitle: String?) {
 		super.init(title: title, subtitle: subtitle)
+		
+		addCustomView(pickerView)
 		
 		delegate = PickerViewDelegate.init(
 			numberOfComponents: { [unowned self] in self.data.count },
@@ -124,16 +118,3 @@ private class PickerViewDelegate: NSObject, UIPickerViewDelegate, UIPickerViewDa
 		didSelectRow(IndexPath(row: row, section: component))
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
