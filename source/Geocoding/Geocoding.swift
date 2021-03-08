@@ -6,121 +6,79 @@
 //
 //
 
-import Alamofire
+import Foundation
 import CoreLocation
 
 
 
+public typealias GeocodingBounds = (sw: CLLocationCoordinate2D, ne: CLLocationCoordinate2D)
 
 
-public struct GeocodingAPI: API {
-	public static var key: String = ""
-	public static var language: String = ""
+public class GeocodingApiClient: ApiClient {
 	
-	public static var loggingMode: LoggingMode = .body
+//	public static private(set) var shared: GeocodingApiClient?
 	
-	public static let baseUrl: String = "https://maps.googleapis.com/maps/api/geocode"
-	public static let baseHeaders: HTTPHeaders? = nil
-}
-
-
-
-
-
-
-
-public protocol Geocodable: DataRequestable {
-}
-
-public extension Geocodable {
+//	public static func initialize(withKey key: String, language: String) {
+//		shared = .init(withKey: key, language: language)
+//	}
 	
-	var url: String {
-		return "json"
+	public let baseUrl: String = "https://maps.googleapis.com/maps/api/geocode"
+	public var interceptors: [(RequestBuilder) -> Void] = []
+	public var logger: HttpLogger = BaseHttpLogger(level: .medium)
+	
+	internal let key: String
+	internal let language: String
+	
+	
+	public init(withKey key: String, language: String) {
+		self.key = key
+		self.language = language
 	}
 }
 
 
-
-
-
-//TODO: Bounds
-public struct Geocode: Geocodable {
-	public typealias Model = GeoResponse
+public extension GeocodingApiClient {
 	
-	public let parameters: Parameters?
-	
-	
-	public typealias Bounds = (sw: CLLocationCoordinate2D, ne: CLLocationCoordinate2D)
-	
-	public init(address: String, bounds: Bounds? = nil, components: [Component: String]? = nil, region: String? = nil) {
-		parameters = [
-			"address": address,
-			"bounds": (bounds == nil) ? "" : "\(bounds!.sw.description)|\(bounds!.ne.description)",
-			"components": components?.map { "\($0.key.rawValue):\($0.value)" }.joined(by: "|") ?? "",
-			"region": region ?? "",
-			"language": GeocodingAPI.language,
-			"key": GeocodingAPI.key
-		]
+	func geocode(address: String? = nil, components: [Component: String]? = nil, bounds: GeocodingBounds? = nil, region: String? = nil) -> Request<GeocodingResponse> {
+		return self.request(decoder: DecodableDecoder(decoder: GeocodingResponse.init)) {
+			$0.method = .get
+			$0.url = "json"
+			$0.bodyEncoder = URLBodyEncoder(parameters: [
+				"address": address ?? "",
+				"bounds": bounds.map { "\($0.sw.description)|\($0.ne.description)" } ?? "",
+				"components": components?.map { "\($0.key.rawValue):\($0.value)" }.joined(by: "|") ?? "",
+				"region": region ?? "",
+				"language": language,
+				"key": key
+			])
+		}
 	}
 	
-	public init(components: [Component: String], bounds: Bounds? = nil, region: String? = nil) {
-		parameters = [
-			"components": components.map { "\($0.key.rawValue):\($0.value)" }.joined(by: "|"),
-			"bounds": (bounds == nil) ? "" : "\(bounds!.sw.description)|\(bounds!.ne.description)",
-			"region": region ?? "",
-			"language": GeocodingAPI.language,
-			"key": GeocodingAPI.key
-		]
-	}
-}
-
-
-
-
-
-public struct ReverseGeocode: Geocodable {
-	public typealias Model = GeoResponse
 	
-	public let parameters: Parameters?
-	
-	
-	public init(coordinate: CLLocationCoordinate2D, resultTypes: [AddressType]? = nil, locationTypes: [LocationType]? = nil, sensor: Bool? = nil) {
-		parameters = [
-			"latlng": "\(coordinate.latitude),\(coordinate.longitude)",
-			"result_type": resultTypes?.map { $0.rawValue }.joined(by: "|") ?? "",
-			"location_type": locationTypes?.map { $0.rawValue }.joined(by: "|") ?? "",
-			"sensor": sensor?.description ?? "",
-			"language": GeocodingAPI.language,
-			"key": GeocodingAPI.key
-		]
+	func reverseGeocode(coordinate: CLLocationCoordinate2D, resultTypes: [AddressType]? = nil, locationTypes: [LocationType]? = nil, sensor: Bool? = nil) -> Request<GeocodingResponse> {
+		return self.request(decoder: DecodableDecoder(decoder: GeocodingResponse.init)) {
+			$0.method = .get
+			$0.url = "json"
+			$0.bodyEncoder = URLBodyEncoder(parameters: [
+				"latlng": "\(coordinate.latitude),\(coordinate.longitude)",
+				"result_type": resultTypes?.map { $0.rawValue }.joined(by: "|") ?? "",
+				"location_type": locationTypes?.map { $0.rawValue }.joined(by: "|") ?? "",
+				"sensor": sensor?.description ?? "",
+				"language": language,
+				"key": key
+			])
+		}
 	}
 	
-	public init(placeId: String) {
-		parameters = [
-			"place_id": placeId,
-			"language": GeocodingAPI.language,
-			"key": GeocodingAPI.key
-		]
+	func reverseGeocode(placeId: String) -> Request<GeocodingResponse> {
+		return self.request(decoder: DecodableDecoder(decoder: GeocodingResponse.init)) {
+			$0.method = .get
+			$0.url = "json"
+			$0.bodyEncoder = URLBodyEncoder(parameters: [
+				"place_id": placeId,
+				"language": language,
+				"key": key
+			])
+		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

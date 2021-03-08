@@ -34,7 +34,6 @@ Pod::Spec.new do |s|
 	s.subspec 'API' do |as|
 		as.source_files = 'source/API/**/*.swift'
 		as.dependency 'Func/Core'
-		as.dependency 'Alamofire', '~> 4.0'
 	end
 
 	s.subspec 'Decoding' do |js|

@@ -12,7 +12,8 @@ import CoreLocation
 
 
 
-public struct GeoResponse: Decodable, CustomStringConvertible {
+public struct GeocodingResponse: Decodable, CustomStringConvertible {
+	
 	public let results: [Result]
 	public let status: Status
 	

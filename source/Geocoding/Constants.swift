@@ -93,18 +93,3 @@ public enum Component: String {
 	case postalCode		= "postal_code"			// matches postal_code and postal_code_prefix.
 	case country		= "country"				// matches a country name or a two letter ISO 3166-1 country code.
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
