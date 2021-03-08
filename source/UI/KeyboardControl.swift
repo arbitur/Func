@@ -53,16 +53,18 @@ public class KeyboardControl: NSObject {
 		UIView.animate(withDuration: data.duration, delay: 0, options: data.options,
 			animations: {
 				if isOpening {
-					guard let projectedBottom = self.currentInput?.projectedFrame(to: self.containerView)?.bottom else {
-						print("*******************************************", self.currentInput as Any)
-						return// self.handler(KeyboardEvent(isOpening: true, keyboardFrame: data.frame, input: nil, distance: nil))
+					guard let projectedInput = self.currentInput?.projectedFrame(to: self.containerView) else {
+						return
 					}
 					let top = data.frame.top - 16
-					let distance = top - projectedBottom
+					let distance = top - projectedInput.bottom
+					
+					print("Event: Opening, keyboard: \(Int(data.frame.top)), limit: \(Int(top)), input: \(Int(projectedInput.bottom)), distance: \(Int(distance))")
 					
 					self.handler(KeyboardEvent(isOpening: true, keyboardFrame: data.frame, input: self.currentInput!, distance: distance))
 				}
 				else if !self._isMoving {
+					print("Event: Closing, keyboardFrame: \(data.frame)")
 					self.handler(KeyboardEvent(isOpening: false, keyboardFrame: data.frame, input: nil, distance: nil))
 				}
 			},
@@ -76,7 +78,11 @@ public class KeyboardControl: NSObject {
 	}
 	
 	@objc private func keyboardWillHide(_ notification: Notification) {
-		handleNotification(notification, isOpening: false)
+		DispatchQueue.main.async() { [self] in
+			if currentInput == nil {
+				handleNotification(notification, isOpening: false)
+			}
+		}
 	}
 	
 	@objc private func keyboardDidShow(_ notification: Notification) {
@@ -244,7 +250,7 @@ private struct KeyboardNotificationData {
 	let frame: CGRect
 	let curve: UInt
 	let duration: TimeInterval
-	let belongsToMe: Bool
+//	let belongsToMe: Bool
 	var options: UIView.AnimationOptions {
 		return UIView.AnimationOptions(rawValue: curve)
 	}
@@ -254,7 +260,7 @@ private struct KeyboardNotificationData {
 		frame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
 		curve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
 		duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
-		belongsToMe = userInfo[UIResponder.keyboardIsLocalUserInfoKey] as! Bool
+//		belongsToMe = userInfo[UIResponder.keyboardIsLocalUserInfoKey] as! Bool
 	}
 }
 

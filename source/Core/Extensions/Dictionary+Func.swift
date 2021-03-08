@@ -47,7 +47,7 @@ public extension Dictionary where Key == String {
 	func valueFor <T> (path: String, separator: String = ".") -> T? {
 		var value: Any = self
 		
-		for part in path.split(separator) {
+		for part in path.split(by: separator) {
 			if let dict = value as? Dict, let v = dict[part] {
 				value = v
 			}

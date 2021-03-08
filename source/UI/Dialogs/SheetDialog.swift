@@ -98,6 +98,7 @@ open class SheetDialogController: ActionDialogController {
 		}
 		
 		contentBlurView.cornerRadius = 13.5
+		contentBlurView.clipsToBounds = true
 		contentStackView.add(arrangedView: contentBlurView)
 		
 		promptContentView?.layoutMargins = UIEdgeInsets(horizontal: 16, top: 14, bottom: (promptSubtitle == nil) ? 14 : 25)
@@ -131,6 +132,7 @@ open class SheetDialogController: ActionDialogController {
 			if let button = cancelButton {
 				let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
 				blurView.cornerRadius = contentBlurView.cornerRadius
+				blurView.clipsToBounds = true
 				blurView.contentView.add(view: button) {
 					$0.edges.equalToSuperview()
 				}

@@ -52,6 +52,7 @@ open class AlertDialogController: ActionDialogController {
 		super.loadView()
 		
 		contentView.cornerRadius = 13.5
+		contentView.clipsToBounds = true
 		contentView.lac.make {
 			$0.width.equalTo(270)
 			$0.centerX.equalToSuperview()

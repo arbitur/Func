@@ -18,7 +18,7 @@ public extension UIView {
 		get { return self.layer.cornerRadius }
 		set {
 			self.layer.cornerRadius = newValue
-			self.layer.masksToBounds = true
+//			self.layer.masksToBounds = true
 		}
 	}
 	
@@ -102,10 +102,15 @@ public extension UIView {
 		}
 	}
 	
-	func removeAllSubViews() {
+	func removeAllSubviews() {
 		for view in self.subviews {
 			view.removeFromSuperview()
 		}
+	}
+	
+	@available(*, deprecated, message: "Use `removeAllSubviews` instead.")
+	func removeAllSubViews() {
+		removeAllSubviews()
 	}
 }
 
@@ -164,6 +169,14 @@ public extension UIView {
 	
 	func transform(moveX x: CGFloat, y: CGFloat) {
 		self.transform = CGAffineTransform(translationX: x, y: y)
+	}
+	
+	func translateTo(x: CGFloat, y: CGFloat) {
+		self.transform = self.transform.concatenating(CGAffineTransform(translationX: x, y: y))
+	}
+	
+	func translateBy(x: CGFloat, y: CGFloat) {
+		self.transform = self.transform.translatedBy(x: x, y: y)
 	}
 	
 	

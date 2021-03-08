@@ -13,7 +13,7 @@ import UIKit
 
 public extension UITableViewCell {
 	
-	var parentTableView: UITableView? {
+	var tableView: UITableView? {
 		return self.precendents.first(where: { $0 is UITableView }) as? UITableView
 	}
 }

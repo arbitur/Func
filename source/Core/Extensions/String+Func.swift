@@ -15,7 +15,7 @@ import Foundation
 public extension String {
 	
 	var nsRange: NSRange {
-		return NSRange(location: self.startIndex.utf16Offset(in: self), length: self.endIndex.utf16Offset(in: self))
+		NSRange(self.startIndex..<self.endIndex, in: self)
 	}
 	
 	var reversed: String {
@@ -97,7 +97,7 @@ public extension String {
 	
 	func matches(regex pattern: String) -> Bool {
 		let regex = try! NSRegularExpression(pattern: pattern, options: [])
-		return regex.firstMatch(in: self, options: [], range: self.nsRange) != nil
+		return regex.numberOfMatches(in: self) > 0
 	}
 	
 	
@@ -131,7 +131,7 @@ public extension String {
 	
 	
 	
-	func split(_ str: String) -> [String] {
+	func split(by str: String) -> [String] {
 		return self.components(separatedBy: str)
 	}
 	

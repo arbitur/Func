@@ -94,7 +94,7 @@ open class RoundButton: UIButton, BorderDrawable {
 }
 
 
-
+@available(*, unavailable, message: "Define assets as templates instead")
 @IBDesignable
 open class TintImageView: UIImageView {
 	
@@ -139,11 +139,13 @@ open class RoundImageView: UIImageView, BorderDrawable {
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 		self.roundCorners()
+		self.clipsToBounds = true
 	}
 }
 
 
 
+@available(*, unavailable, message: "Define assets as templates instead")
 @IBDesignable
 open class RoundTintImageView: RoundImageView {
 	

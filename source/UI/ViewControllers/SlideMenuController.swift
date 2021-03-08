@@ -1,6 +1,6 @@
 //
 //  SlideMenuController.swift
-//  Alamofire
+//  Func
 //
 //  Created by Philip Fryklund on 3/Oct/17.
 //
@@ -240,7 +240,7 @@ extension TransitionManager: UIViewControllerAnimatedTransitioning {
 	func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
 		let containerView = transitionContext.containerView
 		let menuView = transitionContext.viewController(forKey: isPresenting ? .to : .from)!.view!
-		let rootView = transitionContext.viewController(forKey: isPresenting ? .from : .to)!.view!
+//		let rootView = transitionContext.viewController(forKey: isPresenting ? .from : .to)!.view!
 
 		menuView.frame.size = containerView.bounds.size * CGSize(0.8, 1)
 		containerView.addSubview(menuView)

@@ -48,6 +48,17 @@ internal extension ConstraintItemGroup {
 			return constraint
 		}
 	}
+	func constraintTo<T: ConstraintItemGroup>(_ group: T, constant: ConstraintConstant, relation: NSLayoutConstraint.Relation, multiplier: CGFloat, priority: UILayoutPriority) -> [NSLayoutConstraint] {
+		prepareItem()
+		
+		return attributes.enumerated().map { (i, attribute) in
+			let constant: CGFloat = constant.constant(for: attribute)
+			let constraint = NSLayoutConstraint.init(item: self.item, attribute: attribute, relatedBy: relation, toItem: group.item, attribute: group.attributes[i], multiplier: multiplier, constant: constant)
+			constraint.priority = priority
+			constraint.activate()
+			return constraint
+		}
+	}
 	
 	func constraintToSuperview(_ constant: ConstraintConstant, relation: NSLayoutConstraint.Relation, multiplier: CGFloat, priority: UILayoutPriority) -> [NSLayoutConstraint] {
 		guard let superview = superview else {
@@ -67,6 +78,10 @@ public extension ConstraintItemGroup {
 	}
 	@discardableResult
 	func equalTo <T: ConstraintItemGroupTarget> (_ item: T, constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
+		return self.constraintTo(item, constant: constant, relation: .equal, multiplier: multiplier, priority: priority)
+	}
+	@discardableResult
+	func equalTo <T: ConstraintItemGroup> (_ item: T, constant: ConstraintConstant = 0, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> [NSLayoutConstraint] {
 		return self.constraintTo(item, constant: constant, relation: .equal, multiplier: multiplier, priority: priority)
 	}
 	
