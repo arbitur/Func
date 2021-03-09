@@ -139,7 +139,6 @@ open class RoundImageView: UIImageView, BorderDrawable {
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 		self.roundCorners()
-		self.clipsToBounds = true
 	}
 }
 
