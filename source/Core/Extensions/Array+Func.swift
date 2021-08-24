@@ -36,6 +36,22 @@ public extension Collection {
 }
 
 
+public extension MutableCollection where Self: RangeReplaceableCollection {
+	
+	subscript (eager index: Index) -> Element {
+		get { self[index] }
+		set {
+			if self.indices.contains(index) {
+				self[index] = newValue
+			}
+			else {
+				self.append(newValue)
+			}
+		}
+	}
+}
+
+
 
 public extension Collection where Index == Int {
 	
@@ -281,21 +297,3 @@ public func --= <T> (left: inout T, right: T.Iterator.Element) where T: RangeRep
 public func ?== <T> (left: T.Iterator.Element, right: T) -> Bool where T: Sequence, T.Iterator.Element: Equatable {
 	return right.contains(left)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

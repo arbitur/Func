@@ -50,7 +50,7 @@ public struct JsonSerializer: Serializer {
 }
 
 public struct AnySerializer: Serializer {
-	
+	public init() {}
 	public func serialize(data: Data) throws -> Any {
 		return data
 	}
@@ -538,10 +538,7 @@ public struct BaseHttpLogger: HttpLogger {
 		}
 		
 		if let data = data {
-			if level == .medium, data.count >= 10_000 {
-				print("Body too big to print")
-			}
-			else if let string = String(data) {
+			if let string = String(data) {
 				print(string.removed(characters: CharacterSet.newlines))
 			}
 			else {

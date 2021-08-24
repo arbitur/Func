@@ -287,7 +287,7 @@ open class Observable2<T> {
 		return token
 	}
 	
-	open func notify(_ value: T) {
+	open func notify(with value: T) {
 		observers.forEach { _, weakRef in
 			weakRef.reference?.observer(value)
 		}
@@ -333,12 +333,12 @@ open class PropertyObservable<T>: Observable2<T> {
 	}
 	
 	open func notify() {
-		self.notify(wrappedValue)
+		self.notify(with: wrappedValue)
 	}
 	
 	
-	override open func notify(_ value: T) {
-		super.notify(value)
+	override open func notify(with value: T) {
+		super.notify(with: value)
 		bonds.forEach {
 			$0(value)
 		}
@@ -367,7 +367,7 @@ private class ObserverToken<T> {
 	}
 }
 
-private protocol ObservableTokenRemovable: class {
+private protocol ObservableTokenRemovable: AnyObject {
 	func removeToken(for id: ObservableTokenIdType)
 }
 

@@ -12,7 +12,7 @@ import UIKit
 
 
 
-public protocol TableViewCellLoadable: class {
+public protocol TableViewCellLoadable: AnyObject {
 	static var reuseIdentifier: String { get }
 }
 

@@ -39,4 +39,16 @@ public extension UIScrollView {
 //			self.contentSize = newValue.size
 //		}
 //	}
+	
+	@discardableResult
+	func beginAnimateRefreshControl() -> UIRefreshControl? {
+		guard let refreshControl = self.refreshControl else {
+			return nil
+		}
+		
+		refreshControl.beginRefreshing()
+		self.setContentOffset(CGPoint(x: 0, y: self.contentOffset.y - (refreshControl.frame.height)), animated: true)
+		
+		return refreshControl
+	}
 }

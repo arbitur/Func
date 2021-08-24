@@ -23,7 +23,7 @@ public func points(pixels: Int) -> CGFloat {
 
 
 
-public protocol BorderDrawable: class {
+public protocol BorderDrawable: AnyObject {
 	var borderWidth: CGFloat { get set }
 	var borderColor: UIColor { get set }
 }
